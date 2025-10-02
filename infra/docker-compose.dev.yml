@@ -1,0 +1,145 @@
+version: '3.8'
+
+services:
+  # Supabase Local Development
+  supabase-db:
+    image: supabase/postgres:15.1.0.117
+    container_name: voice-to-app-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: voice_to_app
+    volumes:
+      - supabase_db_data:/var/lib/postgresql/data
+      - ./supabase/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Supabase Auth (Local)
+  supabase-auth:
+    image: supabase/gotrue:v2.99.0
+    container_name: voice-to-app-auth
+    ports:
+      - "9999:9999"
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: http://localhost:9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://postgres:postgres@supabase-db:5432/voice_to_app
+      GOTRUE_SITE_URL: http://localhost:3000
+      GOTRUE_URI_ALLOW_LIST: http://localhost:3000,http://localhost:8000
+      GOTRUE_JWT_SECRET: your-super-secret-jwt-token-with-at-least-32-characters-long
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: true
+      GOTRUE_EXTERNAL_PHONE_ENABLED: true
+      GOTRUE_SMTP_HOST: smtp.gmail.com
+      GOTRUE_SMTP_PORT: 587
+      GOTRUE_SMTP_USER: your-email@gmail.com
+      GOTRUE_SMTP_PASS: your-app-password
+      GOTRUE_SMTP_ADMIN_EMAIL: admin@voice-to-app.com
+      GOTRUE_MAILER_AUTOCONFIRM: true
+      GOTRUE_SMS_AUTOCONFIRM: true
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+
+  # Redis (for caching and rate limiting)
+  redis:
+    image: redis:7-alpine
+    container_name: voice-to-app-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: voice-to-app-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=true
+      - ENVIRONMENT=development
+      - LOG_LEVEL=DEBUG
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - JWT_SECRET=dev-jwt-secret-change-in-production
+      - ENCRYPTION_KEY=dev-encryption-key-change-in-production
+      - SUPABASE_URL=http://supabase-auth:9999
+      - SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      - SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+      - DATABASE_URL=postgres://postgres:postgres@supabase-db:5432/voice_to_app
+      - UPSTASH_REDIS_REST_URL=http://redis:6379
+      - UPSTASH_REDIS_REST_TOKEN=dev-redis-token
+      - RAZORPAY_KEY_ID=dev-razorpay-key-id
+      - RAZORPAY_KEY_SECRET=dev-razorpay-key-secret
+      - RAZORPAY_WEBHOOK_SECRET=dev-razorpay-webhook-secret
+      - PAYPAL_CLIENT_ID=dev-paypal-client-id
+      - PAYPAL_CLIENT_SECRET=dev-paypal-client-secret
+      - TWILIO_ACCOUNT_SID=dev-twilio-account-sid
+      - TWILIO_AUTH_TOKEN=dev-twilio-auth-token
+      - TWILIO_PHONE_NUMBER=+1234567890
+      - HF_API_KEY=dev-hf-api-key
+      - TOGETHER_API_KEY=dev-together-api-key
+      - GROQ_API_KEY=dev-groq-api-key
+      - ALLOW_LOCAL_LLM=true
+      - ENABLE_VOICE_COMMANDS=true
+      - ENABLE_GAMIFICATION=true
+      - ENABLE_REFERRALS=true
+      - ENABLE_TEMPLATES_MARKETPLACE=true
+      - ENABLE_COLLABORATIVE_EDITING=true
+      - ENABLE_CORS=true
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../backend:/app
+      - /app/__pycache__
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: voice-to-app-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SUPABASE_URL=http://localhost:9999
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/trpc
+    depends_on:
+      - backend
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+
+volumes:
+  supabase_db_data:
+  redis_data:
+
+networks:
+  default:
+    name: voice-to-app-network

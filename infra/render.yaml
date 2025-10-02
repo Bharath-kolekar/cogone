@@ -1,1 +1,111 @@
-services: []
+services:
+  - type: web
+    name: voice-to-app-backend
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: SECRET_KEY
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: secret-key
+      - key: JWT_SECRET
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: jwt-secret
+      - key: ENCRYPTION_KEY
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: encryption-key
+      - key: SUPABASE_URL
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: supabase-url
+      - key: SUPABASE_ANON_KEY
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: supabase-anon-key
+      - key: SUPABASE_SERVICE_KEY
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: supabase-service-key
+      - key: RAZORPAY_KEY_ID
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: razorpay-key-id
+      - key: RAZORPAY_KEY_SECRET
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: razorpay-key-secret
+      - key: RAZORPAY_WEBHOOK_SECRET
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: razorpay-webhook-secret
+      - key: PAYPAL_CLIENT_ID
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: paypal-client-id
+      - key: PAYPAL_CLIENT_SECRET
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: paypal-client-secret
+      - key: TWILIO_ACCOUNT_SID
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: twilio-account-sid
+      - key: TWILIO_AUTH_TOKEN
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: twilio-auth-token
+      - key: TWILIO_PHONE_NUMBER
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: twilio-phone-number
+      - key: UPSTASH_REDIS_REST_URL
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: upstash-redis-url
+      - key: UPSTASH_REDIS_REST_TOKEN
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: upstash-redis-token
+      - key: HF_API_KEY
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: hf-api-key
+      - key: TOGETHER_API_KEY
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: together-api-key
+      - key: GROQ_API_KEY
+        fromDatabase:
+          name: voice-to-app-secrets
+          property: groq-api-key
+      - key: DEBUG
+        value: false
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: ENABLE_CORS
+        value: true
+      - key: ALLOW_LOCAL_LLM
+        value: true
+      - key: ENABLE_VOICE_COMMANDS
+        value: true
+      - key: ENABLE_GAMIFICATION
+        value: true
+      - key: ENABLE_REFERRALS
+        value: true
+      - key: ENABLE_TEMPLATES_MARKETPLACE
+        value: true
+      - key: ENABLE_COLLABORATIVE_EDITING
+        value: true
+
+databases:
+  - name: voice-to-app-secrets
+    plan: starter
