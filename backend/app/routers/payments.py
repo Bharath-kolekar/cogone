@@ -231,20 +231,21 @@ async def generate_upi_qr(
 
 @router.get("/methods")
 async def get_payment_methods(
-    current_user: User = Depends(AuthDependencies.get_current_user)
+    current_user: User = Depends(AuthDependencies.get_current_user),
+    currency: str = 'INR'
 ):
     """Get available payment methods for user's country"""
     try:
         payment_service = PaymentService()
         methods = await payment_service.get_available_payment_methods(
             country_code=current_user.country_code,
-            currency=request.currency if hasattr(request, 'currency') else 'INR'
+            currency=currency
         )
         
         return {
             "methods": methods,
             "country": current_user.country_code,
-            "currency": "INR"
+            "currency": currency
         }
         
     except Exception as e:
