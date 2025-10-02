@@ -8,7 +8,6 @@ import { LanguageToggle } from '@/components/language-toggle'
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      <LanguageToggle />
       <Hero />
       <Features />
       <Pricing />
