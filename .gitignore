@@ -1,0 +1,267 @@
+# ============================================================
+# Voice-to-App SaaS - Production-grade .gitignore
+# (Next.js frontend + FastAPI backend + Supabase + Docker)
+# ============================================================
+
+# -------------------------
+# Environment / secrets
+# -------------------------
+# Do NOT commit .env or any file containing secrets / service keys
+.env
+.env.local
+.env.*.local
+.env.*.secret
+.env.production
+.env.development
+.env.test
+*.secret
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+credentials.yml
+aws-credentials
+.google-services.json
+*.crt
+
+# -------------------------
+# Node / Frontend artifacts
+# -------------------------
+# Dependencies
+/node_modules/
+/.pnpm-store/
+/.pnpm/
+.pnp.*
+
+# Next.js / build outputs
+.next/
+.next.cache/
+.out/
+dist/
+build/
+.vscode/.history/
+
+# Turbopack / caches
+/.turbo/
+/.cache/
+.cache-loader/
+/.parcel-cache/
+/parcel-cache/
+
+# static exports, storybook builds
+.storybook-static/
+storybook-static/
+public/.cache/
+
+# logs and diagnostics
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+pnpm-lock.yaml.bak
+
+# Editor history & REPL
+node-repl-history
+
+# -------------------------
+# Python / Backend artifacts
+# -------------------------
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# pip / caches
+pip-log.txt
+pip-delete-this-directory.txt
+.python-version
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# Pydantic / generated schemas (if you generate into /backend/app/models/generated)
+# keep if intentionally committed; otherwise ignore
+# backend/app/models/generated/
+
+# -------------------------
+# Database & local dev data
+# -------------------------
+# sqlite, local db dumps, supabase local files
+*.sqlite
+*.db
+*.sql
+*.dump
+supabase/.local/
+supabase/.cache/
+supabase/storage/
+supabase/.db
+supabase/local/ # supabase local files
+
+# -------------------------
+# Docker
+# -------------------------
+# Image layers, containers
+docker-compose.override.yml
+docker-compose.*.yml
+**/Dockerfile.dev
+**/dockerfile.dev
+**/*.dockerignore
+
+# Do not ignore Dockerfile, docker-compose.yml if you want them in repo
+# but ignore build artifacts / local volumes
+.docker/
+volumes/
+tmp.docker/
+
+# -------------------------
+# CI / CD / Deploy artifacts
+# -------------------------
+/.vercel/
+.vercel_build_output/
+.now/
+.netlify/
+.build/
+.cache/
+
+# Render / cloud provider local state
+.render/
+.rmeta/
+
+# GitHub Actions artifacts
+.github/workflows/*.local.*
+.github/workflows/*-secrets.yml
+
+# -------------------------
+# IDE / OS files
+# -------------------------
+# OS
+.DS_Store
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Windows
+*.lnk
+*.bak
+*.old
+
+# JetBrains / IntelliJ / PyCharm
+.idea/
+*.iml
+out/
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# Emacs / vim
+*~
+*.swp
+.project
+.tags
+.cache/
+
+# -------------------------
+# Logs, temp & uploads
+# -------------------------
+logs/
+*.log
+pids/
+*.pid
+*.seed
+tmp/
+temp/
+uploads/
+uploads/*
+!uploads/.gitkeep
+
+# -------------------------
+# Generated artifacts & bundles
+# -------------------------
+# Typescript build outputs & tsserver
+lib/
+es/
+dist/
+build/
+typings/
+*.tsbuildinfo
+
+# JS bundles
+*.bundle.js
+*.min.js
+*.map
+*.gz
+*.br
+
+# CSS build
+*.css.map
+
+# -------------------------
+# Misc tooling
+# -------------------------
+coverage/
+reports/
+test-results/
+reports-*/ 
+.vagrant/
+.cache/
+*.local
+
+# -------------------------
+# LFS / large files
+# -------------------------
+# If you use Git LFS, do NOT include actual binaries accidentally.
+*.bin
+*.exe
+*.dll
+*.so
+*.dylib
+*.zip
+*.tar.gz
+*.tgz
+# Note: allow committed zips intentionally added to repo by removing from ignore
+
+# -------------------------
+# Recommended exceptions (what to commit)
+# -------------------------
+# Keep lockfiles for reproducible builds
+!pnpm-lock.yaml
+!package-lock.json
+!yarn.lock
+!poetry.lock
+
+# Keep migrations folder and SQL files (explicitly)
+!supabase/migrations/
+!supabase/schema.sql
+
+# Keep infra configs, Dockerfiles, CI workflows
+!infra/
+!docker-compose.yml
+!Dockerfile
+!.github/workflows/
+
+# -------------------------
+# Helpful reminders (not part of ignore rules)
+# -------------------------
+# - NEVER commit your secrets or service keys. Use your CI/CD provider's secrets store.
+# - Keep DB migrations and infra config (render.yaml, vercel.json) in the repo.
+# - If you add generated files you DO want to commit (e.g., a generated API client),
+#   add an explicit "!" rule above to override the general ignore.
+

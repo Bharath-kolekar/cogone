@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.core.database import get_supabase_client
 from app.models.user import User, UserCreate, UserUpdate
 from app.models.auth import LoginRequest, LoginResponse, TokenData
+from app.services.totp_service import TOTPService
 
 logger = structlog.get_logger()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -22,6 +23,7 @@ class AuthService:
     
     def __init__(self):
         self.supabase = get_supabase_client()
+        self.totp_service = TOTPService()
     
     async def register_user(self, user_data: UserCreate) -> LoginResponse:
         """Register a new user"""
@@ -87,8 +89,9 @@ class AuthService:
             raise e
     
     async def login_user(self, login_data: LoginRequest) -> LoginResponse:
-        """Login user with email/password or OTP"""
+        """Login user with email/password or OTP, with optional 2FA"""
         try:
+            # First, authenticate with email/password or OTP
             if login_data.password:
                 # Password login
                 auth_response = self.supabase.auth.sign_in_with_password({
@@ -111,6 +114,22 @@ class AuthService:
                 
                 if user_profile.data:
                     user = User(**user_profile.data[0])
+                    
+                    # Check if 2FA is enabled for this user
+                    two_fa_status = await self.totp_service.get_2fa_status(user.id)
+                    
+                    # If 2FA is enabled and no 2FA code provided, require 2FA
+                    if two_fa_status["enabled"] and not login_data.two_factor_code:
+                        return LoginResponse(
+                            requires_2fa=True,
+                            message="2FA code required"
+                        )
+                    
+                    # If 2FA code is provided, verify it
+                    if login_data.two_factor_code:
+                        is_valid_2fa = await self.totp_service.verify_2fa_code(user.id, login_data.two_factor_code)
+                        if not is_valid_2fa:
+                            raise Exception("Invalid 2FA code")
                     
                     # Update last login
                     self.supabase.table("users").update({

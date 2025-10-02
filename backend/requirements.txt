@@ -96,6 +96,9 @@ slowapi==0.1.9
 # QR code generation
 qrcode[pil]==7.4.2
 
+# TOTP for 2FA
+pyotp==2.9.0
+
 # Image processing
 opencv-python==4.8.1.78
 

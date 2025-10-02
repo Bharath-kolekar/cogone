@@ -182,6 +182,18 @@ CREATE TABLE otp_verifications (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Two-Factor Authentication table
+CREATE TABLE user_2fa (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE UNIQUE NOT NULL,
+    totp_secret VARCHAR(255) NOT NULL,
+    backup_codes TEXT[] DEFAULT '{}',
+    is_enabled BOOLEAN DEFAULT false,
+    verified_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Rate limiting table
 CREATE TABLE rate_limits (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -222,6 +234,8 @@ CREATE INDEX idx_app_templates_category ON app_templates(category);
 CREATE INDEX idx_app_templates_is_public ON app_templates(is_public);
 CREATE INDEX idx_otp_verifications_email ON otp_verifications(email);
 CREATE INDEX idx_otp_verifications_phone ON otp_verifications(phone);
+CREATE INDEX idx_user_2fa_user_id ON user_2fa(user_id);
+CREATE INDEX idx_user_2fa_enabled ON user_2fa(is_enabled);
 CREATE INDEX idx_rate_limits_user_id ON rate_limits(user_id);
 CREATE INDEX idx_rate_limits_ip_address ON rate_limits(ip_address);
 
@@ -240,6 +254,7 @@ CREATE TRIGGER update_payments_updated_at BEFORE UPDATE ON payments FOR EACH ROW
 CREATE TRIGGER update_subscriptions_updated_at BEFORE UPDATE ON subscriptions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_generated_apps_updated_at BEFORE UPDATE ON generated_apps FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_app_templates_updated_at BEFORE UPDATE ON app_templates FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_user_2fa_updated_at BEFORE UPDATE ON user_2fa FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Row Level Security (RLS) Policies
 
@@ -256,6 +271,7 @@ ALTER TABLE referrals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE template_reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE otp_verifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_2fa ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rate_limits ENABLE ROW LEVEL SECURITY;
 
 -- Users policies
@@ -310,6 +326,11 @@ CREATE POLICY "Users can update own reviews" ON template_reviews FOR UPDATE USIN
 
 -- OTP verifications policies
 CREATE POLICY "Service role can manage OTP verifications" ON otp_verifications FOR ALL USING (auth.role() = 'service_role');
+
+-- User 2FA policies
+CREATE POLICY "Users can view own 2FA settings" ON user_2fa FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own 2FA settings" ON user_2fa FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Service role can manage all 2FA settings" ON user_2fa FOR ALL USING (auth.role() = 'service_role');
 
 -- Rate limits policies
 CREATE POLICY "Service role can manage rate limits" ON rate_limits FOR ALL USING (auth.role() = 'service_role');

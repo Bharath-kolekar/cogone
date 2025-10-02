@@ -17,6 +17,7 @@ from app.core.database import get_supabase_client
 from app.services.auth_service import AuthService
 from app.services.otp_service import OTPService
 from app.services.sms_service import SMSService
+from app.services.totp_service import TOTPService
 from app.models.user import User, UserCreate, UserUpdate
 from app.models.auth import (
     LoginRequest,
@@ -26,6 +27,14 @@ from app.models.auth import (
     OTPVerifyResponse,
     RefreshTokenRequest,
     RefreshTokenResponse,
+    TwoFactorSetupRequest,
+    TwoFactorSetupResponse,
+    TwoFactorVerifyRequest,
+    TwoFactorVerifyResponse,
+    TwoFactorLoginRequest,
+    TwoFactorLoginResponse,
+    TwoFactorStatusResponse,
+    BackupCodesResponse,
 )
 
 logger = structlog.get_logger()
@@ -315,3 +324,177 @@ async def get_supported_languages():
         ],
         "default": "en"
     }
+
+
+# ===== Two-Factor Authentication Endpoints =====
+
+@router.post("/2fa/setup", response_model=TwoFactorSetupResponse)
+async def setup_2fa(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Setup 2FA for authenticated user"""
+    try:
+        totp_service = TOTPService()
+        
+        # Check if 2FA is already enabled
+        status = await totp_service.get_2fa_status(current_user.id)
+        if status["enabled"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="2FA is already enabled for this user"
+            )
+        
+        # Setup 2FA
+        result = await totp_service.setup_2fa(current_user.id, current_user.email)
+        
+        logger.info("2FA setup initiated", user_id=current_user.id)
+        return TwoFactorSetupResponse(**result)
+        
+    except Exception as e:
+        logger.error("2FA setup failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.post("/2fa/verify", response_model=TwoFactorVerifyResponse)
+async def verify_2fa_setup(
+    verify_request: TwoFactorVerifyRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Verify 2FA setup with TOTP code"""
+    try:
+        totp_service = TOTPService()
+        
+        # Verify and enable 2FA
+        success = await totp_service.verify_and_enable_2fa(current_user.id, verify_request.code)
+        
+        if success:
+            logger.info("2FA verified and enabled", user_id=current_user.id)
+            return TwoFactorVerifyResponse(
+                success=True,
+                message="2FA has been successfully enabled"
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid TOTP code"
+            )
+        
+    except Exception as e:
+        logger.error("2FA verification failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.get("/2fa/status", response_model=TwoFactorStatusResponse)
+async def get_2fa_status(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get 2FA status for authenticated user"""
+    try:
+        totp_service = TOTPService()
+        status = await totp_service.get_2fa_status(current_user.id)
+        
+        return TwoFactorStatusResponse(**status)
+        
+    except Exception as e:
+        logger.error("Failed to get 2FA status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.delete("/2fa/disable")
+async def disable_2fa(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Disable 2FA for authenticated user"""
+    try:
+        totp_service = TOTPService()
+        
+        # Disable 2FA
+        success = await totp_service.disable_2fa(current_user.id)
+        
+        if success:
+            logger.info("2FA disabled", user_id=current_user.id)
+            return {"message": "2FA has been disabled"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to disable 2FA"
+            )
+        
+    except Exception as e:
+        logger.error("2FA disable failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.post("/2fa/backup-codes", response_model=BackupCodesResponse)
+async def regenerate_backup_codes(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Regenerate backup codes for authenticated user"""
+    try:
+        totp_service = TOTPService()
+        
+        # Regenerate backup codes
+        new_codes = await totp_service.regenerate_backup_codes(current_user.id)
+        
+        logger.info("Backup codes regenerated", user_id=current_user.id)
+        return BackupCodesResponse(backup_codes=new_codes)
+        
+    except Exception as e:
+        logger.error("Backup codes regeneration failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.post("/2fa/verify-login", response_model=TwoFactorLoginResponse)
+async def verify_2fa_login(login_request: TwoFactorLoginRequest):
+    """Verify 2FA code during login"""
+    try:
+        totp_service = TOTPService()
+        
+        # Verify 2FA code
+        is_valid = await totp_service.verify_2fa_code(login_request.user_id, login_request.code)
+        
+        if is_valid:
+            # Get user and generate tokens
+            auth_service = AuthService()
+            user_profile = auth_service.supabase.table("users").select("*").eq("id", login_request.user_id).execute()
+            
+            if user_profile.data:
+                user = User(**user_profile.data[0])
+                tokens = await auth_service.generate_tokens(type('User', (), {"id": user.id, "email": user.email})())
+                
+                return TwoFactorLoginResponse(
+                    success=True,
+                    message="2FA verification successful"
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="User not found"
+                )
+        else:
+            return TwoFactorLoginResponse(
+                success=False,
+                message="Invalid 2FA code"
+            )
+        
+    except Exception as e:
+        logger.error("2FA login verification failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )

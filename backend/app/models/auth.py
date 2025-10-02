@@ -18,14 +18,17 @@ class LoginRequest(BaseModel):
     password: Optional[str] = None
     otp_code: Optional[str] = None
     otp_type: Optional[OTPType] = None
+    two_factor_code: Optional[str] = None
 
 
 class LoginResponse(BaseModel):
-    user: "User"
-    access_token: str
-    refresh_token: str
-    expires_in: int
+    user: Optional["User"] = None
+    access_token: Optional[str] = None
+    refresh_token: Optional[str] = None
+    expires_in: Optional[int] = None
     token_type: str = "bearer"
+    requires_2fa: bool = False
+    message: Optional[str] = None
 
 
 class OTPRequest(BaseModel):
@@ -65,6 +68,56 @@ class TokenData(BaseModel):
     email: str
     subscription_tier: str
     exp: datetime
+
+
+class TwoFactorSetupRequest(BaseModel):
+    """Request to setup 2FA"""
+    pass
+
+
+class TwoFactorSetupResponse(BaseModel):
+    """Response for 2FA setup"""
+    secret: str
+    qr_code: str
+    backup_codes: list[str]
+    manual_entry_key: str
+
+
+class TwoFactorVerifyRequest(BaseModel):
+    """Request to verify 2FA setup"""
+    code: str
+
+
+class TwoFactorVerifyResponse(BaseModel):
+    """Response for 2FA verification"""
+    success: bool
+    message: str
+
+
+class TwoFactorLoginRequest(BaseModel):
+    """Request for 2FA during login"""
+    user_id: str
+    code: str
+
+
+class TwoFactorLoginResponse(BaseModel):
+    """Response for 2FA login"""
+    success: bool
+    requires_2fa: bool = False
+    message: Optional[str] = None
+
+
+class TwoFactorStatusResponse(BaseModel):
+    """Response for 2FA status"""
+    enabled: bool
+    backup_codes_count: int
+    verified_at: Optional[datetime] = None
+    created_at: Optional[datetime] = None
+
+
+class BackupCodesResponse(BaseModel):
+    """Response for backup codes"""
+    backup_codes: list[str]
 
 
 # Import User here to avoid circular imports
