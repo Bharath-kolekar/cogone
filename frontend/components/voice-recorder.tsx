@@ -139,7 +139,7 @@ export function VoiceRecorder({
     try {
       // Try local speech recognition first
       if (browserSupport.webSpeech) {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+        const recognition = new ((window.SpeechRecognition as any) || (window.webkitSpeechRecognition as any))()
         recognition.continuous = false
         recognition.interimResults = false
         recognition.lang = 'en-IN' // Indian English
