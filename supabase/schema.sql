@@ -372,7 +372,7 @@ BEGIN
     FROM rate_limits
     WHERE user_id = p_user_id 
     AND endpoint = p_endpoint
-    AND window_start > NOW() - INTERVAL '1 minute' * p_window_minutes;
+    AND window_start > NOW() - make_interval(mins := p_window_minutes);
     
     RETURN current_count < p_limit;
 END;
