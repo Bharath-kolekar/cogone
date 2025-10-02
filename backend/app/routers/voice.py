@@ -60,12 +60,14 @@ async def transcribe_voice(
             )
         
         # Validate file size
-        if audio_file.size > settings.MAX_FILE_SIZE_MB * 1024 * 1024:
+        content = await audio_file.read()
+        if len(content) > settings.MAX_FILE_SIZE_MB * 1024 * 1024:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"File size must be less than {settings.MAX_FILE_SIZE_MB}MB"
             )
-        
+        # Reset file pointer so downstream consumers can read the file again
+        audio_file.file.seek(0)
         voice_service = VoiceService()
         
         # Try local transcription first if enabled
