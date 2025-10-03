@@ -11,6 +11,7 @@ from .admin import router as admin_router
 from .billing import router as billing_router
 from .meta_ai_orchestrator import router as meta_orchestrator_router
 from .meta_ai_orchestrator_enhanced import router as enhanced_meta_orchestrator_router
+from .meta_ai_orchestrator_optimized import router as optimized_meta_orchestrator_router
 from .profiles import router as profiles_router
 from .transcribe import router as transcribe_router
 from .webhooks import router as webhooks_router
@@ -34,6 +35,7 @@ router.include_router(admin_router, prefix="/admin", tags=["admin"])
 router.include_router(billing_router, prefix="/billing", tags=["billing"])
 router.include_router(meta_orchestrator_router, prefix="/meta-orchestrator", tags=["meta-orchestrator"])
 router.include_router(enhanced_meta_orchestrator_router, prefix="/meta-orchestrator-enhanced", tags=["meta-orchestrator-enhanced"])
+router.include_router(optimized_meta_orchestrator_router, prefix="/meta-orchestrator-optimized", tags=["meta-orchestrator-optimized"])
 router.include_router(profiles_router, prefix="/profiles", tags=["profiles"])
 router.include_router(transcribe_router, prefix="/transcribe", tags=["transcribe"])
 router.include_router(webhooks_router, prefix="/webhooks", tags=["webhooks"])
