@@ -134,8 +134,8 @@ export default function ThresholdComparisonTable() {
               {features.map((feature) => (
                 <div key={feature.name} className="flex justify-between items-center">
                   <span className="text-sm font-medium text-gray-700">{feature.name}:</span>
-                  <span className={`text-sm font-semibold ${getFeatureColor(feature[threshold.id as keyof ComparisonFeature], threshold.id)}`}>
-                    {feature[threshold.id as keyof ComparisonFeature]}
+                  <span className={`text-sm font-semibold ${getFeatureColor(feature[threshold.id as keyof ComparisonFeature] || '', threshold.id)}`}>
+                    {feature[threshold.id as keyof ComparisonFeature] || ''}
                   </span>
                 </div>
               ))}

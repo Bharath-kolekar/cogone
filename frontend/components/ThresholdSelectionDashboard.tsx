@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 
 interface ThresholdOption {
   id: string;
@@ -339,7 +339,7 @@ export default function ThresholdSelectionDashboard() {
                     </span>
                   )}
                 </div>
-                <CardDescription>{option.description}</CardDescription>
+                <CardDescription>{option.name}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -413,7 +413,7 @@ export default function ThresholdSelectionDashboard() {
                     </span>
                   )}
                 </div>
-                <CardDescription>{option.description}</CardDescription>
+                <CardDescription>{option.name}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">

@@ -144,7 +144,7 @@ export function VoiceRecorder({
         recognition.interimResults = false
         recognition.lang = 'en-IN' // Indian English
         
-        recognition.onresult = (event) => {
+        recognition.onresult = (event: any) => {
           const transcript = event.results[0][0].transcript
           setTranscript(transcript)
           onTranscript(transcript)

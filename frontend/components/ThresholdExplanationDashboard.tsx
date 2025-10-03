@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 
 interface ExampleScenario {
   id: string;

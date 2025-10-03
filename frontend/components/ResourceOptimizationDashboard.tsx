@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 
 interface ResourceOptimizationMetrics {
   memory_usage: number;
@@ -184,7 +184,7 @@ export default function ResourceOptimizationDashboard() {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
-                {(metrics?.cache_hit_rate * 100)?.toFixed(1) || '0.0'}%
+                {((metrics?.cache_hit_rate || 0) * 100).toFixed(1)}%
               </div>
               <div className="text-sm text-gray-600">Cache Hit Rate</div>
             </div>
@@ -347,11 +347,11 @@ export default function ResourceOptimizationDashboard() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Cache Hit Rate:</span>
-              <span className="font-semibold text-green-600">{(metrics?.cache_hit_rate * 100)?.toFixed(1) || '0.0'}%</span>
+              <span className="font-semibold text-green-600">{((metrics?.cache_hit_rate || 0) * 100).toFixed(1)}%</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Resource Efficiency:</span>
-              <span className="font-semibold text-orange-600">{(metrics?.resource_efficiency * 100)?.toFixed(1) || '0.0'}%</span>
+              <span className="font-semibold text-orange-600">{((metrics?.resource_efficiency || 0) * 100).toFixed(1)}%</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Memory Savings:</span>

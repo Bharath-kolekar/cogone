@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 
 interface CostOptimizationMetrics {
   total_requests: number;
@@ -371,7 +371,7 @@ export default function CostOptimizationDashboard() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Cost Efficiency:</span>
-              <span className="font-semibold text-indigo-600">{(metrics?.cost_efficiency * 100)?.toFixed(1) || '0.0'}%</span>
+              <span className="font-semibold text-indigo-600">{((metrics?.cost_efficiency || 0) * 100).toFixed(1)}%</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Infrastructure Savings:</span>
