@@ -64,16 +64,21 @@ class Settings(BaseSettings):
     TWILIO_AUTH_TOKEN: str
     TWILIO_PHONE_NUMBER: str
     
-    # AWS SNS (Alternative SMS)
-    AWS_ACCESS_KEY_ID: Optional[str] = None
-    AWS_SECRET_ACCESS_KEY: Optional[str] = None
-    AWS_REGION: str = "ap-south-1"
+    # Cloudflare Services (Free Tier)
+    CLOUDFLARE_API_TOKEN: Optional[str] = None
+    CLOUDFLARE_ACCOUNT_ID: Optional[str] = None
+    CLOUDFLARE_ZONE_ID: Optional[str] = None
     
-    # Email Configuration
-    SMTP_HOST: str = "smtp.gmail.com"
+    # Email Configuration (PrivateEmail via Namecheap)
+    SMTP_HOST: str = "mail.cognomega.com"
     SMTP_PORT: int = 587
-    SMTP_USER: str
+    SMTP_USER: str = "postmaster@cognomega.com"
     SMTP_PASS: str
+    
+    # WhatsApp Configuration (Free Tier)
+    WHATSAPP_WEBHOOK_URL: Optional[str] = None
+    WHATSAPP_VERIFY_TOKEN: Optional[str] = None
+    WHATSAPP_ACCESS_TOKEN: Optional[str] = None
     
     # Rate Limiting
     RATE_LIMIT_REQUESTS_PER_MINUTE: int = 60
