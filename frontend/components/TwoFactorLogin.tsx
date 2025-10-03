@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { toast } from './ui/use-toast';
+import { toast } from '../hooks/use-toast';
 
 interface TwoFactorLoginProps {
   userId: string;

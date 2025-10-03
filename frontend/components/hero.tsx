@@ -12,7 +12,12 @@ export function Hero() {
   const [isRecording, setIsRecording] = useState(false)
   const [transcript, setTranscript] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
-  const [generatedApp, setGeneratedApp] = useState(null)
+  const [generatedApp, setGeneratedApp] = useState<{
+    id: string;
+    title: string;
+    preview_url: string;
+    status: string;
+  } | null>(null)
 
   const handleVoiceCommand = async (command: string) => {
     setTranscript(command)

@@ -422,6 +422,188 @@ LEFT JOIN payments p ON u.id = p.user_id
 LEFT JOIN referrals r ON u.id = r.referrer_id
 GROUP BY u.id, u.email, u.full_name, u.points, u.level, u.subscription_tier, u.created_at;
 
+-- ===== AI Agent System Tables =====
+
+-- AI Agents table
+CREATE TABLE ai_agents (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    type VARCHAR(50) NOT NULL DEFAULT 'personal_assistant',
+    status VARCHAR(20) DEFAULT 'inactive',
+    priority VARCHAR(20) DEFAULT 'medium',
+    capabilities TEXT[] DEFAULT '{}',
+    config JSONB DEFAULT '{}',
+    memory JSONB DEFAULT '{}',
+    metrics JSONB DEFAULT '{}',
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    team_id UUID,
+    is_public BOOLEAN DEFAULT false,
+    use_local_models BOOLEAN DEFAULT true,
+    fallback_providers TEXT[] DEFAULT '{}',
+    resource_limits JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_active TIMESTAMP WITH TIME ZONE
+);
+
+-- AI Agent Tasks table
+CREATE TABLE ai_agent_tasks (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    agent_id UUID REFERENCES ai_agents(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    input_data JSONB DEFAULT '{}',
+    expected_output TEXT,
+    status VARCHAR(20) DEFAULT 'pending',
+    priority VARCHAR(20) DEFAULT 'medium',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    started_at TIMESTAMP WITH TIME ZONE,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    scheduled_for TIMESTAMP WITH TIME ZONE,
+    output_data JSONB DEFAULT '{}',
+    error_message TEXT,
+    execution_time FLOAT,
+    use_local_processing BOOLEAN DEFAULT true,
+    max_cost DECIMAL(10,4) DEFAULT 0.0,
+    resource_usage JSONB DEFAULT '{}'
+);
+
+-- AI Agent Interactions table
+CREATE TABLE ai_agent_interactions (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    agent_id UUID REFERENCES ai_agents(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    task_id UUID REFERENCES ai_agent_tasks(id) ON DELETE SET NULL,
+    input_message TEXT NOT NULL,
+    output_message TEXT NOT NULL,
+    interaction_type VARCHAR(50) DEFAULT 'conversation',
+    context_data JSONB DEFAULT '{}',
+    session_id VARCHAR(255),
+    response_time FLOAT DEFAULT 0.0,
+    tokens_used INTEGER DEFAULT 0,
+    cost DECIMAL(10,4) DEFAULT 0.0,
+    user_rating INTEGER CHECK (user_rating >= 1 AND user_rating <= 5),
+    user_feedback TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI Agent Workflows table
+CREATE TABLE ai_agent_workflows (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    trigger_type VARCHAR(50) DEFAULT 'manual',
+    trigger_config JSONB DEFAULT '{}',
+    steps JSONB DEFAULT '[]',
+    primary_agent_id UUID REFERENCES ai_agents(id) ON DELETE CASCADE,
+    fallback_agent_ids UUID[] DEFAULT '{}',
+    max_concurrent INTEGER DEFAULT 1,
+    timeout INTEGER DEFAULT 300,
+    retry_policy JSONB DEFAULT '{}',
+    is_active BOOLEAN DEFAULT true,
+    last_run TIMESTAMP WITH TIME ZONE,
+    next_run TIMESTAMP WITH TIME ZONE,
+    use_local_agents_only BOOLEAN DEFAULT true,
+    cost_limit DECIMAL(10,4) DEFAULT 0.0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- AI Agent Analytics table
+CREATE TABLE ai_agent_analytics (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    agent_id UUID REFERENCES ai_agents(id) ON DELETE CASCADE,
+    period VARCHAR(20) NOT NULL, -- daily, weekly, monthly
+    total_interactions INTEGER DEFAULT 0,
+    unique_users INTEGER DEFAULT 0,
+    average_response_time FLOAT DEFAULT 0.0,
+    success_rate FLOAT DEFAULT 0.0,
+    user_satisfaction FLOAT DEFAULT 0.0,
+    total_cost DECIMAL(10,4) DEFAULT 0.0,
+    cost_per_interaction DECIMAL(10,4) DEFAULT 0.0,
+    capability_usage JSONB DEFAULT '{}',
+    local_model_usage INTEGER DEFAULT 0,
+    cloud_model_usage INTEGER DEFAULT 0,
+    cost_savings DECIMAL(10,4) DEFAULT 0.0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Indexes for AI Agent tables
+CREATE INDEX idx_ai_agents_user_id ON ai_agents(user_id);
+CREATE INDEX idx_ai_agents_type ON ai_agents(type);
+CREATE INDEX idx_ai_agents_status ON ai_agents(status);
+CREATE INDEX idx_ai_agents_is_public ON ai_agents(is_public);
+CREATE INDEX idx_ai_agents_created_at ON ai_agents(created_at);
+
+CREATE INDEX idx_ai_agent_tasks_agent_id ON ai_agent_tasks(agent_id);
+CREATE INDEX idx_ai_agent_tasks_user_id ON ai_agent_tasks(user_id);
+CREATE INDEX idx_ai_agent_tasks_type ON ai_agent_tasks(type);
+CREATE INDEX idx_ai_agent_tasks_status ON ai_agent_tasks(status);
+CREATE INDEX idx_ai_agent_tasks_created_at ON ai_agent_tasks(created_at);
+
+CREATE INDEX idx_ai_agent_interactions_agent_id ON ai_agent_interactions(agent_id);
+CREATE INDEX idx_ai_agent_interactions_user_id ON ai_agent_interactions(user_id);
+CREATE INDEX idx_ai_agent_interactions_session_id ON ai_agent_interactions(session_id);
+CREATE INDEX idx_ai_agent_interactions_created_at ON ai_agent_interactions(created_at);
+
+CREATE INDEX idx_ai_agent_workflows_primary_agent_id ON ai_agent_workflows(primary_agent_id);
+CREATE INDEX idx_ai_agent_workflows_is_active ON ai_agent_workflows(is_active);
+
+CREATE INDEX idx_ai_agent_analytics_agent_id ON ai_agent_analytics(agent_id);
+CREATE INDEX idx_ai_agent_analytics_period ON ai_agent_analytics(period);
+CREATE INDEX idx_ai_agent_analytics_created_at ON ai_agent_analytics(created_at);
+
+-- Performance Optimization Indexes
+-- Compound indexes for frequently used query patterns
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_agents_user_status ON ai_agents(user_id, status) WHERE status = 'active';
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_tasks_agent_status ON ai_agent_tasks(agent_id, status) WHERE status IN ('pending', 'in_progress');
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_interactions_agent_date ON ai_agent_interactions(agent_id, created_at DESC);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_interactions_user_session ON ai_agent_interactions(user_id, session_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_goal_states_goal_status ON goal_states(goal_id, status) WHERE status = 'active';
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_violations_goal_date ON goal_violations(goal_id, detected_at DESC);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_analytics_agent_period ON ai_agent_analytics(agent_id, period, created_at DESC);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_voice_commands_user_date ON voice_commands(user_id, created_at DESC);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_apps_user_status ON generated_apps(user_id, status) WHERE status = 'generating';
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_payments_user_status ON payments(user_id, status) WHERE status = 'pending';
+
+-- Performance monitoring indexes
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_ai_agents_last_active ON ai_agents(last_active) WHERE last_active IS NOT NULL;
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_ai_agent_tasks_scheduled ON ai_agent_tasks(scheduled_for) WHERE scheduled_for IS NOT NULL;
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_ai_agent_interactions_rating ON ai_agent_interactions(user_rating) WHERE user_rating IS NOT NULL;
+
+-- Triggers for updated_at
+CREATE TRIGGER update_ai_agents_updated_at BEFORE UPDATE ON ai_agents FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_ai_agent_workflows_updated_at BEFORE UPDATE ON ai_agent_workflows FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- RLS Policies for AI Agent tables
+ALTER TABLE ai_agents ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own AI agents" ON ai_agents FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can view public AI agents" ON ai_agents FOR SELECT USING (is_public = true);
+CREATE POLICY "Users can manage own AI agents" ON ai_agents FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Service role can manage all AI agents" ON ai_agents FOR ALL USING (auth.role() = 'service_role');
+
+ALTER TABLE ai_agent_tasks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own AI agent tasks" ON ai_agent_tasks FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own AI agent tasks" ON ai_agent_tasks FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Service role can manage all AI agent tasks" ON ai_agent_tasks FOR ALL USING (auth.role() = 'service_role');
+
+ALTER TABLE ai_agent_interactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own AI agent interactions" ON ai_agent_interactions FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own AI agent interactions" ON ai_agent_interactions FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Service role can manage all AI agent interactions" ON ai_agent_interactions FOR ALL USING (auth.role() = 'service_role');
+
+ALTER TABLE ai_agent_workflows ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own AI agent workflows" ON ai_agent_workflows FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own AI agent workflows" ON ai_agent_workflows FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Service role can manage all AI agent workflows" ON ai_agent_workflows FOR ALL USING (auth.role() = 'service_role');
+
+ALTER TABLE ai_agent_analytics ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own AI agent analytics" ON ai_agent_analytics FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Service role can manage all AI agent analytics" ON ai_agent_analytics FOR ALL USING (auth.role() = 'service_role');
+
 -- Grant permissions
 GRANT USAGE ON SCHEMA public TO anon, authenticated;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated;

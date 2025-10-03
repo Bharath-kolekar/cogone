@@ -30,6 +30,7 @@ aws-credentials
 # Node / Frontend artifacts
 # -------------------------
 # Dependencies
+node_modules/
 /node_modules/
 /.pnpm-store/
 /.pnpm/
@@ -202,6 +203,17 @@ dist/
 build/
 typings/
 *.tsbuildinfo
+
+# Frontend specific
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+frontend/.env.local
+frontend/.env.production.local
+frontend/.env.development.local
+frontend/node_modules/
+frontend/next-env.d.ts
 
 # JS bundles
 *.bundle.js

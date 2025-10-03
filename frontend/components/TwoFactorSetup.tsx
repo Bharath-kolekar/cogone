@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { toast } from './ui/use-toast';
+import { toast } from '../hooks/use-toast';
 
 interface TwoFactorSetupProps {
   onSetupComplete: () => void;
