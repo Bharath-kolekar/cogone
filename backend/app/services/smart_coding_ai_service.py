@@ -1,21 +1,37 @@
 """
-Smart Coding AI service with Cursor/GitHub Copilot-like capabilities
+Smart Coding AI Service with in-editor code completion
+Provides real-time code suggestions, completions, and intelligent assistance
 """
 
 import structlog
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime, timedelta
 import asyncio
-import uuid
+import json
 import re
+from typing import Dict, List, Optional, Any, Tuple, Union
+from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
+import uuid
 
 logger = structlog.get_logger()
 
 
-class CodeLanguage(str, Enum):
-    """Programming languages"""
+class CompletionType(str, Enum):
+    """Code completion types"""
+    FUNCTION = "function"
+    VARIABLE = "variable"
+    CLASS = "class"
+    IMPORT = "import"
+    PARAMETER = "parameter"
+    METHOD = "method"
+    PROPERTY = "property"
+    TYPE = "type"
+    KEYWORD = "keyword"
+    SNIPPET = "snippet"
+
+
+class Language(str, Enum):
+    """Supported programming languages"""
     PYTHON = "python"
     JAVASCRIPT = "javascript"
     TYPESCRIPT = "typescript"
@@ -31,828 +47,668 @@ class CodeLanguage(str, Enum):
     HTML = "html"
     CSS = "css"
     SQL = "sql"
+    YAML = "yaml"
+    JSON = "json"
+    MARKDOWN = "markdown"
 
 
-class CodeTaskType(str, Enum):
-    """Code task types"""
+class SuggestionType(str, Enum):
+    """Suggestion types"""
     COMPLETION = "completion"
-    GENERATION = "generation"
-    REFACTORING = "refactoring"
-    DEBUGGING = "debugging"
+    HINT = "hint"
+    ERROR_FIX = "error_fix"
+    REFACTOR = "refactor"
     OPTIMIZATION = "optimization"
     DOCUMENTATION = "documentation"
-    TESTING = "testing"
-    REVIEW = "review"
 
 
-class CodeComplexity(str, Enum):
-    """Code complexity levels"""
-    SIMPLE = "simple"
-    MEDIUM = "medium"
-    COMPLEX = "complex"
-    ADVANCED = "advanced"
+@dataclass
+class CodeCompletion:
+    """Code completion model"""
+    completion_id: str
+    text: str
+    completion_type: CompletionType
+    language: Language
+    confidence: float
+    start_line: int
+    end_line: int
+    start_column: int
+    end_column: int
+    description: str
+    documentation: Optional[str] = None
+    parameters: Optional[List[Dict]] = None
+    return_type: Optional[str] = None
+    created_at: datetime
 
 
 @dataclass
 class CodeSuggestion:
     """Code suggestion model"""
     suggestion_id: str
-    code: str
-    language: CodeLanguage
-    task_type: CodeTaskType
-    complexity: CodeComplexity
+    suggestion_type: SuggestionType
+    text: str
+    language: Language
     confidence: float
-    explanation: str
-    alternatives: List[str]
-    performance_notes: str
-    security_notes: str
-    created_at: datetime
-
-
-@dataclass
-class CodeWorkspace:
-    """Code workspace model"""
-    workspace_id: str
-    name: str
+    start_line: int
+    end_line: int
+    start_column: int
+    end_column: int
     description: str
-    language: CodeLanguage
-    files: List[str]
-    dependencies: List[str]
-    project_type: str
-    ai_context: Dict[str, Any]
+    priority: int  # 1-10, higher is more important
+    auto_apply: bool = False
     created_at: datetime
-    updated_at: datetime
 
 
 @dataclass
-class CodeReview:
-    """Code review model"""
-    review_id: str
-    code: str
-    language: CodeLanguage
-    issues: List[Dict[str, Any]]
-    suggestions: List[str]
-    quality_score: float
-    security_score: float
-    performance_score: float
-    maintainability_score: float
-    created_at: datetime
+class CodeContext:
+    """Code context model"""
+    file_path: str
+    language: Language
+    content: str
+    cursor_position: Tuple[int, int]  # (line, column)
+    selection: Optional[str] = None
+    imports: List[str] = None
+    functions: List[Dict] = None
+    classes: List[Dict] = None
+    variables: List[Dict] = None
 
 
 class SmartCodingAI:
-    """Smart Coding AI service with advanced capabilities"""
+    """Smart Coding AI service with in-editor code completion"""
     
     def __init__(self):
-        self.code_suggestions: Dict[str, CodeSuggestion] = {}
-        self.workspaces: Dict[str, CodeWorkspace] = {}
-        self.code_reviews: Dict[str, CodeReview] = {}
-        self._initialize_templates()
+        self.completion_cache: Dict[str, List[CodeCompletion]] = {}
+        self.suggestion_cache: Dict[str, List[CodeSuggestion]] = {}
+        self.language_patterns = self._initialize_language_patterns()
+        self.completion_templates = self._initialize_completion_templates()
+        self._initialize_ai_models()
     
-    def _initialize_templates(self):
-        """Initialize code templates and patterns"""
-        self.code_templates = {
-            CodeLanguage.PYTHON: {
-                "api_endpoint": """
-@app.route('/api/{endpoint}', methods=['GET', 'POST'])
-def {function_name}():
-    try:
-        # Your code here
-        return jsonify({{'status': 'success', 'data': data}})
-    except Exception as e:
-        return jsonify({{'status': 'error', 'message': str(e)}}), 500
-""",
-                "class_template": """
-class {class_name}:
-    def __init__(self, {params}):
-        self.{params} = {params}
-    
-    def {method_name}(self):
-        # Your method implementation
-        pass
-""",
-                "async_function": """
-async def {function_name}({params}):
-    try:
-        # Async implementation
-        result = await some_async_operation()
-        return result
-    except Exception as e:
-        logger.error(f"Error in {function_name}: {{e}}")
-        raise
-"""
+    def _initialize_language_patterns(self) -> Dict[Language, Dict[str, str]]:
+        """Initialize language-specific patterns"""
+        return {
+            Language.PYTHON: {
+                "function": r"def\s+(\w+)\s*\(",
+                "class": r"class\s+(\w+)\s*[\(:]",
+                "variable": r"(\w+)\s*=",
+                "import": r"(?:from\s+(\w+)\s+)?import\s+(\w+)",
+                "method": r"def\s+(\w+)\s*\(",
+                "property": r"@property\s*\n\s*def\s+(\w+)\s*\(",
             },
-            CodeLanguage.JAVASCRIPT: {
-                "react_component": """
-import React, {{ useState, useEffect }} from 'react';
-
-const {component_name} = ({{ {props} }}) => {{
-    const [state, setState] = useState(null);
-    
-    useEffect(() => {{
-        // Effect logic
-    }}, []);
-    
-    return (
-        <div>
-            {/* Component JSX */}
-        </div>
-    );
-}};
-
-export default {component_name};
-""",
-                "api_function": """
-const {function_name} = async ({params}) => {{
-    try {{
-        const response = await fetch('/api/{endpoint}', {{
-            method: 'POST',
-            headers: {{
-                'Content-Type': 'application/json',
-            }},
-            body: JSON.stringify({{ {params} }})
-        }});
-        
-        const data = await response.json();
-        return data;
-    }} catch (error) {{
-        console.error('Error:', error);
-        throw error;
-    }}
-}};
-"""
+            Language.JAVASCRIPT: {
+                "function": r"function\s+(\w+)\s*\(",
+                "class": r"class\s+(\w+)\s*[{\s]",
+                "variable": r"(?:const|let|var)\s+(\w+)\s*=",
+                "import": r"import\s+(?:\{([^}]+)\}\s+from\s+)?['\"]([^'\"]+)['\"]",
+                "method": r"(\w+)\s*:\s*function\s*\(",
+                "property": r"(\w+)\s*:\s*",
             },
-            CodeLanguage.TYPESCRIPT: {
-                "interface": """
-interface {interface_name} {{
-    {properties}: {types};
-}}
-
-class {class_name} implements {interface_name} {{
-    {properties}: {types};
-    
-    constructor({params}: {interface_name}) {{
-        {assignments}
-    }}
-}}
-""",
-                "api_service": """
-export class {service_name} {{
-    private baseUrl: string;
-    
-    constructor(baseUrl: string) {{
-        this.baseUrl = baseUrl;
-    }}
-    
-    async {method_name}({params}): Promise<{return_type}> {{
-        try {{
-            const response = await fetch(`${{this.baseUrl}}/{endpoint}`, {{
-                method: '{http_method}',
-                headers: {{
-                    'Content-Type': 'application/json',
-                }},
-                body: JSON.stringify({{ {params} }})
-            }});
-            
-            if (!response.ok) {{
-                throw new Error(`HTTP error! status: ${{response.status}}`);
-            }}
-            
-            return await response.json();
-        }} catch (error) {{
-            console.error('API Error:', error);
-            throw error;
-        }}
-    }}
-}}
-"""
-            }
+            Language.TYPESCRIPT: {
+                "function": r"function\s+(\w+)\s*\(",
+                "class": r"class\s+(\w+)\s*[{\s]",
+                "variable": r"(?:const|let|var)\s+(\w+)\s*:",
+                "import": r"import\s+(?:\{([^}]+)\}\s+from\s+)?['\"]([^'\"]+)['\"]",
+                "method": r"(\w+)\s*:\s*\([^)]*\)\s*=>",
+                "property": r"(\w+)\s*:\s*",
+                "type": r"type\s+(\w+)\s*=",
+                "interface": r"interface\s+(\w+)\s*[{\s]",
+            },
+            Language.JAVA: {
+                "function": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:void|\w+)\s+(\w+)\s*\(",
+                "class": r"(?:public\s+)?class\s+(\w+)\s*[{\s]",
+                "variable": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:final\s+)?\s*(\w+)\s+(\w+)\s*=",
+                "import": r"import\s+([^;]+);",
+                "method": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:void|\w+)\s+(\w+)\s*\(",
+                "property": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:final\s+)?\s*(\w+)\s+(\w+)\s*;",
+            },
+            Language.CSHARP: {
+                "function": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:void|\w+)\s+(\w+)\s*\(",
+                "class": r"(?:public\s+)?class\s+(\w+)\s*[{\s]",
+                "variable": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:readonly\s+)?\s*(\w+)\s+(\w+)\s*=",
+                "import": r"using\s+([^;]+);",
+                "method": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:void|\w+)\s+(\w+)\s*\(",
+                "property": r"(?:public|private|protected)?\s*(?:static\s+)?\s*(?:readonly\s+)?\s*(\w+)\s+(\w+)\s*{\s*get;\s*set;\s*}",
+            },
         }
     
-    async def generate_code(self, prompt: str, language: CodeLanguage, context: Dict[str, Any] = None) -> CodeSuggestion:
-        """Generate code based on prompt and context"""
+    def _initialize_completion_templates(self) -> Dict[Language, Dict[str, List[str]]]:
+        """Initialize completion templates for each language"""
+        return {
+            Language.PYTHON: {
+                "function": [
+                    "def {name}({params}):\n    \"\"\"{description}\"\"\"\n    {body}",
+                    "async def {name}({params}):\n    \"\"\"{description}\"\"\"\n    {body}",
+                ],
+                "class": [
+                    "class {name}:\n    \"\"\"{description}\"\"\"\n    \n    def __init__(self{params}):\n        {body}",
+                    "class {name}({base}):\n    \"\"\"{description}\"\"\"\n    \n    def __init__(self{params}):\n        super().__init__()\n        {body}",
+                ],
+                "import": [
+                    "import {module}",
+                    "from {module} import {item}",
+                    "from {module} import {item} as {alias}",
+                ],
+            },
+            Language.JAVASCRIPT: {
+                "function": [
+                    "function {name}({params}) {\n    {body}\n}",
+                    "const {name} = ({params}) => {\n    {body}\n};",
+                    "async function {name}({params}) {\n    {body}\n}",
+                ],
+                "class": [
+                    "class {name} {\n    constructor({params}) {\n        {body}\n    }\n}",
+                    "class {name} extends {base} {\n    constructor({params}) {\n        super();\n        {body}\n    }\n}",
+                ],
+                "import": [
+                    "import { {item} } from '{module}';",
+                    "import {item} from '{module}';",
+                    "import * as {alias} from '{module}';",
+                ],
+            },
+            Language.TYPESCRIPT: {
+                "function": [
+                    "function {name}({params}): {return_type} {\n    {body}\n}",
+                    "const {name} = ({params}): {return_type} => {\n    {body}\n};",
+                    "async function {name}({params}): Promise<{return_type}> {\n    {body}\n}",
+                ],
+                "class": [
+                    "class {name} {\n    constructor({params}) {\n        {body}\n    }\n}",
+                    "class {name} extends {base} {\n    constructor({params}) {\n        super();\n        {body}\n    }\n}",
+                ],
+                "interface": [
+                    "interface {name} {\n    {properties}\n}",
+                ],
+                "type": [
+                    "type {name} = {definition};",
+                ],
+            },
+        }
+    
+    def _initialize_ai_models(self):
+        """Initialize AI models for code completion"""
+        # This would integrate with actual AI models
+        # For now, we'll use pattern-based completion
+        self.models_initialized = True
+        logger.info("AI models initialized for code completion")
+    
+    async def get_code_completions(
+        self, 
+        context: CodeContext, 
+        max_completions: int = 10
+    ) -> List[CodeCompletion]:
+        """Get code completions for the given context"""
         try:
-            # Analyze prompt for task type
-            task_type = await self._analyze_task_type(prompt)
-            complexity = await self._analyze_complexity(prompt, context)
+            cache_key = f"{context.file_path}:{context.cursor_position[0]}:{context.cursor_position[1]}"
             
-            # Generate code based on language and task type
-            if task_type == CodeTaskType.GENERATION:
-                code = await self._generate_new_code(prompt, language, context)
-            elif task_type == CodeTaskType.COMPLETION:
-                code = await self._complete_code(prompt, language, context)
-            elif task_type == CodeTaskType.REFACTORING:
-                code = await self._refactor_code(prompt, language, context)
-            elif task_type == CodeTaskType.DEBUGGING:
-                code = await self._debug_code(prompt, language, context)
+            # Check cache first
+            if cache_key in self.completion_cache:
+                return self.completion_cache[cache_key][:max_completions]
+            
+            completions = []
+            
+            # Get completions based on language
+            if context.language == Language.PYTHON:
+                completions = await self._get_python_completions(context)
+            elif context.language == Language.JAVASCRIPT:
+                completions = await self._get_javascript_completions(context)
+            elif context.language == Language.TYPESCRIPT:
+                completions = await self._get_typescript_completions(context)
+            elif context.language == Language.JAVA:
+                completions = await self._get_java_completions(context)
+            elif context.language == Language.CSHARP:
+                completions = await self._get_csharp_completions(context)
             else:
-                code = await self._generate_generic_code(prompt, language, context)
+                completions = await self._get_generic_completions(context)
             
-            # Generate explanation and alternatives
-            explanation = await self._generate_explanation(code, language, task_type)
-            alternatives = await self._generate_alternatives(prompt, language, context)
+            # Sort by confidence
+            completions.sort(key=lambda x: x.confidence, reverse=True)
             
-            # Analyze performance and security
-            performance_notes = await self._analyze_performance(code, language)
-            security_notes = await self._analyze_security(code, language)
+            # Cache results
+            self.completion_cache[cache_key] = completions
             
-            suggestion = CodeSuggestion(
-                suggestion_id=str(uuid.uuid4()),
-                code=code,
-                language=language,
-                task_type=task_type,
-                complexity=complexity,
-                confidence=0.95,  # High confidence for AI-generated code
-                explanation=explanation,
-                alternatives=alternatives,
-                performance_notes=performance_notes,
-                security_notes=security_notes,
-                created_at=datetime.now()
-            )
+            logger.info("Code completions generated", 
+                       count=len(completions), 
+                       language=context.language.value)
             
-            self.code_suggestions[suggestion.suggestion_id] = suggestion
-            
-            logger.info("Code generated", suggestion_id=suggestion.suggestion_id, language=language, task_type=task_type)
-            return suggestion
+            return completions[:max_completions]
             
         except Exception as e:
-            logger.error("Failed to generate code", error=str(e))
-            raise e
-    
-    async def _analyze_task_type(self, prompt: str) -> CodeTaskType:
-        """Analyze prompt to determine task type"""
-        prompt_lower = prompt.lower()
-        
-        if any(word in prompt_lower for word in ["create", "generate", "write", "build", "make"]):
-            return CodeTaskType.GENERATION
-        elif any(word in prompt_lower for word in ["complete", "finish", "continue"]):
-            return CodeTaskType.COMPLETION
-        elif any(word in prompt_lower for word in ["refactor", "improve", "optimize", "clean"]):
-            return CodeTaskType.REFACTORING
-        elif any(word in prompt_lower for word in ["debug", "fix", "error", "bug"]):
-            return CodeTaskType.DEBUGGING
-        elif any(word in prompt_lower for word in ["test", "testing", "unit test"]):
-            return CodeTaskType.TESTING
-        elif any(word in prompt_lower for word in ["document", "comment", "explain"]):
-            return CodeTaskType.DOCUMENTATION
-        else:
-            return CodeTaskType.GENERATION
-    
-    async def _analyze_complexity(self, prompt: str, context: Dict[str, Any]) -> CodeComplexity:
-        """Analyze code complexity"""
-        prompt_lower = prompt.lower()
-        
-        if any(word in prompt_lower for word in ["simple", "basic", "hello world", "hello"]):
-            return CodeComplexity.SIMPLE
-        elif any(word in prompt_lower for word in ["advanced", "complex", "sophisticated", "enterprise"]):
-            return CodeComplexity.ADVANCED
-        elif any(word in prompt_lower for word in ["algorithm", "data structure", "optimization"]):
-            return CodeComplexity.COMPLEX
-        else:
-            return CodeComplexity.MEDIUM
-    
-    async def _generate_new_code(self, prompt: str, language: CodeLanguage, context: Dict[str, Any]) -> str:
-        """Generate new code from scratch"""
-        try:
-            if language == CodeLanguage.PYTHON:
-                return await self._generate_python_code(prompt, context)
-            elif language == CodeLanguage.JAVASCRIPT:
-                return await self._generate_javascript_code(prompt, context)
-            elif language == CodeLanguage.TYPESCRIPT:
-                return await self._generate_typescript_code(prompt, context)
-            else:
-                return await self._generate_generic_code(prompt, language, context)
-                
-        except Exception as e:
-            logger.error("Failed to generate new code", error=str(e))
-            return f"# Error generating code: {str(e)}"
-    
-    async def _generate_python_code(self, prompt: str, context: Dict[str, Any]) -> str:
-        """Generate Python code"""
-        try:
-            if "api" in prompt.lower() or "endpoint" in prompt.lower():
-                return self.code_templates[CodeLanguage.PYTHON]["api_endpoint"].format(
-                    endpoint="users",
-                    function_name="get_users"
-                )
-            elif "class" in prompt.lower():
-                return self.code_templates[CodeLanguage.PYTHON]["class_template"].format(
-                    class_name="User",
-                    params="name, email",
-                    method_name="get_info"
-                )
-            elif "async" in prompt.lower():
-                return self.code_templates[CodeLanguage.PYTHON]["async_function"].format(
-                    function_name="fetch_data",
-                    params="url"
-                )
-            else:
-                return f"""
-def {prompt.lower().replace(' ', '_')}():
-    \"\"\"
-    {prompt}
-    \"\"\"
-    # Implementation here
-    pass
-"""
-                
-        except Exception as e:
-            logger.error("Failed to generate Python code", error=str(e))
-            return "# Error generating Python code"
-    
-    async def _generate_javascript_code(self, prompt: str, context: Dict[str, Any]) -> str:
-        """Generate JavaScript code"""
-        try:
-            if "react" in prompt.lower() or "component" in prompt.lower():
-                return self.code_templates[CodeLanguage.JAVASCRIPT]["react_component"].format(
-                    component_name="MyComponent",
-                    props="title, description"
-                )
-            elif "api" in prompt.lower() or "fetch" in prompt.lower():
-                return self.code_templates[CodeLanguage.JAVASCRIPT]["api_function"].format(
-                    function_name="fetchData",
-                    params="url, options",
-                    endpoint="data"
-                )
-            else:
-                return f"""
-function {prompt.lower().replace(' ', '')}() {{
-    // {prompt}
-    // Implementation here
-}}
-"""
-                
-        except Exception as e:
-            logger.error("Failed to generate JavaScript code", error=str(e))
-            return "// Error generating JavaScript code"
-    
-    async def _generate_typescript_code(self, prompt: str, context: Dict[str, Any]) -> str:
-        """Generate TypeScript code"""
-        try:
-            if "interface" in prompt.lower() or "type" in prompt.lower():
-                return self.code_templates[CodeLanguage.TYPESCRIPT]["interface"].format(
-                    interface_name="User",
-                    properties="id, name, email",
-                    types="number, string, string",
-                    class_name="UserClass",
-                    params="user",
-                    assignments="this.id = user.id; this.name = user.name; this.email = user.email;"
-                )
-            elif "service" in prompt.lower() or "api" in prompt.lower():
-                return self.code_templates[CodeLanguage.TYPESCRIPT]["api_service"].format(
-                    service_name="ApiService",
-                    method_name="getData",
-                    params="id: number",
-                    return_type="Promise<any>",
-                    endpoint="data",
-                    http_method="GET"
-                )
-            else:
-                return f"""
-interface {prompt.replace(' ', '')} {{
-    // Define properties here
-}}
-
-function {prompt.lower().replace(' ', '')}(): {prompt.replace(' ', '')} {{
-    // Implementation here
-    return {{}};
-}}
-"""
-                
-        except Exception as e:
-            logger.error("Failed to generate TypeScript code", error=str(e))
-            return "// Error generating TypeScript code"
-    
-    async def _complete_code(self, prompt: str, language: CodeLanguage, context: Dict[str, Any]) -> str:
-        """Complete existing code"""
-        try:
-            # Analyze the incomplete code and provide completion
-            if language == CodeLanguage.PYTHON:
-                return """
-# Complete the implementation
-def complete_function():
-    # Your completion here
-    return result
-"""
-            elif language == CodeLanguage.JAVASCRIPT:
-                return """
-// Complete the implementation
-function completeFunction() {
-    // Your completion here
-    return result;
-}
-"""
-            else:
-                return f"// Complete: {prompt}"
-                
-        except Exception as e:
-            logger.error("Failed to complete code", error=str(e))
-            return f"// Error completing code: {str(e)}"
-    
-    async def _refactor_code(self, prompt: str, language: CodeLanguage, context: Dict[str, Any]) -> str:
-        """Refactor existing code"""
-        try:
-            # Provide refactored version
-            return f"""
-# Refactored version of: {prompt}
-# Improved for better readability, performance, and maintainability
-
-def refactored_function():
-    # Clean, optimized implementation
-    pass
-"""
-                
-        except Exception as e:
-            logger.error("Failed to refactor code", error=str(e))
-            return f"# Error refactoring code: {str(e)}"
-    
-    async def _debug_code(self, prompt: str, language: CodeLanguage, context: Dict[str, Any]) -> str:
-        """Debug code issues"""
-        try:
-            return f"""
-# Debugged version of: {prompt}
-# Fixed common issues and added error handling
-
-def debugged_function():
-    try:
-        # Fixed implementation
-        pass
-    except Exception as e:
-        print(f"Error: {{e}}")
-        # Handle error appropriately
-"""
-                
-        except Exception as e:
-            logger.error("Failed to debug code", error=str(e))
-            return f"# Error debugging code: {str(e)}"
-    
-    async def _generate_generic_code(self, prompt: str, language: CodeLanguage, context: Dict[str, Any]) -> str:
-        """Generate generic code"""
-        try:
-            return f"""
-# Generated code for: {prompt}
-# Language: {language.value}
-
-def generated_function():
-    # Implementation based on prompt
-    pass
-"""
-                
-        except Exception as e:
-            logger.error("Failed to generate generic code", error=str(e))
-            return f"# Error generating code: {str(e)}"
-    
-    async def _generate_explanation(self, code: str, language: CodeLanguage, task_type: CodeTaskType) -> str:
-        """Generate explanation for generated code"""
-        try:
-            return f"""
-This {language.value} code was generated for {task_type.value} task.
-
-Key features:
-- Clean, readable code structure
-- Proper error handling
-- Follows best practices for {language.value}
-- Optimized for performance and maintainability
-
-The code implements the requested functionality with proper documentation and error handling.
-"""
-                
-        except Exception as e:
-            logger.error("Failed to generate explanation", error=str(e))
-            return "Explanation not available"
-    
-    async def _generate_alternatives(self, prompt: str, language: CodeLanguage, context: Dict[str, Any]) -> List[str]:
-        """Generate alternative implementations"""
-        try:
-            alternatives = []
-            
-            # Generate different approaches
-            if language == CodeLanguage.PYTHON:
-                alternatives.extend([
-                    "Alternative 1: Using list comprehension",
-                    "Alternative 2: Using functional programming",
-                    "Alternative 3: Using object-oriented approach"
-                ])
-            elif language == CodeLanguage.JAVASCRIPT:
-                alternatives.extend([
-                    "Alternative 1: Using async/await",
-                    "Alternative 2: Using Promises",
-                    "Alternative 3: Using callbacks"
-                ])
-            
-            return alternatives
-            
-        except Exception as e:
-            logger.error("Failed to generate alternatives", error=str(e))
+            logger.error("Failed to get code completions", error=str(e))
             return []
     
-    async def _analyze_performance(self, code: str, language: CodeLanguage) -> str:
-        """Analyze code performance"""
-        try:
-            performance_notes = []
+    async def _get_python_completions(self, context: CodeContext) -> List[CodeCompletion]:
+        """Get Python-specific completions"""
+        completions = []
+        
+        # Built-in functions
+        builtin_functions = [
+            "print", "len", "str", "int", "float", "bool", "list", "dict", "set", "tuple",
+            "range", "enumerate", "zip", "map", "filter", "sorted", "reversed", "sum", "max", "min",
+            "abs", "round", "pow", "divmod", "bin", "hex", "oct", "chr", "ord", "ascii",
+            "repr", "eval", "exec", "compile", "hash", "id", "type", "isinstance", "issubclass",
+            "hasattr", "getattr", "setattr", "delattr", "dir", "vars", "locals", "globals",
+            "open", "input", "raw_input", "file", "help", "quit", "exit", "copyright", "credits", "license"
+        ]
+        
+        for func in builtin_functions:
+            if func.startswith(context.content.split()[-1] if context.content.split() else ""):
+                completions.append(CodeCompletion(
+                    completion_id=str(uuid.uuid4()),
+                    text=func,
+                    completion_type=CompletionType.FUNCTION,
+                    language=Language.PYTHON,
+                    confidence=0.9,
+                    start_line=context.cursor_position[0],
+                    end_line=context.cursor_position[0],
+                    start_column=context.cursor_position[1],
+                    end_column=context.cursor_position[1] + len(func),
+                    description=f"Built-in function: {func}",
+                    documentation=f"Python built-in function: {func}",
+                    return_type="Any"
+                ))
+        
+        # Common patterns
+        if "import" in context.content:
+            # Suggest common modules
+            common_modules = [
+                "os", "sys", "json", "datetime", "time", "random", "math", "re", "collections",
+                "itertools", "functools", "operator", "string", "io", "pathlib", "typing"
+            ]
             
-            # Check for performance issues
-            if "for loop" in code.lower():
-                performance_notes.append("Consider using list comprehension for better performance")
-            
-            if "database" in code.lower():
-                performance_notes.append("Add database indexing for better query performance")
-            
-            if "api" in code.lower():
-                performance_notes.append("Consider caching for API responses")
-            
-            return "; ".join(performance_notes) if performance_notes else "No performance issues detected"
-            
-        except Exception as e:
-            logger.error("Failed to analyze performance", error=str(e))
-            return "Performance analysis not available"
+            for module in common_modules:
+                completions.append(CodeCompletion(
+                    completion_id=str(uuid.uuid4()),
+                    text=module,
+                    completion_type=CompletionType.IMPORT,
+                    language=Language.PYTHON,
+                    confidence=0.8,
+                    start_line=context.cursor_position[0],
+                    end_line=context.cursor_position[0],
+                    start_column=context.cursor_position[1],
+                    end_column=context.cursor_position[1] + len(module),
+                    description=f"Import module: {module}",
+                    documentation=f"Python standard library module: {module}"
+                ))
+        
+        return completions
     
-    async def _analyze_security(self, code: str, language: CodeLanguage) -> str:
-        """Analyze code security"""
-        try:
-            security_notes = []
-            
-            # Check for security issues
-            if "sql" in code.lower() and "execute" in code.lower():
-                security_notes.append("Use parameterized queries to prevent SQL injection")
-            
-            if "password" in code.lower():
-                security_notes.append("Ensure password hashing and secure storage")
-            
-            if "input" in code.lower():
-                security_notes.append("Validate and sanitize all user inputs")
-            
-            return "; ".join(security_notes) if security_notes else "No security issues detected"
-            
-        except Exception as e:
-            logger.error("Failed to analyze security", error=str(e))
-            return "Security analysis not available"
+    async def _get_javascript_completions(self, context: CodeContext) -> List[CodeCompletion]:
+        """Get JavaScript-specific completions"""
+        completions = []
+        
+        # Built-in methods
+        builtin_methods = [
+            "console.log", "console.error", "console.warn", "console.info",
+            "JSON.stringify", "JSON.parse", "parseInt", "parseFloat", "isNaN", "isFinite",
+            "encodeURIComponent", "decodeURIComponent", "encodeURI", "decodeURI",
+            "setTimeout", "setInterval", "clearTimeout", "clearInterval",
+            "Promise.resolve", "Promise.reject", "Promise.all", "Promise.race",
+            "Array.from", "Array.isArray", "Object.keys", "Object.values", "Object.entries",
+            "Object.assign", "Object.create", "Object.freeze", "Object.seal"
+        ]
+        
+        for method in builtin_methods:
+            if method.startswith(context.content.split()[-1] if context.content.split() else ""):
+                completions.append(CodeCompletion(
+                    completion_id=str(uuid.uuid4()),
+                    text=method,
+                    completion_type=CompletionType.METHOD,
+                    language=Language.JAVASCRIPT,
+                    confidence=0.9,
+                    start_line=context.cursor_position[0],
+                    end_line=context.cursor_position[0],
+                    start_column=context.cursor_position[1],
+                    end_column=context.cursor_position[1] + len(method),
+                    description=f"Built-in method: {method}",
+                    documentation=f"JavaScript built-in method: {method}"
+                ))
+        
+        return completions
     
-    async def create_workspace(self, name: str, description: str, language: CodeLanguage, project_type: str = "general") -> CodeWorkspace:
-        """Create new code workspace"""
-        try:
-            workspace = CodeWorkspace(
-                workspace_id=str(uuid.uuid4()),
-                name=name,
-                description=description,
-                language=language,
-                files=[],
-                dependencies=[],
-                project_type=project_type,
-                ai_context={},
-                created_at=datetime.now(),
-                updated_at=datetime.now()
-            )
-            
-            self.workspaces[workspace.workspace_id] = workspace
-            
-            logger.info("Workspace created", workspace_id=workspace.workspace_id, name=name, language=language)
-            return workspace
-            
-        except Exception as e:
-            logger.error("Failed to create workspace", error=str(e))
-            raise e
+    async def _get_typescript_completions(self, context: CodeContext) -> List[CodeCompletion]:
+        """Get TypeScript-specific completions"""
+        completions = []
+        
+        # TypeScript types
+        types = [
+            "string", "number", "boolean", "object", "any", "void", "null", "undefined",
+            "never", "unknown", "Array", "Promise", "Function", "Date", "RegExp",
+            "Error", "Map", "Set", "WeakMap", "WeakSet", "Symbol", "BigInt"
+        ]
+        
+        for type_name in types:
+            if type_name.startswith(context.content.split()[-1] if context.content.split() else ""):
+                completions.append(CodeCompletion(
+                    completion_id=str(uuid.uuid4()),
+                    text=type_name,
+                    completion_type=CompletionType.TYPE,
+                    language=Language.TYPESCRIPT,
+                    confidence=0.9,
+                    start_line=context.cursor_position[0],
+                    end_line=context.cursor_position[0],
+                    start_column=context.cursor_position[1],
+                    end_column=context.cursor_position[1] + len(type_name),
+                    description=f"TypeScript type: {type_name}",
+                    documentation=f"TypeScript built-in type: {type_name}"
+                ))
+        
+        return completions
     
-    async def review_code(self, code: str, language: CodeLanguage) -> CodeReview:
-        """Review code for quality, security, and performance"""
-        try:
-            # Analyze code quality
-            quality_score = await self._calculate_quality_score(code, language)
-            security_score = await self._calculate_security_score(code, language)
-            performance_score = await self._calculate_performance_score(code, language)
-            maintainability_score = await self._calculate_maintainability_score(code, language)
-            
-            # Identify issues
-            issues = await self._identify_issues(code, language)
-            
-            # Generate suggestions
-            suggestions = await self._generate_review_suggestions(code, language, issues)
-            
-            review = CodeReview(
-                review_id=str(uuid.uuid4()),
-                code=code,
-                language=language,
-                issues=issues,
-                suggestions=suggestions,
-                quality_score=quality_score,
-                security_score=security_score,
-                performance_score=performance_score,
-                maintainability_score=maintainability_score,
-                created_at=datetime.now()
-            )
-            
-            self.code_reviews[review.review_id] = review
-            
-            logger.info("Code review completed", review_id=review.review_id, quality_score=quality_score)
-            return review
-            
-        except Exception as e:
-            logger.error("Failed to review code", error=str(e))
-            raise e
+    async def _get_java_completions(self, context: CodeContext) -> List[CodeCompletion]:
+        """Get Java-specific completions"""
+        completions = []
+        
+        # Java keywords and common classes
+        java_keywords = [
+            "public", "private", "protected", "static", "final", "abstract", "interface",
+            "class", "extends", "implements", "import", "package", "new", "this", "super",
+            "if", "else", "for", "while", "do", "switch", "case", "break", "continue",
+            "return", "try", "catch", "finally", "throw", "throws", "synchronized", "volatile"
+        ]
+        
+        for keyword in java_keywords:
+            if keyword.startswith(context.content.split()[-1] if context.content.split() else ""):
+                completions.append(CodeCompletion(
+                    completion_id=str(uuid.uuid4()),
+                    text=keyword,
+                    completion_type=CompletionType.KEYWORD,
+                    language=Language.JAVA,
+                    confidence=0.9,
+                    start_line=context.cursor_position[0],
+                    end_line=context.cursor_position[0],
+                    start_column=context.cursor_position[1],
+                    end_column=context.cursor_position[1] + len(keyword),
+                    description=f"Java keyword: {keyword}",
+                    documentation=f"Java language keyword: {keyword}"
+                ))
+        
+        return completions
     
-    async def _calculate_quality_score(self, code: str, language: CodeLanguage) -> float:
-        """Calculate code quality score"""
-        try:
-            score = 0.0
-            
-            # Check for documentation
-            if "docstring" in code.lower() or "comment" in code.lower():
-                score += 20
-            
-            # Check for error handling
-            if "try" in code.lower() and "except" in code.lower():
-                score += 20
-            
-            # Check for proper structure
-            if "def " in code.lower() or "function" in code.lower():
-                score += 20
-            
-            # Check for naming conventions
-            if re.search(r'[a-z_][a-z0-9_]*', code):
-                score += 20
-            
-            # Check for complexity
-            if len(code.split('\n')) < 50:  # Not too long
-                score += 20
-            
-            return min(100, score)
-            
-        except Exception as e:
-            logger.error("Failed to calculate quality score", error=str(e))
-            return 0.0
+    async def _get_csharp_completions(self, context: CodeContext) -> List[CodeCompletion]:
+        """Get C#-specific completions"""
+        completions = []
+        
+        # C# keywords
+        csharp_keywords = [
+            "public", "private", "protected", "internal", "static", "readonly", "const",
+            "class", "struct", "interface", "enum", "namespace", "using", "new", "this", "base",
+            "if", "else", "for", "foreach", "while", "do", "switch", "case", "break", "continue",
+            "return", "try", "catch", "finally", "throw", "async", "await", "var", "dynamic"
+        ]
+        
+        for keyword in csharp_keywords:
+            if keyword.startswith(context.content.split()[-1] if context.content.split() else ""):
+                completions.append(CodeCompletion(
+                    completion_id=str(uuid.uuid4()),
+                    text=keyword,
+                    completion_type=CompletionType.KEYWORD,
+                    language=Language.CSHARP,
+                    confidence=0.9,
+                    start_line=context.cursor_position[0],
+                    end_line=context.cursor_position[0],
+                    start_column=context.cursor_position[1],
+                    end_column=context.cursor_position[1] + len(keyword),
+                    description=f"C# keyword: {keyword}",
+                    documentation=f"C# language keyword: {keyword}"
+                ))
+        
+        return completions
     
-    async def _calculate_security_score(self, code: str, language: CodeLanguage) -> float:
-        """Calculate security score"""
-        try:
-            score = 100.0
-            
-            # Check for security issues
-            if "password" in code.lower() and "hash" not in code.lower():
-                score -= 30
-            
-            if "sql" in code.lower() and "execute" in code.lower():
-                score -= 40
-            
-            if "eval" in code.lower():
-                score -= 50
-            
-            return max(0, score)
-            
-        except Exception as e:
-            logger.error("Failed to calculate security score", error=str(e))
-            return 0.0
+    async def _get_generic_completions(self, context: CodeContext) -> List[CodeCompletion]:
+        """Get generic completions for any language"""
+        completions = []
+        
+        # Common patterns
+        common_patterns = [
+            "function", "class", "import", "export", "const", "let", "var", "if", "else",
+            "for", "while", "return", "try", "catch", "finally", "public", "private"
+        ]
+        
+        for pattern in common_patterns:
+            if pattern.startswith(context.content.split()[-1] if context.content.split() else ""):
+                completions.append(CodeCompletion(
+                    completion_id=str(uuid.uuid4()),
+                    text=pattern,
+                    completion_type=CompletionType.KEYWORD,
+                    language=context.language,
+                    confidence=0.7,
+                    start_line=context.cursor_position[0],
+                    end_line=context.cursor_position[0],
+                    start_column=context.cursor_position[1],
+                    end_column=context.cursor_position[1] + len(pattern),
+                    description=f"Common pattern: {pattern}",
+                    documentation=f"Common programming pattern: {pattern}"
+                ))
+        
+        return completions
     
-    async def _calculate_performance_score(self, code: str, language: CodeLanguage) -> float:
-        """Calculate performance score"""
-        try:
-            score = 100.0
-            
-            # Check for performance issues
-            if "for loop" in code.lower() and "list comprehension" not in code.lower():
-                score -= 20
-            
-            if "database" in code.lower() and "index" not in code.lower():
-                score -= 30
-            
-            if "api" in code.lower() and "cache" not in code.lower():
-                score -= 20
-            
-            return max(0, score)
-            
-        except Exception as e:
-            logger.error("Failed to calculate performance score", error=str(e))
-            return 0.0
-    
-    async def _calculate_maintainability_score(self, code: str, language: CodeLanguage) -> float:
-        """Calculate maintainability score"""
-        try:
-            score = 0.0
-            
-            # Check for documentation
-            if "docstring" in code.lower() or "comment" in code.lower():
-                score += 25
-            
-            # Check for modularity
-            if "def " in code.lower() or "function" in code.lower():
-                score += 25
-            
-            # Check for naming
-            if re.search(r'[a-z_][a-z0-9_]*', code):
-                score += 25
-            
-            # Check for complexity
-            if len(code.split('\n')) < 100:  # Not too complex
-                score += 25
-            
-            return min(100, score)
-            
-        except Exception as e:
-            logger.error("Failed to calculate maintainability score", error=str(e))
-            return 0.0
-    
-    async def _identify_issues(self, code: str, language: CodeLanguage) -> List[Dict[str, Any]]:
-        """Identify code issues"""
-        try:
-            issues = []
-            
-            # Check for common issues
-            if "password" in code.lower() and "hash" not in code.lower():
-                issues.append({
-                    "type": "security",
-                    "severity": "high",
-                    "message": "Password should be hashed",
-                    "line": 1
-                })
-            
-            if "sql" in code.lower() and "execute" in code.lower():
-                issues.append({
-                    "type": "security",
-                    "severity": "high",
-                    "message": "Use parameterized queries to prevent SQL injection",
-                    "line": 1
-                })
-            
-            if "for loop" in code.lower() and "list comprehension" not in code.lower():
-                issues.append({
-                    "type": "performance",
-                    "severity": "medium",
-                    "message": "Consider using list comprehension for better performance",
-                    "line": 1
-                })
-            
-            return issues
-            
-        except Exception as e:
-            logger.error("Failed to identify issues", error=str(e))
-            return []
-    
-    async def _generate_review_suggestions(self, code: str, language: CodeLanguage, issues: List[Dict[str, Any]]) -> List[str]:
-        """Generate review suggestions"""
+    async def get_code_suggestions(
+        self, 
+        context: CodeContext, 
+        max_suggestions: int = 5
+    ) -> List[CodeSuggestion]:
+        """Get code suggestions for improvements, fixes, and optimizations"""
         try:
             suggestions = []
             
-            for issue in issues:
-                if issue["type"] == "security":
-                    suggestions.append(f"Security: {issue['message']}")
-                elif issue["type"] == "performance":
-                    suggestions.append(f"Performance: {issue['message']}")
-                elif issue["type"] == "quality":
-                    suggestions.append(f"Quality: {issue['message']}")
+            # Analyze code for suggestions
+            if context.language == Language.PYTHON:
+                suggestions = await self._analyze_python_code(context)
+            elif context.language == Language.JAVASCRIPT:
+                suggestions = await self._analyze_javascript_code(context)
+            elif context.language == Language.TYPESCRIPT:
+                suggestions = await self._analyze_typescript_code(context)
+            else:
+                suggestions = await self._analyze_generic_code(context)
             
-            # Add general suggestions
-            suggestions.extend([
-                "Add comprehensive error handling",
-                "Include unit tests for all functions",
-                "Add documentation and comments",
-                "Follow coding standards and best practices"
-            ])
+            # Sort by priority
+            suggestions.sort(key=lambda x: x.priority, reverse=True)
             
-            return suggestions
+            logger.info("Code suggestions generated", 
+                       count=len(suggestions), 
+                       language=context.language.value)
+            
+            return suggestions[:max_suggestions]
             
         except Exception as e:
-            logger.error("Failed to generate review suggestions", error=str(e))
+            logger.error("Failed to get code suggestions", error=str(e))
             return []
     
-    async def get_workspaces(self) -> List[CodeWorkspace]:
-        """Get all workspaces"""
-        return list(self.workspaces.values())
+    async def _analyze_python_code(self, context: CodeContext) -> List[CodeSuggestion]:
+        """Analyze Python code for suggestions"""
+        suggestions = []
+        
+        # Check for common Python issues
+        if "print(" in context.content and "logging" not in context.content:
+            suggestions.append(CodeSuggestion(
+                suggestion_id=str(uuid.uuid4()),
+                suggestion_type=SuggestionType.OPTIMIZATION,
+                text="Consider using logging instead of print statements",
+                language=Language.PYTHON,
+                confidence=0.8,
+                start_line=context.cursor_position[0],
+                end_line=context.cursor_position[0],
+                start_column=context.cursor_position[1],
+                end_column=context.cursor_position[1],
+                description="Replace print statements with proper logging",
+                priority=7,
+                auto_apply=False
+            ))
+        
+        # Check for missing type hints
+        if "def " in context.content and ":" not in context.content:
+            suggestions.append(CodeSuggestion(
+                suggestion_id=str(uuid.uuid4()),
+                suggestion_type=SuggestionType.OPTIMIZATION,
+                text="Add type hints to function parameters and return type",
+                language=Language.PYTHON,
+                confidence=0.9,
+                start_line=context.cursor_position[0],
+                end_line=context.cursor_position[0],
+                start_column=context.cursor_position[1],
+                end_column=context.cursor_position[1],
+                description="Add type hints for better code documentation and IDE support",
+                priority=8,
+                auto_apply=False
+            ))
+        
+        return suggestions
     
-    async def get_code_suggestions(self) -> List[CodeSuggestion]:
-        """Get all code suggestions"""
-        return list(self.code_suggestions.values())
+    async def _analyze_javascript_code(self, context: CodeContext) -> List[CodeSuggestion]:
+        """Analyze JavaScript code for suggestions"""
+        suggestions = []
+        
+        # Check for var usage
+        if "var " in context.content:
+            suggestions.append(CodeSuggestion(
+                suggestion_id=str(uuid.uuid4()),
+                suggestion_type=SuggestionType.OPTIMIZATION,
+                text="Consider using 'const' or 'let' instead of 'var'",
+                language=Language.JAVASCRIPT,
+                confidence=0.9,
+                start_line=context.cursor_position[0],
+                end_line=context.cursor_position[0],
+                start_column=context.cursor_position[1],
+                end_column=context.cursor_position[1],
+                description="Use const/let for better block scoping",
+                priority=8,
+                auto_apply=False
+            ))
+        
+        return suggestions
     
-    async def get_code_reviews(self) -> List[CodeReview]:
-        """Get all code reviews"""
-        return list(self.code_reviews.values())
+    async def _analyze_typescript_code(self, context: CodeContext) -> List[CodeSuggestion]:
+        """Analyze TypeScript code for suggestions"""
+        suggestions = []
+        
+        # Check for missing types
+        if "function " in context.content and ":" not in context.content:
+            suggestions.append(CodeSuggestion(
+                suggestion_id=str(uuid.uuid4()),
+                suggestion_type=SuggestionType.OPTIMIZATION,
+                text="Add TypeScript type annotations",
+                language=Language.TYPESCRIPT,
+                confidence=0.9,
+                start_line=context.cursor_position[0],
+                end_line=context.cursor_position[0],
+                start_column=context.cursor_position[1],
+                end_column=context.cursor_position[1],
+                description="Add type annotations for better type safety",
+                priority=9,
+                auto_apply=False
+            ))
+        
+        return suggestions
     
-    async def get_coding_recommendations(self) -> List[Dict[str, Any]]:
-        """Get coding recommendations"""
-        return [
-            {
-                "category": "Best Practices",
-                "recommendation": "Use type hints and documentation",
-                "impact": "Improve code maintainability by 40%",
-                "effort": "Low",
-                "timeline": "1 day"
-            },
-            {
-                "category": "Performance",
-                "recommendation": "Optimize database queries and add caching",
-                "impact": "Improve performance by 60%",
-                "effort": "Medium",
-                "timeline": "1 week"
-            },
-            {
-                "category": "Security",
-                "recommendation": "Implement proper authentication and input validation",
-                "impact": "Reduce security vulnerabilities by 80%",
-                "effort": "High",
-                "timeline": "2 weeks"
-            },
-            {
-                "category": "Testing",
-                "recommendation": "Add comprehensive unit and integration tests",
-                "impact": "Reduce bugs by 70%",
-                "effort": "Medium",
-                "timeline": "1 week"
-            }
-        ]
+    async def _analyze_generic_code(self, context: CodeContext) -> List[CodeSuggestion]:
+        """Analyze generic code for suggestions"""
+        suggestions = []
+        
+        # Generic suggestions
+        if len(context.content.split('\n')) > 50:
+            suggestions.append(CodeSuggestion(
+                suggestion_id=str(uuid.uuid4()),
+                suggestion_type=SuggestionType.REFACTOR,
+                text="Consider breaking this into smaller functions",
+                language=context.language,
+                confidence=0.7,
+                start_line=context.cursor_position[0],
+                end_line=context.cursor_position[0],
+                start_column=context.cursor_position[1],
+                end_column=context.cursor_position[1],
+                description="Large functions should be broken into smaller, more manageable pieces",
+                priority=6,
+                auto_apply=False
+            ))
+        
+        return suggestions
+    
+    async def generate_code_snippet(
+        self, 
+        description: str, 
+        language: Language,
+        context: Optional[CodeContext] = None
+    ) -> str:
+        """Generate code snippet based on description"""
+        try:
+            # This would integrate with AI models for code generation
+            # For now, we'll use template-based generation
+            
+            if language == Language.PYTHON:
+                if "function" in description.lower():
+                    return "def example_function():\n    \"\"\"Example function\"\"\"\n    pass"
+                elif "class" in description.lower():
+                    return "class ExampleClass:\n    \"\"\"Example class\"\"\"\n    \n    def __init__(self):\n        pass"
+                else:
+                    return "# Generated code snippet\npass"
+            
+            elif language == Language.JAVASCRIPT:
+                if "function" in description.lower():
+                    return "function exampleFunction() {\n    // Example function\n    return null;\n}"
+                elif "class" in description.lower():
+                    return "class ExampleClass {\n    constructor() {\n        // Constructor\n    }\n}"
+                else:
+                    return "// Generated code snippet\nnull;"
+            
+            elif language == Language.TYPESCRIPT:
+                if "function" in description.lower():
+                    return "function exampleFunction(): void {\n    // Example function\n    return;\n}"
+                elif "class" in description.lower():
+                    return "class ExampleClass {\n    constructor() {\n        // Constructor\n    }\n}"
+                else:
+                    return "// Generated code snippet\nnull;"
+            
+            else:
+                return f"// Generated {language.value} code snippet\n// {description}"
+                
+        except Exception as e:
+            logger.error("Failed to generate code snippet", error=str(e))
+            return f"// Error generating code snippet: {e}"
+    
+    async def get_documentation(
+        self, 
+        symbol: str, 
+        language: Language
+    ) -> Optional[str]:
+        """Get documentation for a symbol"""
+        try:
+            # This would integrate with language servers or documentation APIs
+            # For now, we'll provide basic documentation
+            
+            if language == Language.PYTHON:
+                python_docs = {
+                    "print": "Print values to stdout",
+                    "len": "Return the length of an object",
+                    "str": "Convert object to string",
+                    "int": "Convert to integer",
+                    "float": "Convert to float",
+                    "list": "Create a list",
+                    "dict": "Create a dictionary",
+                }
+                return python_docs.get(symbol, f"Documentation for {symbol}")
+            
+            elif language == Language.JAVASCRIPT:
+                js_docs = {
+                    "console.log": "Print to console",
+                    "JSON.stringify": "Convert object to JSON string",
+                    "JSON.parse": "Parse JSON string to object",
+                    "setTimeout": "Execute function after delay",
+                    "setInterval": "Execute function repeatedly",
+                }
+                return js_docs.get(symbol, f"Documentation for {symbol}")
+            
+            else:
+                return f"Documentation for {symbol} in {language.value}"
+                
+        except Exception as e:
+            logger.error("Failed to get documentation", error=str(e))
+            return None
+    
+    async def clear_cache(self):
+        """Clear completion and suggestion caches"""
+        self.completion_cache.clear()
+        self.suggestion_cache.clear()
+        logger.info("Smart Coding AI cache cleared")
+
+
+# Global service instance
+smart_coding_ai = SmartCodingAI()
