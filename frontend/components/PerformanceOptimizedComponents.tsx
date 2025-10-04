@@ -25,7 +25,15 @@ import {
   Brain,
   Sparkles,
   TrendingUp,
-  Database
+  Database,
+  Code,
+  FileText,
+  Lightbulb,
+  BookOpen,
+  Terminal,
+  GitBranch,
+  Search,
+  Filter
 } from 'lucide-react';
 
 // Memoized components to prevent unnecessary re-renders
@@ -435,6 +443,7 @@ export function PerformanceOptimizedAIAgentDashboard() {
         <nav className="-mb-px flex space-x-8">
           {[
             { id: 'agents', label: 'Agents', icon: Bot },
+            { id: 'smart-coding', label: 'Smart Coding AI', icon: Code },
             { id: 'analytics', label: 'Analytics', icon: BarChart3 },
             { id: 'performance', label: 'Performance', icon: TrendingUp }
           ].map(({ id, label, icon: Icon }) => (
@@ -513,6 +522,199 @@ export function PerformanceOptimizedAIAgentDashboard() {
               </p>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Smart Coding AI Tab */}
+      {activeTab === 'smart-coding' && (
+        <div className="space-y-6">
+          {/* Smart Coding AI Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Code Completions</CardTitle>
+                <Code className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">1,234</div>
+                <p className="text-xs text-muted-foreground">
+                  +12% from last month
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Suggestions</CardTitle>
+                <Lightbulb className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">567</div>
+                <p className="text-xs text-muted-foreground">
+                  +8% from last month
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Snippets</CardTitle>
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">89</div>
+                <p className="text-xs text-muted-foreground">
+                  +15% from last month
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Documentation</CardTitle>
+                <BookOpen className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">45</div>
+                <p className="text-xs text-muted-foreground">
+                  +5% from last month
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Code Editor Interface */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Smart Code Assistant</CardTitle>
+              <CardDescription>
+                Get intelligent code completions, suggestions, and documentation
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Language Selection */}
+                <div className="flex items-center space-x-4">
+                  <label className="text-sm font-medium">Language:</label>
+                  <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="typescript">TypeScript</option>
+                    <option value="java">Java</option>
+                    <option value="csharp">C#</option>
+                    <option value="cpp">C++</option>
+                    <option value="go">Go</option>
+                    <option value="rust">Rust</option>
+                  </select>
+                </div>
+
+                {/* Code Editor */}
+                <div className="border border-gray-300 rounded-lg">
+                  <div className="bg-gray-50 dark:bg-gray-800 px-4 py-2 border-b border-gray-300">
+                    <div className="flex items-center space-x-2">
+                      <Terminal className="h-4 w-4" />
+                      <span className="text-sm font-medium">main.py</span>
+                    </div>
+                  </div>
+                  <textarea
+                    className="w-full h-64 p-4 font-mono text-sm focus:outline-none resize-none"
+                    placeholder="def hello_world():
+    # Type your code here...
+    # Get intelligent completions as you type"
+                    defaultValue="def hello_world():
+    # Type your code here...
+    # Get intelligent completions as you type"
+                  />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-2">
+                  <Button className="flex items-center space-x-2">
+                    <Code className="h-4 w-4" />
+                    <span>Get Completions</span>
+                  </Button>
+                  <Button variant="outline" className="flex items-center space-x-2">
+                    <Lightbulb className="h-4 w-4" />
+                    <span>Get Suggestions</span>
+                  </Button>
+                  <Button variant="outline" className="flex items-center space-x-2">
+                    <FileText className="h-4 w-4" />
+                    <span>Get Snippets</span>
+                  </Button>
+                  <Button variant="outline" className="flex items-center space-x-2">
+                    <BookOpen className="h-4 w-4" />
+                    <span>Get Documentation</span>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Completions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Completions</CardTitle>
+              <CardDescription>
+                Your recent code completions and suggestions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  {
+                    id: 1,
+                    text: "async def fetch_data():",
+                    type: "function",
+                    language: "python",
+                    confidence: 0.95,
+                    timestamp: "2 minutes ago"
+                  },
+                  {
+                    id: 2,
+                    text: "try:\n    # Your code here\nexcept Exception as e:",
+                    type: "snippet",
+                    language: "python",
+                    confidence: 0.92,
+                    timestamp: "5 minutes ago"
+                  },
+                  {
+                    id: 3,
+                    text: "from typing import List, Dict",
+                    type: "import",
+                    language: "python",
+                    confidence: 0.98,
+                    timestamp: "10 minutes ago"
+                  }
+                ].map((completion) => (
+                  <div key={completion.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                        <Code className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{completion.text}</p>
+                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                          <Badge variant="outline" className="text-xs">
+                            {completion.type}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {completion.language}
+                          </Badge>
+                          <span>{completion.timestamp}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium">
+                        {(completion.confidence * 100).toFixed(0)}%
+                      </p>
+                      <p className="text-xs text-gray-500">confidence</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
 

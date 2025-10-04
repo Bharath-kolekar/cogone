@@ -71,6 +71,17 @@ interface SystemMetrics {
   network_latency: string;
 }
 
+interface AIAgent {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  status: string;
+  capabilities: string[];
+  created_at: string;
+  last_active?: string;
+}
+
 export function AIAgentOptimizedDashboard() {
   const [optimizationMetrics, setOptimizationMetrics] = useState<OptimizationMetrics | null>(null);
   const [qualityMetrics, setQualityMetrics] = useState<QualityMetrics | null>(null);
@@ -78,9 +89,16 @@ export function AIAgentOptimizedDashboard() {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizationStatus, setOptimizationStatus] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  
+  // AI Agent Management State
+  const [agents, setAgents] = useState<AIAgent[]>([]);
+  const [showCreateAgent, setShowCreateAgent] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<AIAgent | null>(null);
+  const [agentLoading, setAgentLoading] = useState(false);
 
   useEffect(() => {
     fetchOptimizationData();
+    fetchAgents();
   }, []);
 
   const fetchOptimizationData = async () => {
@@ -154,6 +172,119 @@ export function AIAgentOptimizedDashboard() {
       });
     } finally {
       setIsOptimizing(false);
+    }
+  };
+
+  const fetchAgents = async () => {
+    try {
+      setAgentLoading(true);
+      const response = await fetch('/api/v0/smart-coding-ai/agents', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+
+      if (response.ok) {
+        const agentsData = await response.json();
+        setAgents(agentsData);
+      } else {
+        throw new Error('Failed to fetch agents');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch AI agents",
+        variant: "destructive"
+      });
+    } finally {
+      setAgentLoading(false);
+    }
+  };
+
+  const createAgent = async (agentData: Partial<AIAgent>) => {
+    try {
+      const response = await fetch('/api/v0/smart-coding-ai/agents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify(agentData)
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "AI agent created successfully"
+        });
+        fetchAgents();
+        setShowCreateAgent(false);
+      } else {
+        throw new Error('Failed to create agent');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create AI agent",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const updateAgent = async (agentId: string, agentData: Partial<AIAgent>) => {
+    try {
+      const response = await fetch(`/api/v0/smart-coding-ai/agents/${agentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify(agentData)
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "AI agent updated successfully"
+        });
+        fetchAgents();
+        setSelectedAgent(null);
+      } else {
+        throw new Error('Failed to update agent');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update AI agent",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const deleteAgent = async (agentId: string) => {
+    try {
+      const response = await fetch(`/api/v0/smart-coding-ai/agents/${agentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "AI agent deleted successfully"
+        });
+        fetchAgents();
+      } else {
+        throw new Error('Failed to delete agent');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete AI agent",
+        variant: "destructive"
+      });
     }
   };
 
@@ -462,6 +593,110 @@ export function AIAgentOptimizedDashboard() {
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* AI Agent Management */}
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle className="flex items-center">
+                <Bot className="h-5 w-5 mr-2 text-blue-600" />
+                AI Agent Management
+              </CardTitle>
+              <CardDescription>Create, manage, and monitor your AI agents</CardDescription>
+            </div>
+            <Button 
+              onClick={() => setShowCreateAgent(true)}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Bot className="h-4 w-4 mr-2" />
+              Create Agent
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {agentLoading ? (
+            <div className="flex items-center justify-center h-32">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {agents.map((agent) => (
+                <Card key={agent.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{agent.name}</h4>
+                        <p className="text-sm text-gray-600">{agent.description}</p>
+                      </div>
+                      <Badge 
+                        className={
+                          agent.status === 'active' 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-gray-100 text-gray-800'
+                        }
+                      >
+                        {agent.status}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Bot className="h-4 w-4 mr-2" />
+                        {agent.type.replace('_', ' ').toUpperCase()}
+                      </div>
+                      
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Activity className="h-4 w-4 mr-2" />
+                        {agent.capabilities.length} capabilities
+                      </div>
+                      
+                      {agent.last_active && (
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Clock className="h-4 w-4 mr-2" />
+                          Last active: {new Date(agent.last_active).toLocaleDateString()}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex space-x-2 mt-4">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setSelectedAgent(agent)}
+                      >
+                        Edit
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="destructive"
+                        onClick={() => deleteAgent(agent.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {agents.length === 0 && (
+                <div className="col-span-full text-center py-8">
+                  <Bot className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No AI Agents</h3>
+                  <p className="text-gray-600 mb-4">Create your first AI agent to get started</p>
+                  <Button 
+                    onClick={() => setShowCreateAgent(true)}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Bot className="h-4 w-4 mr-2" />
+                    Create Your First Agent
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

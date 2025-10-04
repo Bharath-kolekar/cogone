@@ -14,7 +14,7 @@ from app.models.billing import (
 from app.services.billing_service import BillingService
 from app.services.profit_strategies_service import ProfitStrategiesService
 from app.services.marketing_seo_ai_service import MarketingSEOAI
-from app.services.smart_coding_ai_service import SmartCodingAI
+from app.services.smart_coding_ai_optimized import smart_coding_ai_optimized as SmartCodingAI
 
 logger = structlog.get_logger()
 router = APIRouter()

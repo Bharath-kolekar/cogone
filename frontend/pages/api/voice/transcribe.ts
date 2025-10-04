@@ -1,2 +1,6 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+
 export const config = { api: { bodyParser: false } }
-export default async function handler(req, res) { res.json({transcript:'demo'}) }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) { 
+  res.json({transcript:'demo'}) 
+}

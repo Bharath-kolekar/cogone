@@ -23,6 +23,12 @@ from app.routers import (
     apps,
     admin,
     webhooks,
+    smart_coding_ai_optimized,
+    ai_agents_consolidated,
+    meta_ai_orchestrator_unified,
+    swarm_ai_router,
+    architecture_generator_router,
+    agent_mode_router,
 )
 from app.middleware.rate_limiter import RateLimitMiddleware
 from app.middleware.auth import AuthMiddleware
@@ -110,6 +116,12 @@ app.include_router(gamification.router, prefix="/api/v0/gamification", tags=["Ga
 app.include_router(apps.router, prefix="/api/v0/apps", tags=["App Generation"])
 app.include_router(admin.router, prefix="/api/v0/admin", tags=["Admin"])
 app.include_router(webhooks.router, prefix="/api/v0/webhooks", tags=["Webhooks"])
+app.include_router(smart_coding_ai_optimized.router, prefix="/api/v0/smart-coding-ai", tags=["Smart Coding AI"])
+app.include_router(ai_agents_consolidated.router, prefix="/api/v0/ai-agents", tags=["AI Agents"])
+app.include_router(meta_ai_orchestrator_unified.router, prefix="/api/v0/meta-orchestrator", tags=["Meta Orchestrator"])
+app.include_router(swarm_ai_router.router, prefix="/api/v0/swarm-ai", tags=["Swarm AI"])
+app.include_router(architecture_generator_router.router, prefix="/api/v0/architecture-generator", tags=["Architecture Generator"])
+app.include_router(agent_mode_router.router, prefix="/api/v0/agent-mode", tags=["Agent Mode"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -200,6 +212,12 @@ async def api_status():
             "app_generation": True,
             "payments": True,
             "gamification": True,
+            "smart_coding_ai": True,
+            "ai_agents": True,
+            "meta_orchestrator": True,
+            "swarm_ai": True,
+            "architecture_generator": True,
+            "agent_mode": True,
             "local_ai": settings.ALLOW_LOCAL_LLM,
             "cloud_ai": bool(settings.HF_API_KEY or settings.TOGETHER_API_KEY or settings.GROQ_API_KEY),
         },
@@ -209,6 +227,12 @@ async def api_status():
             "payments": "/api/v0/payments",
             "apps": "/api/v0/apps",
             "admin": "/api/v0/admin",
+            "smart_coding_ai": "/api/v0/smart-coding-ai",
+            "ai_agents": "/api/v0/ai-agents",
+            "meta_orchestrator": "/api/v0/meta-orchestrator",
+            "swarm_ai": "/api/v0/swarm-ai",
+            "architecture_generator": "/api/v0/architecture-generator",
+            "agent_mode": "/api/v0/agent-mode",
         },
     }
 
