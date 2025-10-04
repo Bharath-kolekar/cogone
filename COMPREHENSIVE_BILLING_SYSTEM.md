@@ -26,7 +26,7 @@ The Cognomega AI platform now includes a comprehensive billing system with advan
 - **Analytics**: Performance tracking and insights
 
 ### 4. **Smart Coding AI**
-- **Code Generation**: Cursor/GitHub Copilot-like capabilities
+- **Code Generation**: Advanced code assistant capabilities
 - **Code Review**: Automated quality, security, and performance analysis
 - **Workspace Management**: Project-based code organization
 - **Multi-language Support**: Python, JavaScript, TypeScript, Java, and more

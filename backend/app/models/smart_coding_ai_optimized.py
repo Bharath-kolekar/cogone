@@ -521,7 +521,7 @@ class SmartCodingAIOptimizedConfig(BaseModel):
 
 
 # ============================================================================
-# IN-LINE COMPLETION MODELS (GitHub Copilot-like features)
+# IN-LINE COMPLETION MODELS (Advanced code assistant features)
 # ============================================================================
 
 class InlineCompletionRequest(BaseModel):
@@ -715,3 +715,232 @@ class InlineCompletionStatus(BaseModel):
     cache_size: int = Field(..., description="Completion cache size")
     performance_score: float = Field(..., description="Performance score (0-1)")
     timestamp: datetime = Field(default_factory=datetime.now, description="Status timestamp")
+
+
+# ============================================================================
+# CODEBASE-AWARE AI MEMORY SYSTEM MODELS
+# ============================================================================
+
+class FileStructure(BaseModel):
+    """File structure representation"""
+    file_path: str = Field(..., description="File path")
+    file_type: str = Field(..., description="File type/extension")
+    file_size: int = Field(..., description="File size in bytes")
+    directory: str = Field(..., description="Directory path")
+    relative_path: str = Field(..., description="Relative path from project root")
+    is_directory: bool = Field(False, description="Whether this is a directory")
+    children: Optional[List['FileStructure']] = Field(None, description="Child files/directories")
+    last_modified: datetime = Field(..., description="Last modification time")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation time")
+
+
+class ProjectStructure(BaseModel):
+    """Complete project structure"""
+    project_id: str = Field(..., description="Unique project identifier")
+    project_name: str = Field(..., description="Project name")
+    project_root: str = Field(..., description="Project root directory")
+    file_tree: FileStructure = Field(..., description="Root file structure")
+    total_files: int = Field(..., description="Total number of files")
+    total_directories: int = Field(..., description="Total number of directories")
+    languages_used: List[str] = Field(..., description="Programming languages used")
+    frameworks: List[str] = Field(..., description="Frameworks detected")
+    dependencies: List[str] = Field(..., description="Dependencies detected")
+    config_files: List[str] = Field(..., description="Configuration files")
+    last_analyzed: datetime = Field(default_factory=datetime.now, description="Last analysis time")
+
+
+class CodingPattern(BaseModel):
+    """Coding pattern representation"""
+    pattern_id: str = Field(..., description="Unique pattern identifier")
+    pattern_type: str = Field(..., description="Type of pattern (function, class, etc.)")
+    pattern_name: str = Field(..., description="Pattern name")
+    pattern_code: str = Field(..., description="Pattern code snippet")
+    language: str = Field(..., description="Programming language")
+    file_path: str = Field(..., description="File where pattern was found")
+    line_number: int = Field(..., description="Line number where pattern starts")
+    context: str = Field(..., description="Surrounding context")
+    frequency: int = Field(1, description="How often this pattern appears")
+    complexity: float = Field(..., description="Pattern complexity score")
+    dependencies: List[str] = Field([], description="Pattern dependencies")
+    related_patterns: List[str] = Field([], description="Related pattern IDs")
+    last_seen: datetime = Field(default_factory=datetime.now, description="Last time pattern was seen")
+    created_at: datetime = Field(default_factory=datetime.now, description="Pattern creation time")
+
+
+class DependencyInfo(BaseModel):
+    """Dependency information"""
+    dependency_id: str = Field(..., description="Unique dependency identifier")
+    name: str = Field(..., description="Dependency name")
+    version: str = Field(..., description="Dependency version")
+    type: str = Field(..., description="Dependency type (package, library, framework)")
+    source: str = Field(..., description="Where dependency is defined")
+    usage_count: int = Field(0, description="How many times dependency is used")
+    files_using: List[str] = Field([], description="Files that use this dependency")
+    import_statements: List[str] = Field([], description="Import statements")
+    is_dev_dependency: bool = Field(False, description="Whether it's a dev dependency")
+    last_used: datetime = Field(default_factory=datetime.now, description="Last usage time")
+
+
+class ConfigInfo(BaseModel):
+    """Configuration information"""
+    config_id: str = Field(..., description="Unique config identifier")
+    config_type: str = Field(..., description="Type of configuration")
+    file_path: str = Field(..., description="Configuration file path")
+    config_data: Dict[str, Any] = Field(..., description="Configuration data")
+    environment: str = Field("default", description="Environment (dev, prod, test)")
+    is_active: bool = Field(True, description="Whether configuration is active")
+    last_modified: datetime = Field(default_factory=datetime.now, description="Last modification time")
+
+
+class SessionContext(BaseModel):
+    """Session context for cross-session memory"""
+    session_id: str = Field(..., description="Unique session identifier")
+    user_id: str = Field(..., description="User identifier")
+    project_id: str = Field(..., description="Project identifier")
+    current_file: str = Field(..., description="Currently active file")
+    cursor_position: Tuple[int, int] = Field(..., description="Cursor position (line, column)")
+    recent_files: List[str] = Field([], description="Recently accessed files")
+    recent_commands: List[str] = Field([], description="Recent commands/actions")
+    working_directory: str = Field(..., description="Current working directory")
+    git_branch: Optional[str] = Field(None, description="Current git branch")
+    git_commit: Optional[str] = Field(None, description="Current git commit")
+    last_activity: datetime = Field(default_factory=datetime.now, description="Last activity time")
+    session_start: datetime = Field(default_factory=datetime.now, description="Session start time")
+
+
+class MemorySnapshot(BaseModel):
+    """Complete memory snapshot of codebase"""
+    snapshot_id: str = Field(..., description="Unique snapshot identifier")
+    project_id: str = Field(..., description="Project identifier")
+    project_structure: ProjectStructure = Field(..., description="Project structure")
+    coding_patterns: List[CodingPattern] = Field([], description="All coding patterns")
+    dependencies: List[DependencyInfo] = Field([], description="All dependencies")
+    configs: List[ConfigInfo] = Field([], description="All configurations")
+    session_context: Optional[SessionContext] = Field(None, description="Current session context")
+    memory_size: int = Field(..., description="Total memory size in bytes")
+    last_updated: datetime = Field(default_factory=datetime.now, description="Last update time")
+    version: str = Field("1.0", description="Memory schema version")
+
+
+class MemoryQuery(BaseModel):
+    """Query for memory system"""
+    query_type: str = Field(..., description="Type of query")
+    query_text: str = Field(..., description="Query text")
+    filters: Dict[str, Any] = Field({}, description="Query filters")
+    limit: int = Field(100, description="Maximum results")
+    include_context: bool = Field(True, description="Include context in results")
+
+
+class MemorySearchResult(BaseModel):
+    """Memory search result"""
+    result_id: str = Field(..., description="Unique result identifier")
+    result_type: str = Field(..., description="Type of result")
+    content: str = Field(..., description="Result content")
+    file_path: str = Field(..., description="File path")
+    line_number: Optional[int] = Field(None, description="Line number")
+    confidence: float = Field(..., description="Search confidence")
+    context: Dict[str, Any] = Field({}, description="Additional context")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Result timestamp")
+
+
+class MemoryAnalysisRequest(BaseModel):
+    """Request for memory analysis"""
+    project_path: str = Field(..., description="Project path to analyze")
+    analysis_depth: str = Field("deep", description="Analysis depth: shallow, medium, deep, comprehensive")
+    include_patterns: bool = Field(True, description="Include pattern analysis")
+    include_dependencies: bool = Field(True, description="Include dependency analysis")
+    include_configs: bool = Field(True, description="Include configuration analysis")
+    update_existing: bool = Field(False, description="Update existing memory if found")
+
+
+class MemoryAnalysisResponse(BaseModel):
+    """Response for memory analysis"""
+    analysis_id: str = Field(..., description="Analysis identifier")
+    project_id: str = Field(..., description="Project identifier")
+    memory_snapshot: MemorySnapshot = Field(..., description="Generated memory snapshot")
+    analysis_time: float = Field(..., description="Analysis time in seconds")
+    files_analyzed: int = Field(..., description="Number of files analyzed")
+    patterns_found: int = Field(..., description="Number of patterns found")
+    dependencies_found: int = Field(..., description="Number of dependencies found")
+    configs_found: int = Field(..., description="Number of configurations found")
+    analysis_summary: Dict[str, Any] = Field(..., description="Analysis summary")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Analysis timestamp")
+
+
+class MemoryStatus(BaseModel):
+    """Memory system status"""
+    system_active: bool = Field(..., description="Whether memory system is active")
+    total_projects: int = Field(..., description="Total projects in memory")
+    total_patterns: int = Field(..., description="Total patterns stored")
+    total_dependencies: int = Field(..., description="Total dependencies tracked")
+    total_configs: int = Field(..., description="Total configurations stored")
+    memory_usage: float = Field(..., description="Memory usage percentage")
+    last_analysis: Optional[datetime] = Field(None, description="Last analysis time")
+    cache_hit_rate: float = Field(..., description="Cache hit rate")
+    performance_score: float = Field(..., description="Performance score")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Status timestamp")
+
+
+# ============================================================================
+# CHAT WITH YOUR CODEBASE MODELS
+# ============================================================================
+
+class CodebaseChatRequest(BaseModel):
+    """Request for chatting with codebase"""
+    query: str = Field(..., description="Natural language question about the codebase")
+    project_id: str = Field(..., description="Project identifier")
+    context_type: str = Field("general", description="Type of context: general, debug, flow, component")
+    include_code_snippets: bool = Field(True, description="Include code snippets in response")
+    max_results: int = Field(10, description="Maximum number of results to return")
+    focus_files: Optional[List[str]] = Field(None, description="Specific files to focus on")
+
+class CodebaseChatResponse(BaseModel):
+    """Response from codebase chat"""
+    answer: str = Field(..., description="Natural language answer to the query")
+    confidence: float = Field(..., description="Confidence score for the answer")
+    code_snippets: List[Dict[str, Any]] = Field([], description="Relevant code snippets")
+    related_files: List[str] = Field([], description="Files referenced in the answer")
+    analysis_type: str = Field(..., description="Type of analysis performed")
+    follow_up_questions: List[str] = Field([], description="Suggested follow-up questions")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Response timestamp")
+
+class CodeFlowAnalysis(BaseModel):
+    """Code flow analysis result"""
+    flow_id: str = Field(..., description="Unique flow analysis identifier")
+    flow_name: str = Field(..., description="Name of the flow being analyzed")
+    flow_type: str = Field(..., description="Type of flow: data, authentication, business_logic")
+    entry_points: List[str] = Field(..., description="Entry points to the flow")
+    exit_points: List[str] = Field(..., description="Exit points from the flow")
+    intermediate_steps: List[Dict[str, Any]] = Field(..., description="Intermediate steps in the flow")
+    dependencies: List[str] = Field([], description="Dependencies involved in the flow")
+    files_involved: List[str] = Field(..., description="Files involved in the flow")
+    complexity_score: float = Field(..., description="Complexity score of the flow")
+
+class ComponentRelationship(BaseModel):
+    """Component relationship analysis"""
+    component_id: str = Field(..., description="Unique component identifier")
+    component_name: str = Field(..., description="Name of the component")
+    component_type: str = Field(..., description="Type of component: class, function, module")
+    file_path: str = Field(..., description="File containing the component")
+    dependencies: List[str] = Field([], description="Components this depends on")
+    dependents: List[str] = Field([], description="Components that depend on this")
+    relationships: List[Dict[str, Any]] = Field([], description="Detailed relationship information")
+    usage_frequency: int = Field(0, description="How often this component is used")
+    last_modified: datetime = Field(..., description="Last modification time")
+
+class ChatAnalysisRequest(BaseModel):
+    """Request for specific chat analysis"""
+    query: str = Field(..., description="Analysis query")
+    project_id: str = Field(..., description="Project identifier")
+    analysis_type: str = Field(..., description="Type of analysis: flow, component, debug, search")
+    include_context: bool = Field(True, description="Include additional context")
+    max_depth: int = Field(5, description="Maximum analysis depth")
+
+class ChatAnalysisResponse(BaseModel):
+    """Response from chat analysis"""
+    analysis_result: Dict[str, Any] = Field(..., description="Analysis result")
+    confidence: float = Field(..., description="Confidence score")
+    related_components: List[ComponentRelationship] = Field([], description="Related components")
+    code_flows: List[CodeFlowAnalysis] = Field([], description="Related code flows")
+    suggestions: List[str] = Field([], description="Suggestions based on analysis")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Analysis timestamp")

@@ -59,10 +59,12 @@ class Settings(BaseSettings):
     ENABLE_VOICE_COMMANDS: bool = True
     LOCAL_MODEL_PATH: str = "./models/"
     
-    # SMS Provider
-    TWILIO_ACCOUNT_SID: str
-    TWILIO_AUTH_TOKEN: str
-    TWILIO_PHONE_NUMBER: str
+    # WhatsApp Business API (Replaces SMS Provider)
+    WHATSAPP_WEBHOOK_URL: Optional[str] = None
+    WHATSAPP_VERIFY_TOKEN: Optional[str] = None
+    WHATSAPP_ACCESS_TOKEN: Optional[str] = None
+    WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None
+    WHATSAPP_BUSINESS_ACCOUNT_ID: Optional[str] = None
     
     # Cloudflare Services (Free Tier)
     CLOUDFLARE_API_TOKEN: Optional[str] = None
@@ -75,10 +77,10 @@ class Settings(BaseSettings):
     SMTP_USER: str = "postmaster@cognomega.com"
     SMTP_PASS: str
     
-    # WhatsApp Configuration (Free Tier)
-    WHATSAPP_WEBHOOK_URL: Optional[str] = None
-    WHATSAPP_VERIFY_TOKEN: Optional[str] = None
-    WHATSAPP_ACCESS_TOKEN: Optional[str] = None
+    # WhatsApp Business API Configuration
+    WHATSAPP_MESSAGE_TEMPLATES: Optional[str] = None
+    WHATSAPP_MEDIA_UPLOAD_URL: Optional[str] = None
+    WHATSAPP_WEBHOOK_SECRET: Optional[str] = None
     
     # Rate Limiting
     RATE_LIMIT_REQUESTS_PER_MINUTE: int = 60
@@ -135,8 +137,8 @@ def validate_settings():
         "SUPABASE_SERVICE_KEY",
         "RAZORPAY_KEY_ID",
         "RAZORPAY_KEY_SECRET",
-        "TWILIO_ACCOUNT_SID",
-        "TWILIO_AUTH_TOKEN",
+        "WHATSAPP_ACCESS_TOKEN",
+        "WHATSAPP_PHONE_NUMBER_ID",
     ]
     
     missing_settings = []

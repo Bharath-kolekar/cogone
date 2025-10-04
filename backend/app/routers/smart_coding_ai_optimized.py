@@ -6,7 +6,7 @@ import structlog
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from typing import Dict, List, Optional, Any
 from datetime import datetime
-from uuid import UUID
+from uuid import UUID, uuid4
 from app.services.smart_coding_ai_optimized import (
     smart_coding_ai_optimized, AccuracyLevel, OptimizationStrategy,
     Language, CompletionType, SuggestionType, CodeContext
@@ -28,7 +28,13 @@ from app.models.smart_coding_ai_optimized import (
     IntelligentCompletionResponse, CompletionSuggestionsRequest,
     CompletionSuggestionsResponse, CompletionConfidenceRequest,
     CompletionConfidenceResponse, CompletionPerformanceRequest,
-    CompletionPerformanceResponse, InlineCompletionStatus
+    CompletionPerformanceResponse, InlineCompletionStatus,
+    # Codebase-Aware AI Memory Models
+    MemoryAnalysisRequest, MemoryAnalysisResponse, MemoryQuery,
+    MemorySearchResult, MemoryStatus,
+    # Chat with Your Codebase Models
+    CodebaseChatRequest, CodebaseChatResponse, CodeFlowAnalysis,
+    ComponentRelationship, ChatAnalysisRequest, ChatAnalysisResponse
 )
 from app.models.ai_agent import (
     AgentDefinition, AgentCreationRequest, AgentUpdateRequest,
@@ -879,6 +885,479 @@ async def get_benchmarks():
         )
 
 
+# ============================================================================
+# CODEBASE-AWARE AI MEMORY SYSTEM ENDPOINTS
+# ============================================================================
+
+@router.post("/memory/analyze-project", response_model=MemoryAnalysisResponse)
+async def analyze_project_memory(
+    request: MemoryAnalysisRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Analyze project and create memory snapshot with photographic memory"""
+    try:
+        # Perform comprehensive project analysis
+        analysis_result = await smart_coding_ai_optimized.analyze_project_memory(
+            project_path=request.project_path,
+            analysis_depth=request.analysis_depth
+        )
+        
+        if not analysis_result:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to analyze project"
+            )
+        
+        return MemoryAnalysisResponse(
+            analysis_id=analysis_result.get("analysis_id", str(uuid4())),
+            project_id=analysis_result.get("project_id", str(uuid4())),
+            memory_snapshot=analysis_result.get("memory_snapshot", {}),
+            analysis_time=analysis_result.get("analysis_time", 0.0),
+            files_analyzed=analysis_result.get("files_analyzed", 0),
+            patterns_found=analysis_result.get("patterns_found", 0),
+            dependencies_found=analysis_result.get("dependencies_found", 0),
+            configs_found=analysis_result.get("configs_found", 0),
+            analysis_summary=analysis_result.get("analysis_summary", {}),
+            timestamp=analysis_result.get("timestamp", datetime.now())
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Failed to analyze project memory", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to analyze project memory: {e}"
+        )
+
+
+@router.post("/memory/search", response_model=List[MemorySearchResult])
+async def search_codebase_memory(
+    request: MemoryQuery,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Search through codebase memory with photographic precision"""
+    try:
+        # Search memory system
+        search_results = await smart_coding_ai_optimized.search_codebase_memory(
+            query=request.query_text,
+            project_id=request.filters.get("project_id"),
+            result_type=request.filters.get("result_type")
+        )
+        
+        # Convert to response models
+        results = []
+        for result in search_results[:request.limit]:
+            results.append(MemorySearchResult(
+                result_id=result.get("result_id", str(uuid4())),
+                result_type=result.get("result_type", "unknown"),
+                content=result.get("content", ""),
+                file_path=result.get("file_path", ""),
+                line_number=result.get("line_number"),
+                confidence=result.get("confidence", 0.0),
+                context=result.get("context", {}) if request.include_context else {},
+                timestamp=result.get("timestamp", datetime.now())
+            ))
+        
+        return results
+        
+    except Exception as e:
+        logger.error("Failed to search codebase memory", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to search codebase memory: {e}"
+        )
+
+
+@router.get("/memory/status", response_model=MemoryStatus)
+async def get_memory_status(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get codebase memory system status"""
+    try:
+        status_data = await smart_coding_ai_optimized.get_memory_status()
+        
+        return MemoryStatus(
+            system_active=status_data.get("system_active", False),
+            total_projects=status_data.get("total_projects", 0),
+            total_patterns=status_data.get("total_patterns", 0),
+            total_dependencies=status_data.get("total_dependencies", 0),
+            total_configs=status_data.get("total_configs", 0),
+            memory_usage=status_data.get("memory_usage", 0.0),
+            last_analysis=status_data.get("last_analysis"),
+            cache_hit_rate=status_data.get("cache_hit_rate", 0.0),
+            performance_score=status_data.get("performance_score", 0.0),
+            timestamp=status_data.get("timestamp", datetime.now())
+        )
+        
+    except Exception as e:
+        logger.error("Failed to get memory status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get memory status: {e}"
+        )
+
+
+@router.post("/memory/session/context")
+async def create_session_context(
+    user_id: str,
+    project_id: str,
+    current_file: str,
+    cursor_line: int,
+    cursor_column: int,
+    working_directory: str,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Create session context for cross-session memory"""
+    try:
+        context = await smart_coding_ai_optimized.create_session_context(
+            user_id=user_id,
+            project_id=project_id,
+            current_file=current_file,
+            cursor_position=(cursor_line, cursor_column),
+            working_directory=working_directory
+        )
+        
+        return {
+            "success": True,
+            "session_context": context,
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to create session context", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to create session context: {e}"
+        )
+
+
+@router.put("/memory/session/{session_id}")
+async def update_session_context(
+    session_id: str,
+    updates: Dict[str, Any],
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Update session context"""
+    try:
+        success = await smart_coding_ai_optimized.update_session_context(
+            session_id=session_id,
+            updates=updates
+        )
+        
+        return {
+            "success": success,
+            "session_id": session_id,
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to update session context", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update session context: {e}"
+        )
+
+
+@router.get("/memory/user/{user_id}/context")
+async def get_user_context(
+    user_id: str,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get user's context across all sessions"""
+    try:
+        context = await smart_coding_ai_optimized.get_user_context(user_id)
+        
+        return {
+            "user_id": user_id,
+            "context": context,
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get user context", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get user context: {e}"
+        )
+
+
+@router.post("/memory/enhance-completion", response_model=InlineCompletionResponse)
+async def enhance_completion_with_memory(
+    request: InlineCompletionRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Enhance code completion using codebase memory"""
+    try:
+        # Create completion context
+        from app.services.smart_coding_ai_optimized import CompletionContext
+        
+        context = CompletionContext(
+            file_path=request.file_path,
+            language=request.language,
+            content=request.content,
+            cursor_position=(request.cursor_line, request.cursor_column),
+            selection=request.selection,
+            imports=request.imports or [],
+            functions=request.functions or [],
+            classes=request.classes or [],
+            variables=request.variables or [],
+            recent_changes=request.recent_changes or [],
+            project_context=request.project_context or {},
+            user_preferences=request.user_preferences or {},
+            completion_history=request.completion_history or [],
+            typing_speed=request.typing_speed or 0.0,
+            pause_duration=request.pause_duration or 0.0
+        )
+        
+        # Get enhanced completion
+        enhanced_completion = await smart_coding_ai_optimized.enhance_completion_with_memory(context)
+        
+        # Convert to response model
+        response = InlineCompletionResponse(
+            completion_id=enhanced_completion.completion_id,
+            text=enhanced_completion.text,
+            completion_type=enhanced_completion.completion_type,
+            language=enhanced_completion.language,
+            confidence=enhanced_completion.confidence,
+            accuracy_score=enhanced_completion.accuracy_score,
+            context_relevance=enhanced_completion.context_relevance,
+            semantic_similarity=enhanced_completion.semantic_similarity,
+            pattern_match_score=enhanced_completion.pattern_match_score,
+            ml_prediction_score=enhanced_completion.ml_prediction_score,
+            ensemble_score=enhanced_completion.ensemble_score,
+            start_line=enhanced_completion.start_line,
+            end_line=enhanced_completion.end_line,
+            start_column=enhanced_completion.start_column,
+            end_column=enhanced_completion.end_column,
+            description=enhanced_completion.description,
+            documentation=enhanced_completion.documentation,
+            parameters=enhanced_completion.parameters,
+            return_type=enhanced_completion.return_type,
+            optimization_strategies=enhanced_completion.optimization_strategies,
+            is_streaming=enhanced_completion.is_streaming,
+            created_at=enhanced_completion.created_at
+        )
+        
+        return response
+        
+    except Exception as e:
+        logger.error("Failed to enhance completion with memory", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enhance completion with memory: {e}"
+        )
+
+
+@router.get("/memory/contextual-suggestions")
+async def get_contextual_suggestions(
+    file_path: str,
+    language: str,
+    cursor_line: int,
+    cursor_column: int,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get contextual suggestions based on codebase memory"""
+    try:
+        suggestions = await smart_coding_ai_optimized.get_contextual_suggestions(
+            file_path=file_path,
+            language=language,
+            cursor_position=(cursor_line, cursor_column)
+        )
+        
+        return {
+            "file_path": file_path,
+            "language": language,
+            "cursor_position": {"line": cursor_line, "column": cursor_column},
+            "suggestions": suggestions,
+            "total_count": len(suggestions),
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get contextual suggestions", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get contextual suggestions: {e}"
+        )
+
+
+# ============================================================================
+# CHAT WITH YOUR CODEBASE ENDPOINTS
+# ============================================================================
+
+@router.post("/chat/codebase", response_model=CodebaseChatResponse)
+async def chat_with_codebase(
+    request: CodebaseChatRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Chat with your codebase using natural language"""
+    try:
+        response = await smart_coding_ai_optimized.chat_with_codebase(
+            query=request.query,
+            project_id=request.project_id,
+            context_type=request.context_type,
+            include_code_snippets=request.include_code_snippets,
+            max_results=request.max_results,
+            focus_files=request.focus_files
+        )
+        
+        return CodebaseChatResponse(**response)
+        
+    except Exception as e:
+        logger.error("Failed to chat with codebase", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to chat with codebase: {e}"
+        )
+
+@router.post("/chat/analyze-flow", response_model=CodeFlowAnalysis)
+async def analyze_code_flow(
+    query: str,
+    project_id: str,
+    flow_type: str = "data",
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Analyze data flow and business logic"""
+    try:
+        flow_analysis = await smart_coding_ai_optimized.analyze_code_flow(
+            query=query,
+            project_id=project_id,
+            flow_type=flow_type
+        )
+        
+        return CodeFlowAnalysis(**flow_analysis)
+        
+    except Exception as e:
+        logger.error("Failed to analyze code flow", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to analyze code flow: {e}"
+        )
+
+@router.post("/chat/explain-component", response_model=ComponentRelationship)
+async def explain_code_component(
+    component_name: str,
+    project_id: str,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get detailed explanations of code components"""
+    try:
+        component_analysis = await smart_coding_ai_optimized.explain_code_component(
+            component_name=component_name,
+            project_id=project_id
+        )
+        
+        return ComponentRelationship(**component_analysis)
+        
+    except Exception as e:
+        logger.error("Failed to explain component", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to explain component: {e}"
+        )
+
+@router.post("/chat/find-relationships", response_model=List[ComponentRelationship])
+async def find_code_relationships(
+    query: str,
+    project_id: str,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Discover relationships between components"""
+    try:
+        relationships = await smart_coding_ai_optimized.find_code_relationships(
+            query=query,
+            project_id=project_id
+        )
+        
+        return [ComponentRelationship(**rel) for rel in relationships]
+        
+    except Exception as e:
+        logger.error("Failed to find relationships", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to find relationships: {e}"
+        )
+
+@router.post("/chat/debug-issues")
+async def debug_code_issues(
+    issue_description: str,
+    project_id: str,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Debug and explain code issues"""
+    try:
+        debug_analysis = await smart_coding_ai_optimized.debug_code_issues(
+            issue_description=issue_description,
+            project_id=project_id
+        )
+        
+        return {
+            "debug_result": debug_analysis,
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to debug issues", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to debug issues: {e}"
+        )
+
+@router.post("/chat/search-natural")
+async def search_code_with_natural_language(
+    query: str,
+    project_id: str,
+    max_results: int = 15,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Search code with natural language"""
+    try:
+        search_results = await smart_coding_ai_optimized.search_code_with_natural_language(
+            query=query,
+            project_id=project_id,
+            max_results=max_results
+        )
+        
+        return {
+            "query": query,
+            "project_id": project_id,
+            "results": search_results,
+            "total_count": len(search_results),
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to search with natural language", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to search with natural language: {e}"
+        )
+
+@router.post("/chat/analyze-auth")
+async def analyze_authentication_flow(
+    project_id: str,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Analyze authentication flows"""
+    try:
+        auth_analysis = await smart_coding_ai_optimized.analyze_authentication_flow(
+            project_id=project_id
+        )
+        
+        return {
+            "auth_analysis": auth_analysis,
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to analyze auth flow", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to analyze auth flow: {e}"
+        )
+
+
 @router.post("/generate-code")
 async def generate_code_endpoint(
     prompt: str,
@@ -948,12 +1427,12 @@ async def get_coding_recommendations_endpoint():
 
 
 # ============================================================================
-# IN-LINE COMPLETION ENDPOINTS (GitHub Copilot-like features)
+# IN-LINE COMPLETION ENDPOINTS (Advanced code assistant features)
 # ============================================================================
 
 @router.post("/inline-completion", response_model=InlineCompletionResponse)
 async def get_inline_completion(request: InlineCompletionRequest):
-    """Get in-line code completion like GitHub Copilot"""
+    """Get in-line code completion with advanced AI assistance"""
     try:
         # Create completion context
         from app.services.smart_coding_ai_optimized import CompletionContext

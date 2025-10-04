@@ -1,5 +1,6 @@
 """
 WhatsApp service for free messaging using WhatsApp Business API
+Integrated with Smart Coding AI for voice-to-code and chat functionality
 """
 
 import structlog
@@ -8,6 +9,7 @@ from datetime import datetime
 import asyncio
 import aiohttp
 import json
+import base64
 from app.core.config import settings
 
 logger = structlog.get_logger()
@@ -20,8 +22,170 @@ class WhatsAppService:
         self.webhook_url = settings.WHATSAPP_WEBHOOK_URL
         self.verify_token = settings.WHATSAPP_VERIFY_TOKEN
         self.access_token = settings.WHATSAPP_ACCESS_TOKEN
+        self.phone_number_id = settings.WHATSAPP_PHONE_NUMBER_ID
+        self.business_account_id = settings.WHATSAPP_BUSINESS_ACCOUNT_ID
         self.base_url = "https://graph.facebook.com/v18.0"
-        self.phone_number_id = None  # Will be set from webhook verification
+        self.webhook_secret = settings.WHATSAPP_WEBHOOK_SECRET
+        
+        # Smart Coding AI Integration
+        self.smart_coding_ai = None
+        self.integration_enabled = False
+    
+    def enable_smart_coding_integration(self, smart_coding_ai_service):
+        """Enable Smart Coding AI integration"""
+        self.smart_coding_ai = smart_coding_ai_service
+        self.integration_enabled = True
+        logger.info("WhatsApp Smart Coding AI integration enabled")
+    
+    async def process_voice_message(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process voice message for code generation"""
+        try:
+            if not self.integration_enabled or not self.smart_coding_ai:
+                return {"error": "Smart Coding AI integration not enabled"}
+            
+            # Extract voice data from WhatsApp message
+            voice_data = message_data.get("voice", {})
+            if not voice_data:
+                return {"error": "No voice data found"}
+            
+            # Get voice media URL
+            media_id = voice_data.get("id")
+            if not media_id:
+                return {"error": "No voice media ID found"}
+            
+            # Download voice file
+            voice_file = await self._download_media(media_id)
+            if not voice_file:
+                return {"error": "Failed to download voice file"}
+            
+            # Get user info
+            from_number = message_data.get("from", "")
+            user_id = f"whatsapp_{from_number}"
+            
+            # Process with Smart Coding AI
+            from app.services.smart_coding_ai_integration import AIIntegrationContext
+            context = AIIntegrationContext(
+                user_id=user_id,
+                project_id=f"whatsapp_project_{from_number}",
+                operation_type="voice_to_code"
+            )
+            
+            # Use Smart Coding AI integration
+            response = await self.smart_coding_ai.process_voice_to_code(
+                audio_file=voice_file,
+                language="en",
+                context=context
+            )
+            
+            # Format response for WhatsApp
+            generated_code = response.primary_response.get("generated_code", "")
+            confidence = response.confidence
+            
+            if generated_code:
+                message = f"🤖 *Code Generated* (Confidence: {confidence:.1%})\n\n```python\n{generated_code}\n```"
+            else:
+                message = f"🤖 I couldn't generate code from your voice message. Confidence: {confidence:.1%}"
+            
+            return {
+                "success": True,
+                "message": message,
+                "generated_code": generated_code,
+                "confidence": confidence
+            }
+            
+        except Exception as e:
+            logger.error("Failed to process voice message", error=str(e))
+            return {"error": f"Failed to process voice message: {str(e)}"}
+    
+    async def process_text_message(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process text message for Smart Coding AI chat"""
+        try:
+            if not self.integration_enabled or not self.smart_coding_ai:
+                return {"error": "Smart Coding AI integration not enabled"}
+            
+            # Extract text from WhatsApp message
+            text = message_data.get("text", {}).get("body", "")
+            if not text:
+                return {"error": "No text found in message"}
+            
+            # Get user info
+            from_number = message_data.get("from", "")
+            user_id = f"whatsapp_{from_number}"
+            
+            # Check if it's a code-related query
+            code_keywords = ["code", "function", "class", "variable", "import", "programming", "debug", "error"]
+            is_code_related = any(keyword in text.lower() for keyword in code_keywords)
+            
+            if is_code_related:
+                # Process with Smart Coding AI
+                from app.services.smart_coding_ai_integration import AIIntegrationContext
+                context = AIIntegrationContext(
+                    user_id=user_id,
+                    project_id=f"whatsapp_project_{from_number}",
+                    operation_type="ai_assistant_chat"
+                )
+                
+                # Use Smart Coding AI integration
+                response = await self.smart_coding_ai.chat_with_ai_assistant(
+                    message=text,
+                    context=context
+                )
+                
+                # Format response for WhatsApp
+                ai_response = response.primary_response.get("combined_response", response.primary_response)
+                confidence = response.confidence
+                
+                message = f"🤖 *Smart Coding AI Response* (Confidence: {confidence:.1%})\n\n{ai_response}"
+                
+                # Add code snippets if available
+                code_snippets = response.primary_response.get("code_snippets", [])
+                if code_snippets:
+                    for snippet in code_snippets[:2]:  # Limit to 2 snippets
+                        message += f"\n\n```python\n{snippet.get('content', '')}\n```"
+                
+                return {
+                    "success": True,
+                    "message": message,
+                    "confidence": confidence,
+                    "code_related": True
+                }
+            else:
+                # Regular WhatsApp response
+                return {
+                    "success": True,
+                    "message": f"👋 Hello! I received your message: {text}\n\nFor code-related questions, use keywords like 'code', 'function', 'debug', etc.",
+                    "confidence": 1.0,
+                    "code_related": False
+                }
+            
+        except Exception as e:
+            logger.error("Failed to process text message", error=str(e))
+            return {"error": f"Failed to process text message: {str(e)}"}
+    
+    async def _download_media(self, media_id: str) -> Optional[bytes]:
+        """Download media from WhatsApp API"""
+        try:
+            url = f"{self.base_url}/{media_id}"
+            headers = {
+                "Authorization": f"Bearer {self.access_token}"
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, headers=headers) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        media_url = data.get("url")
+                        
+                        if media_url:
+                            async with session.get(media_url, headers=headers) as media_response:
+                                if media_response.status == 200:
+                                    return await media_response.read()
+            
+            return None
+            
+        except Exception as e:
+            logger.error("Failed to download media", error=str(e))
+            return None
     
     async def send_message(self, to: str, message: str, message_type: str = "text") -> Dict[str, Any]:
         """Send WhatsApp message"""

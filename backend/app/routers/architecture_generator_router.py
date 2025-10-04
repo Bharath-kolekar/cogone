@@ -583,7 +583,164 @@ async def health_check(
             "architecture_generation": True,
             "diagram_generation": True,
             "analysis": True,
-            "mermaid_ai": True
+            "mermaid_ai": True,
+            "ai_diagram_repair": True,
+            "diagram_optimization": True
         },
         "timestamp": datetime.now()
     }
+
+
+# ============================================================================
+# AI DIAGRAM REPAIR ENDPOINTS
+# ============================================================================
+
+@router.post("/repair", response_model=DiagramRepairResponse)
+async def repair_diagram(
+    request: DiagramRepairRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Repair diagram using AI analysis and correction"""
+    try:
+        from app.services.architecture_generator import DiagramRepairRequest as ServiceRequest
+        
+        service_request = ServiceRequest(
+            diagram_content=request.diagram_content,
+            diagram_type=request.diagram_type,
+            repair_type=request.repair_type,
+            issues=request.issues,
+            requirements=request.requirements,
+            context=request.context
+        )
+        
+        result = await architecture_generator.repair_diagram(service_request)
+        
+        return DiagramRepairResponse(
+            repair_id=str(uuid.uuid4()),
+            original_diagram=result.original_diagram,
+            repaired_diagram=result.repaired_diagram,
+            repair_type=result.repair_type,
+            issues_found=result.issues_found,
+            fixes_applied=result.fixes_applied,
+            improvements=result.improvements,
+            confidence_score=result.confidence_score,
+            validation_passed=result.validation_passed,
+            performance_metrics=result.performance_metrics,
+            created_at=result.created_at
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to repair diagram: {str(e)}")
+
+
+@router.post("/analyze-diagram", response_model=DiagramAnalysisResponse)
+async def analyze_diagram(
+    request: DiagramAnalysisRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Analyze diagram for issues and quality"""
+    try:
+        from app.services.architecture_generator import DiagramAnalysis
+        
+        # Create analysis request for service
+        analysis = await architecture_generator._analyze_diagram_issues(
+            request.diagram_content, 
+            request.diagram_type
+        )
+        
+        return DiagramAnalysisResponse(
+            analysis_id=str(uuid.uuid4()),
+            syntax_valid=analysis.syntax_valid,
+            logic_consistent=analysis.logic_consistent,
+            completeness_score=analysis.completeness_score,
+            optimization_opportunities=analysis.optimization_opportunities,
+            best_practices_compliance=analysis.best_practices_compliance,
+            complexity_analysis=analysis.complexity_analysis,
+            recommendations=analysis.recommendations,
+            quality_score=analysis.quality_score,
+            created_at=datetime.now()
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to analyze diagram: {str(e)}")
+
+
+@router.post("/optimize-diagram", response_model=DiagramOptimizationResponse)
+async def optimize_diagram(
+    request: DiagramOptimizationRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Optimize diagram structure and performance"""
+    try:
+        from app.services.architecture_generator import DiagramRepairRequest as ServiceRequest, RepairType
+        
+        # Create optimization request
+        service_request = ServiceRequest(
+            diagram_content=request.diagram_content,
+            diagram_type=request.diagram_type,
+            repair_type=RepairType.OPTIMIZATION,
+            requirements=request.optimization_goals,
+            context={"constraints": request.constraints}
+        )
+        
+        result = await architecture_generator.repair_diagram(service_request)
+        
+        return DiagramOptimizationResponse(
+            optimization_id=str(uuid.uuid4()),
+            original_diagram=result.original_diagram,
+            optimized_diagram=result.repaired_diagram,
+            optimization_goals=request.optimization_goals,
+            improvements=result.improvements,
+            performance_gains=result.performance_metrics,
+            quality_score=result.confidence_score,
+            created_at=result.created_at
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to optimize diagram: {str(e)}")
+
+
+@router.get("/repair-types")
+async def get_repair_types(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get available diagram repair types"""
+    try:
+        from app.models.architecture_generator_models import RepairType
+        
+        return {
+            "repair_types": [
+                {
+                    "type": repair_type.value,
+                    "name": repair_type.value.replace("_", " ").title(),
+                    "description": f"AI-powered {repair_type.value.replace('_', ' ')} for diagrams"
+                }
+                for repair_type in RepairType
+            ]
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get repair types: {str(e)}")
+
+
+@router.get("/diagram-types")
+async def get_diagram_types(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get supported diagram types"""
+    try:
+        from app.models.architecture_generator_models import DiagramType
+        
+        return {
+            "diagram_types": [
+                {
+                    "type": diagram_type.value,
+                    "name": diagram_type.value.replace("_", " ").title(),
+                    "description": f"Mermaid {diagram_type.value} diagram support"
+                }
+                for diagram_type in DiagramType
+            ]
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get diagram types: {str(e)}")

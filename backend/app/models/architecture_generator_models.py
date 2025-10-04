@@ -84,6 +84,16 @@ class RelationshipType(str, Enum):
     STORES_IN = "stores_in"
 
 
+class RepairType(str, Enum):
+    """AI diagram repair type enumeration"""
+    SYNTAX_FIX = "syntax_fix"
+    LOGIC_CORRECTION = "logic_correction"
+    OPTIMIZATION = "optimization"
+    ENHANCEMENT = "enhancement"
+    VALIDATION = "validation"
+    COMPLETION = "completion"
+
+
 # ============================================================================
 # ARCHITECTURE MODELS
 # ============================================================================
@@ -357,3 +367,74 @@ class ValidationError(BaseModel):
     error_message: str = Field(..., description="Error message")
     suggested_value: Optional[Any] = Field(None, description="Suggested value")
     timestamp: datetime = Field(..., description="Error timestamp")
+
+
+# ============================================================================
+# AI DIAGRAM REPAIR MODELS
+# ============================================================================
+
+class DiagramRepairRequest(BaseModel):
+    """Request for AI diagram repair"""
+    diagram_content: str = Field(..., description="Original diagram content")
+    diagram_type: DiagramType = Field(..., description="Type of diagram to repair")
+    repair_type: RepairType = Field(..., description="Type of repair to perform")
+    issues: List[str] = Field(default_factory=list, description="Known issues to fix")
+    requirements: List[str] = Field(default_factory=list, description="Requirements for repair")
+    context: Optional[Dict[str, Any]] = Field(None, description="Additional context")
+
+
+class DiagramRepairResponse(BaseModel):
+    """Response for AI diagram repair"""
+    repair_id: str = Field(..., description="Unique repair identifier")
+    original_diagram: str = Field(..., description="Original diagram content")
+    repaired_diagram: str = Field(..., description="Repaired diagram content")
+    repair_type: RepairType = Field(..., description="Type of repair performed")
+    issues_found: List[str] = Field(..., description="Issues found in original diagram")
+    fixes_applied: List[str] = Field(..., description="Fixes applied to diagram")
+    improvements: List[str] = Field(..., description="Improvements made to diagram")
+    confidence_score: float = Field(..., description="Confidence score for repair quality")
+    validation_passed: bool = Field(..., description="Whether validation passed")
+    performance_metrics: Dict[str, float] = Field(..., description="Performance metrics")
+    created_at: datetime = Field(..., description="Repair timestamp")
+
+
+class DiagramAnalysisRequest(BaseModel):
+    """Request for diagram analysis"""
+    diagram_content: str = Field(..., description="Diagram content to analyze")
+    diagram_type: DiagramType = Field(..., description="Type of diagram")
+    analysis_depth: str = Field(default="standard", description="Depth of analysis")
+    focus_areas: List[str] = Field(default_factory=list, description="Areas to focus on")
+
+
+class DiagramAnalysisResponse(BaseModel):
+    """Response for diagram analysis"""
+    analysis_id: str = Field(..., description="Unique analysis identifier")
+    syntax_valid: bool = Field(..., description="Whether syntax is valid")
+    logic_consistent: bool = Field(..., description="Whether logic is consistent")
+    completeness_score: float = Field(..., description="Completeness score (0-1)")
+    optimization_opportunities: List[str] = Field(..., description="Optimization opportunities")
+    best_practices_compliance: float = Field(..., description="Best practices compliance score")
+    complexity_analysis: Dict[str, Any] = Field(..., description="Complexity analysis results")
+    recommendations: List[str] = Field(..., description="Improvement recommendations")
+    quality_score: float = Field(..., description="Overall quality score")
+    created_at: datetime = Field(..., description="Analysis timestamp")
+
+
+class DiagramOptimizationRequest(BaseModel):
+    """Request for diagram optimization"""
+    diagram_content: str = Field(..., description="Diagram content to optimize")
+    diagram_type: DiagramType = Field(..., description="Type of diagram")
+    optimization_goals: List[str] = Field(..., description="Optimization goals")
+    constraints: List[str] = Field(default_factory=list, description="Optimization constraints")
+
+
+class DiagramOptimizationResponse(BaseModel):
+    """Response for diagram optimization"""
+    optimization_id: str = Field(..., description="Unique optimization identifier")
+    original_diagram: str = Field(..., description="Original diagram content")
+    optimized_diagram: str = Field(..., description="Optimized diagram content")
+    optimization_goals: List[str] = Field(..., description="Optimization goals applied")
+    improvements: List[str] = Field(..., description="Improvements made")
+    performance_gains: Dict[str, float] = Field(..., description="Performance gains achieved")
+    quality_score: float = Field(..., description="Quality score improvement")
+    created_at: datetime = Field(..., description="Optimization timestamp")

@@ -30,7 +30,7 @@ Authorization: Bearer <jwt_token>
 Content-Type: application/json
 ```
 
-## 🤖 Smart Coding AI - GitHub Copilot-like Features
+## 🤖 Smart Coding AI - Advanced Code Assistant Features
 
 ### Base Path: `/api/v0/smart-coding-ai`
 

@@ -29,6 +29,10 @@ from app.routers import (
     swarm_ai_router,
     architecture_generator_router,
     agent_mode_router,
+    smart_coding_ai_integration_router,
+    auto_save_router,
+    ai_component_orchestrator_router,
+    unified_ai_orchestrator_router,
 )
 from app.middleware.rate_limiter import RateLimitMiddleware
 from app.middleware.auth import AuthMiddleware
@@ -117,6 +121,10 @@ app.include_router(apps.router, prefix="/api/v0/apps", tags=["App Generation"])
 app.include_router(admin.router, prefix="/api/v0/admin", tags=["Admin"])
 app.include_router(webhooks.router, prefix="/api/v0/webhooks", tags=["Webhooks"])
 app.include_router(smart_coding_ai_optimized.router, prefix="/api/v0/smart-coding-ai", tags=["Smart Coding AI"])
+app.include_router(smart_coding_ai_integration_router.router, tags=["Smart Coding AI Integration"])
+app.include_router(auto_save_router.router, tags=["Auto-Save & Keep All Changes"])
+app.include_router(ai_component_orchestrator_router.router, tags=["AI Component Orchestrator"])
+app.include_router(unified_ai_orchestrator_router.router, tags=["Unified AI Orchestrator"])
 app.include_router(ai_agents_consolidated.router, prefix="/api/v0/ai-agents", tags=["AI Agents"])
 app.include_router(meta_ai_orchestrator_unified.router, prefix="/api/v0/meta-orchestrator", tags=["Meta Orchestrator"])
 app.include_router(swarm_ai_router.router, prefix="/api/v0/swarm-ai", tags=["Swarm AI"])
