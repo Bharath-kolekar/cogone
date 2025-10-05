@@ -112,6 +112,7 @@ vercel --prod
 NEXT_PUBLIC_API_URL=https://your-backend-url.com
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+NEXT_PUBLIC_APP_URL=https://your-frontend-url.com
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxx
 ```
 

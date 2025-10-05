@@ -33,6 +33,12 @@ from app.routers import (
     auto_save_router,
     ai_component_orchestrator_router,
     unified_ai_orchestrator_router,
+    hierarchical_orchestration_router,
+    multi_agent_coordinator_router,
+    tool_integration_router,
+    consistency_dna_router,
+    proactive_dna_router,
+    consciousness_dna_router,
 )
 from app.middleware.rate_limiter import RateLimitMiddleware
 from app.middleware.auth import AuthMiddleware
@@ -130,6 +136,12 @@ app.include_router(meta_ai_orchestrator_unified.router, prefix="/api/v0/meta-orc
 app.include_router(swarm_ai_router.router, prefix="/api/v0/swarm-ai", tags=["Swarm AI"])
 app.include_router(architecture_generator_router.router, prefix="/api/v0/architecture-generator", tags=["Architecture Generator"])
 app.include_router(agent_mode_router.router, prefix="/api/v0/agent-mode", tags=["Agent Mode"])
+app.include_router(hierarchical_orchestration_router.router, prefix="/api/v0", tags=["Hierarchical Orchestration"])
+app.include_router(multi_agent_coordinator_router.router, prefix="/api/v0", tags=["Multi-Agent Coordination"])
+app.include_router(tool_integration_router.router, prefix="/api/v0", tags=["Tool Integration"])
+app.include_router(consistency_dna_router.router, prefix="/api/v0", tags=["Consistency DNA"])
+app.include_router(proactive_dna_router.router, prefix="/api/v0", tags=["Proactive DNA"])
+app.include_router(consciousness_dna_router.router, prefix="/api/v0", tags=["Consciousness DNA"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -226,6 +238,7 @@ async def api_status():
             "swarm_ai": True,
             "architecture_generator": True,
             "agent_mode": True,
+            "tool_integration": True,
             "local_ai": settings.ALLOW_LOCAL_LLM,
             "cloud_ai": bool(settings.HF_API_KEY or settings.TOGETHER_API_KEY or settings.GROQ_API_KEY),
         },
@@ -241,6 +254,7 @@ async def api_status():
             "swarm_ai": "/api/v0/swarm-ai",
             "architecture_generator": "/api/v0/architecture-generator",
             "agent_mode": "/api/v0/agent-mode",
+            "tool_integration": "/api/v0/tools",
         },
     }
 

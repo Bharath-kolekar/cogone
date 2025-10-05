@@ -32,9 +32,22 @@ from app.models.smart_coding_ai_optimized import (
     # Codebase-Aware AI Memory Models
     MemoryAnalysisRequest, MemoryAnalysisResponse, MemoryQuery,
     MemorySearchResult, MemoryStatus,
+    # Auth & RBAC Models
+    SmartCodingAuthRequest, SmartCodingAuthResponse, SmartCodingQuotaInfo,
+    SmartCodingAuthAudit, SmartCodingAuthConfig,
+    RBACRole, RBACAssignment, RBACPolicy,
+    StateSnapshot, StateEvent, StateManagerConfig,
     # Chat with Your Codebase Models
     CodebaseChatRequest, CodebaseChatResponse, CodeFlowAnalysis,
-    ComponentRelationship, ChatAnalysisRequest, ChatAnalysisResponse
+    ComponentRelationship, ChatAnalysisRequest, ChatAnalysisResponse,
+    # OAuth Models
+    OAuthRequest, OAuthResponse, OAuthCallbackRequest, OAuthTokenResponse,
+    OAuthUserInfo, OAuthLoginResponse, OAuthConfig, OAuthProvider,
+    # Cache/Queue/Telemetry Models
+    CacheRequest, CacheResponse, CacheStats, CacheOperation,
+    QueueRequest, QueueResponse, QueueStats, QueuePriority, QueueStatus,
+    TelemetryRequest, TelemetryResponse, TelemetryMetric, TelemetryEvent,
+    TelemetryType, TelemetryLevel
 )
 from app.models.ai_agent import (
     AgentDefinition, AgentCreationRequest, AgentUpdateRequest,
@@ -1179,6 +1192,601 @@ async def get_contextual_suggestions(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get contextual suggestions: {e}"
+        )
+
+
+# ============================================================================
+# AUTH & RBAC ENDPOINTS WITH STATEMANAGER
+# ============================================================================
+
+@router.post("/auth/initialize-state", response_model=StateSnapshot)
+async def initialize_auth_state(
+    user_id: str = Query(..., description="User ID"),
+    initial_state: str = Query("authenticated", description="Initial state"),
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Initialize authentication state for user"""
+    try:
+        # Initialize auth state
+        auth_state = await smart_coding_ai_optimized.initialize_auth_state(
+            user_id=user_id,
+            initial_state=initial_state,
+            state_data={"initialized_by": current_user.id}
+        )
+
+        return StateSnapshot(**auth_state)
+
+    except Exception as e:
+        logger.error("Failed to initialize auth state", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to initialize auth state: {e}"
+        )
+
+
+@router.post("/auth/assign-role", response_model=RBACAssignment)
+async def assign_user_role(
+    user_id: str = Query(..., description="User ID"),
+    role_id: str = Query(..., description="Role ID"),
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Assign role to user"""
+    try:
+        # Assign role to user
+        assignment = await smart_coding_ai_optimized.assign_user_role(
+            user_id=user_id,
+            role_id=role_id,
+            granted_by=current_user.id
+        )
+
+        return RBACAssignment(**assignment)
+
+    except Exception as e:
+        logger.error("Failed to assign role", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to assign role: {e}"
+        )
+
+
+@router.post("/auth/authorize-operation", response_model=SmartCodingAuthResponse)
+async def authorize_smart_coding_operation(
+    request: SmartCodingAuthRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Authorize Smart Coding AI operation"""
+    try:
+        # Authorize operation
+        auth_response = await smart_coding_ai_optimized.authorize_smart_coding_operation(
+            user_id=request.user_id,
+            operation=request.operation,
+            resource_type=request.scope,
+            resource_id=request.resource_id
+        )
+
+        return SmartCodingAuthResponse(**auth_response)
+
+    except Exception as e:
+        logger.error("Failed to authorize operation", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to authorize operation: {e}"
+        )
+
+
+@router.get("/auth/user-status")
+async def get_user_auth_status(
+    user_id: str = Query(..., description="User ID"),
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get user authentication and authorization status"""
+    try:
+        # Get user auth status
+        auth_status = await smart_coding_ai_optimized.get_user_auth_status(user_id=user_id)
+
+        return auth_status
+
+    except Exception as e:
+        logger.error("Failed to get user auth status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to get user auth status: {e}"
+            )
+
+
+# ============================================================================
+# OAUTH ENDPOINTS FOR SMART CODING AI
+# ============================================================================
+
+@router.post("/oauth/{provider}/initiate", response_model=OAuthResponse)
+async def initiate_oauth_login(
+    provider: str,
+    request: OAuthRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Initiate OAuth login with Google, GitHub, etc."""
+    try:
+        # Validate provider
+        if provider not in ["google", "github"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Unsupported OAuth provider: {provider}"
+            )
+        
+        # Initiate OAuth login
+        oauth_result = await smart_coding_ai_optimized.initiate_oauth_login(
+            provider=provider,
+            redirect_uri=request.redirect_uri
+        )
+        
+        return OAuthResponse(
+            auth_url=oauth_result["auth_url"],
+            state=oauth_result["state"],
+            expires_at=oauth_result["expires_at"],
+            provider=OAuthProvider(provider)
+        )
+        
+    except Exception as e:
+        logger.error("OAuth initiation failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"OAuth initiation failed: {e}"
+        )
+
+
+@router.post("/oauth/{provider}/callback", response_model=OAuthLoginResponse)
+async def handle_oauth_callback(
+    provider: str,
+    request: OAuthCallbackRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Handle OAuth callback and complete login"""
+    try:
+        # Validate provider
+        if provider not in ["google", "github"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Unsupported OAuth provider: {provider}"
+            )
+        
+        # Handle OAuth callback
+        oauth_result = await smart_coding_ai_optimized.handle_oauth_callback(
+            provider=provider,
+            code=request.code,
+            state=request.state
+        )
+        
+        return OAuthLoginResponse(
+            user=oauth_result["user"],
+            access_token=oauth_result["access_token"],
+            refresh_token=oauth_result["refresh_token"],
+            expires_in=oauth_result["expires_in"],
+            oauth_provider=OAuthProvider(provider),
+            is_new_user=oauth_result["is_new_user"],
+            requires_profile_completion=oauth_result["requires_profile_completion"]
+        )
+        
+    except Exception as e:
+        logger.error("OAuth callback failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"OAuth callback failed: {e}"
+        )
+
+
+@router.post("/oauth/{provider}/refresh", response_model=OAuthTokenResponse)
+async def refresh_oauth_token(
+    provider: str,
+    refresh_token: str = Query(..., description="OAuth refresh token"),
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Refresh OAuth access token"""
+    try:
+        # Validate provider
+        if provider not in ["google", "github"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Unsupported OAuth provider: {provider}"
+            )
+        
+        # Refresh OAuth token
+        token_result = await smart_coding_ai_optimized.refresh_oauth_token(
+            provider=provider,
+            refresh_token=refresh_token
+        )
+        
+        return OAuthTokenResponse(
+            access_token=token_result["access_token"],
+            refresh_token=token_result.get("refresh_token"),
+            token_type=token_result.get("token_type", "Bearer"),
+            expires_in=token_result["expires_in"],
+            scope=token_result.get("scope"),
+            provider=OAuthProvider(provider)
+        )
+        
+    except Exception as e:
+        logger.error("OAuth token refresh failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"OAuth token refresh failed: {e}"
+        )
+
+
+@router.get("/oauth/providers")
+async def get_oauth_providers():
+    """Get available OAuth providers"""
+    try:
+        providers = [
+            {
+                "provider": "google",
+                "name": "Google",
+                "enabled": True,
+                "scopes": ["openid", "email", "profile"],
+                "icon_url": "/icons/google.svg"
+            },
+            {
+                "provider": "github", 
+                "name": "GitHub",
+                "enabled": True,
+                "scopes": ["user:email", "read:user"],
+                "icon_url": "/icons/github.svg"
+            }
+        ]
+        
+        return {
+            "providers": providers,
+            "total": len(providers)
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get OAuth providers", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get OAuth providers: {e}"
+        )
+
+
+# ============================================================================
+# CACHE/QUEUE/TELEMETRY INFRASTRUCTURE ENDPOINTS
+# ============================================================================
+
+@router.post("/cache/operation", response_model=CacheResponse)
+async def cache_operation(
+    request: CacheRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Perform cache operation (get, set, delete, clear, exists, stats)"""
+    try:
+        operation = request.operation
+        key = request.key
+        value = request.value
+        ttl = request.ttl
+        namespace = request.namespace or "default"
+        
+        if operation == CacheOperation.GET:
+            if not key:
+                raise HTTPException(status_code=400, detail="Key required for get operation")
+            
+            cached_value = await smart_coding_ai_optimized.cache_get(key, namespace)
+            
+            return CacheResponse(
+                success=True,
+                value=cached_value,
+                message="Value retrieved from cache" if cached_value is not None else "Key not found",
+                timestamp=datetime.now()
+            )
+        
+        elif operation == CacheOperation.SET:
+            if not key or value is None:
+                raise HTTPException(status_code=400, detail="Key and value required for set operation")
+            
+            success = await smart_coding_ai_optimized.cache_set(key, value, ttl, namespace)
+            
+            return CacheResponse(
+                success=success,
+                message="Value set in cache" if success else "Failed to set value in cache",
+                timestamp=datetime.now()
+            )
+        
+        elif operation == CacheOperation.DELETE:
+            if not key:
+                raise HTTPException(status_code=400, detail="Key required for delete operation")
+            
+            success = await smart_coding_ai_optimized.cache_delete(key, namespace)
+            
+            return CacheResponse(
+                success=success,
+                message="Key deleted from cache" if success else "Key not found or delete failed",
+                timestamp=datetime.now()
+            )
+        
+        elif operation == CacheOperation.EXISTS:
+            if not key:
+                raise HTTPException(status_code=400, detail="Key required for exists operation")
+            
+            exists = await smart_coding_ai_optimized.cache_exists(key, namespace)
+            
+            return CacheResponse(
+                success=True,
+                value=exists,
+                message="Key exists in cache" if exists else "Key does not exist in cache",
+                timestamp=datetime.now()
+            )
+        
+        elif operation == CacheOperation.CLEAR:
+            success = await smart_coding_ai_optimized.cache_clear(namespace)
+            
+            return CacheResponse(
+                success=success,
+                message="Cache cleared" if success else "Failed to clear cache",
+                timestamp=datetime.now()
+            )
+        
+        elif operation == CacheOperation.STATS:
+            stats = await smart_coding_ai_optimized.cache_stats()
+            
+            return CacheResponse(
+                success=True,
+                stats=CacheStats(**stats),
+                message="Cache statistics retrieved",
+                timestamp=datetime.now()
+            )
+        
+        else:
+            raise HTTPException(status_code=400, detail=f"Unsupported operation: {operation}")
+        
+    except Exception as e:
+        logger.error("Cache operation failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Cache operation failed: {e}"
+        )
+
+
+@router.post("/queue/enqueue", response_model=QueueResponse)
+async def queue_enqueue(
+    request: QueueRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Add item to queue"""
+    try:
+        item_id = await smart_coding_ai_optimized.queue_enqueue(
+            queue_name=request.queue_name,
+            data=request.data,
+            priority=request.priority.value,
+            delay=request.delay,
+            max_retries=request.max_retries
+        )
+        
+        return QueueResponse(
+            success=True,
+            item_id=item_id,
+            message=f"Item added to queue {request.queue_name}",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error("Queue enqueue failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Queue enqueue failed: {e}"
+        )
+
+
+@router.get("/queue/{queue_name}/dequeue")
+async def queue_dequeue(
+    queue_name: str,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get next item from queue"""
+    try:
+        item = await smart_coding_ai_optimized.queue_dequeue(queue_name)
+        
+        if item:
+            return {
+                "success": True,
+                "item": item,
+                "message": "Item retrieved from queue",
+                "timestamp": datetime.now()
+            }
+        else:
+            return {
+                "success": False,
+                "item": None,
+                "message": "No items in queue",
+                "timestamp": datetime.now()
+            }
+        
+    except Exception as e:
+        logger.error("Queue dequeue failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Queue dequeue failed: {e}"
+        )
+
+
+@router.post("/queue/{queue_name}/{item_id}/complete")
+async def queue_complete(
+    queue_name: str,
+    item_id: str,
+    result: Optional[Dict[str, Any]] = None,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Mark queue item as completed"""
+    try:
+        success = await smart_coding_ai_optimized.queue_complete(queue_name, item_id, result)
+        
+        return {
+            "success": success,
+            "message": "Item marked as completed" if success else "Failed to mark item as completed",
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Queue complete failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Queue complete failed: {e}"
+        )
+
+
+@router.post("/queue/{queue_name}/{item_id}/fail")
+async def queue_fail(
+    queue_name: str,
+    item_id: str,
+    error_message: str = Query(..., description="Error message"),
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Mark queue item as failed"""
+    try:
+        success = await smart_coding_ai_optimized.queue_fail(queue_name, item_id, error_message)
+        
+        return {
+            "success": success,
+            "message": "Item marked as failed" if success else "Failed to mark item as failed",
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Queue fail failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Queue fail failed: {e}"
+        )
+
+
+@router.get("/queue/stats")
+async def queue_stats(
+    queue_name: Optional[str] = Query(None, description="Queue name (optional)"),
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get queue statistics"""
+    try:
+        stats = await smart_coding_ai_optimized.queue_stats(queue_name)
+        
+        return {
+            "success": True,
+            "stats": stats,
+            "message": "Queue statistics retrieved",
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Queue stats failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Queue stats failed: {e}"
+        )
+
+
+@router.post("/telemetry/record", response_model=TelemetryResponse)
+async def telemetry_record(
+    request: TelemetryRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Record telemetry metrics and events"""
+    try:
+        metrics_recorded = 0
+        events_recorded = 0
+        
+        # Record metrics
+        for metric in request.metrics:
+            success = await smart_coding_ai_optimized.telemetry_record_metric(
+                name=metric.name,
+                value=metric.value,
+                tags=metric.tags,
+                level=metric.level.value,
+                user_id=metric.user_id,
+                session_id=metric.session_id
+            )
+            if success:
+                metrics_recorded += 1
+        
+        # Record events
+        for event in request.events:
+            success = await smart_coding_ai_optimized.telemetry_record_event(
+                event_name=event.event_name,
+                event_data=event.event_data,
+                tags=event.tags,
+                level=event.level.value,
+                user_id=event.user_id,
+                session_id=event.session_id
+            )
+            if success:
+                events_recorded += 1
+        
+        return TelemetryResponse(
+            success=True,
+            metrics_recorded=metrics_recorded,
+            events_recorded=events_recorded,
+            message=f"Recorded {metrics_recorded} metrics and {events_recorded} events",
+            timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        logger.error("Telemetry recording failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Telemetry recording failed: {e}"
+        )
+
+
+@router.get("/telemetry/stats")
+async def telemetry_stats(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Get telemetry statistics"""
+    try:
+        stats = await smart_coding_ai_optimized.telemetry_stats()
+        
+        return {
+            "success": True,
+            "stats": stats,
+            "message": "Telemetry statistics retrieved",
+            "timestamp": datetime.now()
+        }
+        
+    except Exception as e:
+        logger.error("Telemetry stats failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Telemetry stats failed: {e}"
+        )
+
+
+@router.post("/auth/check-permission")
+async def check_user_permission(
+    user_id: str = Query(..., description="User ID"),
+    resource_type: str = Query(..., description="Resource type"),
+    action_type: str = Query(..., description="Action type"),
+    resource_id: Optional[str] = Query(None, description="Resource ID"),
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """Check user permission for action on resource"""
+    try:
+        # Check permission
+        has_permission = await smart_coding_ai_optimized.check_user_permission(
+            user_id=user_id,
+            resource_type=resource_type,
+            action_type=action_type,
+            resource_id=resource_id
+        )
+
+        return {
+            "user_id": user_id,
+            "resource_type": resource_type,
+            "action_type": action_type,
+            "resource_id": resource_id,
+            "has_permission": has_permission,
+            "checked_by": current_user.id,
+            "timestamp": datetime.now()
+        }
+
+    except Exception as e:
+        logger.error("Failed to check permission", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to check permission: {e}"
         )
 
 

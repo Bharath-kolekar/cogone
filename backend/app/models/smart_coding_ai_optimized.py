@@ -7,6 +7,16 @@ from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
 from enum import Enum
 
+# Import User model for OAuth integration
+try:
+    from .user import User
+except ImportError:
+    # Fallback if user model not available
+    class User(BaseModel):
+        id: str
+        email: str
+        name: Optional[str] = None
+
 
 class AccuracyLevel(str, Enum):
     """Accuracy levels"""
@@ -879,6 +889,558 @@ class MemoryStatus(BaseModel):
     cache_hit_rate: float = Field(..., description="Cache hit rate")
     performance_score: float = Field(..., description="Performance score")
     timestamp: datetime = Field(default_factory=datetime.now, description="Status timestamp")
+
+
+# ============================================================================
+# AUTHENTICATION MODELS FOR SMART CODING AI
+# ============================================================================
+
+class AuthPermission(str, Enum):
+    """Authentication permission levels for Smart Coding AI"""
+    READ = "read"
+    WRITE = "write"
+    EXECUTE = "execute"
+    ADMIN = "admin"
+    OWNER = "owner"
+
+
+class AuthScope(str, Enum):
+    """Authentication scopes for Smart Coding AI"""
+    COMPLETION = "completion"
+    MEMORY = "memory"
+    ANALYSIS = "analysis"
+    SESSION = "session"
+    ADMIN = "admin"
+
+
+class SmartCodingAuthRequest(BaseModel):
+    """Authentication request for Smart Coding AI operations"""
+    user_id: str = Field(..., description="User ID")
+    operation: str = Field(..., description="Operation being performed")
+    scope: AuthScope = Field(..., description="Authentication scope")
+    resource_id: Optional[str] = Field(None, description="Resource ID being accessed")
+    project_id: Optional[str] = Field(None, description="Project ID for project-specific operations")
+    session_id: Optional[str] = Field(None, description="Session ID for session-specific operations")
+
+
+class SmartCodingAuthResponse(BaseModel):
+    """Authentication response for Smart Coding AI operations"""
+    authorized: bool = Field(..., description="Whether operation is authorized")
+    permission_level: AuthPermission = Field(..., description="Permission level granted")
+    expires_at: datetime = Field(..., description="When authorization expires")
+    limitations: Dict[str, Any] = Field(default_factory=dict, description="Operation limitations")
+    quota_remaining: Dict[str, int] = Field(default_factory=dict, description="Remaining quota")
+    message: Optional[str] = Field(None, description="Authorization message")
+
+
+class SmartCodingQuotaInfo(BaseModel):
+    """Quota information for Smart Coding AI operations"""
+    user_id: str = Field(..., description="User ID")
+    daily_completions: int = Field(0, description="Daily completion quota")
+    daily_memory_operations: int = Field(0, description="Daily memory operation quota")
+    daily_analysis_operations: int = Field(0, description="Daily analysis operation quota")
+    monthly_storage_mb: int = Field(0, description="Monthly storage quota in MB")
+    concurrent_sessions: int = Field(1, description="Concurrent session limit")
+    usage_stats: Dict[str, int] = Field(default_factory=dict, description="Current usage statistics")
+    reset_date: datetime = Field(..., description="When quotas reset")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
+
+
+class SmartCodingAuthAudit(BaseModel):
+    """Authentication audit log for Smart Coding AI"""
+    audit_id: str = Field(..., description="Unique audit identifier")
+    user_id: str = Field(..., description="User ID")
+    operation: str = Field(..., description="Operation performed")
+    scope: AuthScope = Field(..., description="Authentication scope")
+    resource_id: Optional[str] = Field(None, description="Resource accessed")
+    project_id: Optional[str] = Field(None, description="Project ID")
+    session_id: Optional[str] = Field(None, description="Session ID")
+    authorized: bool = Field(..., description="Whether operation was authorized")
+    permission_level: AuthPermission = Field(..., description="Permission level used")
+    ip_address: Optional[str] = Field(None, description="Client IP address")
+    user_agent: Optional[str] = Field(None, description="Client user agent")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Operation timestamp")
+    duration_ms: Optional[float] = Field(None, description="Operation duration in milliseconds")
+    error_message: Optional[str] = Field(None, description="Error message if any")
+
+
+class SmartCodingAuthConfig(BaseModel):
+    """Authentication configuration for Smart Coding AI"""
+    user_id: str = Field(..., description="User ID")
+    enabled_features: List[str] = Field(default_factory=list, description="Enabled features")
+    disabled_features: List[str] = Field(default_factory=list, description="Disabled features")
+    permission_overrides: Dict[str, AuthPermission] = Field(default_factory=dict, description="Permission overrides")
+    quota_overrides: Dict[str, int] = Field(default_factory=dict, description="Quota overrides")
+    session_timeout_minutes: int = Field(60, description="Session timeout in minutes")
+    require_2fa_for_admin: bool = Field(True, description="Require 2FA for admin operations")
+    allow_api_access: bool = Field(True, description="Allow API access")
+    allowed_ip_ranges: List[str] = Field(default_factory=list, description="Allowed IP ranges")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
+
+
+# ============================================================================
+# RBAC (ROLE-BASED ACCESS CONTROL) MODELS
+# ============================================================================
+
+class RoleType(str, Enum):
+    """Role types for Smart Coding AI RBAC"""
+    VIEWER = "viewer"
+    DEVELOPER = "developer"
+    ADMIN = "admin"
+    OWNER = "owner"
+    GUEST = "guest"
+    COLLABORATOR = "collaborator"
+    AUDITOR = "auditor"
+
+
+class ResourceType(str, Enum):
+    """Resource types for RBAC"""
+    PROJECT = "project"
+    FILE = "file"
+    SESSION = "session"
+    MEMORY = "memory"
+    COMPLETION = "completion"
+    ANALYSIS = "analysis"
+    CONFIG = "config"
+    USER = "user"
+
+
+class ActionType(str, Enum):
+    """Action types for RBAC"""
+    CREATE = "create"
+    READ = "read"
+    UPDATE = "update"
+    DELETE = "delete"
+    EXECUTE = "execute"
+    ADMIN = "admin"
+    AUDIT = "audit"
+
+
+class RBACRole(BaseModel):
+    """RBAC Role definition"""
+    role_id: str = Field(..., description="Unique role identifier")
+    role_name: str = Field(..., description="Role name")
+    role_type: RoleType = Field(..., description="Role type")
+    description: str = Field(..., description="Role description")
+    permissions: List[str] = Field(default_factory=list, description="Role permissions")
+    resource_access: Dict[ResourceType, List[ActionType]] = Field(default_factory=dict, description="Resource access matrix")
+    quota_limits: Dict[str, int] = Field(default_factory=dict, description="Quota limits for this role")
+    is_system_role: bool = Field(False, description="Whether this is a system-defined role")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
+
+
+class RBACPermission(BaseModel):
+    """RBAC Permission definition"""
+    permission_id: str = Field(..., description="Unique permission identifier")
+    permission_name: str = Field(..., description="Permission name")
+    resource_type: ResourceType = Field(..., description="Resource type")
+    action_type: ActionType = Field(..., description="Action type")
+    scope: str = Field(..., description="Permission scope")
+    conditions: Dict[str, Any] = Field(default_factory=dict, description="Permission conditions")
+    description: str = Field(..., description="Permission description")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+
+
+class RBACAssignment(BaseModel):
+    """RBAC Role assignment"""
+    assignment_id: str = Field(..., description="Unique assignment identifier")
+    user_id: str = Field(..., description="User ID")
+    role_id: str = Field(..., description="Role ID")
+    resource_id: Optional[str] = Field(None, description="Specific resource ID (for resource-specific roles)")
+    resource_type: Optional[ResourceType] = Field(None, description="Resource type")
+    granted_by: str = Field(..., description="User ID who granted this role")
+    granted_at: datetime = Field(default_factory=datetime.now, description="Grant timestamp")
+    expires_at: Optional[datetime] = Field(None, description="Expiration timestamp")
+    is_active: bool = Field(True, description="Whether assignment is active")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+
+
+class RBACPolicy(BaseModel):
+    """RBAC Policy definition"""
+    policy_id: str = Field(..., description="Unique policy identifier")
+    policy_name: str = Field(..., description="Policy name")
+    description: str = Field(..., description="Policy description")
+    rules: List[Dict[str, Any]] = Field(default_factory=list, description="Policy rules")
+    conditions: Dict[str, Any] = Field(default_factory=dict, description="Policy conditions")
+    effect: str = Field("allow", description="Policy effect (allow/deny)")
+    priority: int = Field(100, description="Policy priority")
+    is_active: bool = Field(True, description="Whether policy is active")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
+
+
+# ============================================================================
+# STATE MANAGER MODELS
+# ============================================================================
+
+class StateType(str, Enum):
+    """State types for StateManager"""
+    AUTHENTICATION = "authentication"
+    AUTHORIZATION = "authorization"
+    SESSION = "session"
+    PROJECT = "project"
+    MEMORY = "memory"
+    COMPLETION = "completion"
+    ANALYSIS = "analysis"
+    USER_PREFERENCES = "user_preferences"
+    SYSTEM_CONFIG = "system_config"
+
+
+class StateStatus(str, Enum):
+    """State status"""
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    SUSPENDED = "suspended"
+    EXPIRED = "expired"
+    PENDING = "pending"
+    ERROR = "error"
+
+
+class StateTransition(BaseModel):
+    """State transition definition"""
+    transition_id: str = Field(..., description="Unique transition identifier")
+    from_state: str = Field(..., description="Source state")
+    to_state: str = Field(..., description="Target state")
+    condition: str = Field(..., description="Transition condition")
+    action: str = Field(..., description="Action to perform during transition")
+    permissions_required: List[str] = Field(default_factory=list, description="Required permissions")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+
+
+class StateSnapshot(BaseModel):
+    """State snapshot for StateManager"""
+    snapshot_id: str = Field(..., description="Unique snapshot identifier")
+    entity_id: str = Field(..., description="Entity ID")
+    entity_type: str = Field(..., description="Entity type")
+    state_type: StateType = Field(..., description="State type")
+    current_state: str = Field(..., description="Current state")
+    state_data: Dict[str, Any] = Field(default_factory=dict, description="State data")
+    previous_state: Optional[str] = Field(None, description="Previous state")
+    status: StateStatus = Field(StateStatus.ACTIVE, description="State status")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
+    expires_at: Optional[datetime] = Field(None, description="Expiration timestamp")
+
+
+class StateEvent(BaseModel):
+    """State event for StateManager"""
+    event_id: str = Field(..., description="Unique event identifier")
+    entity_id: str = Field(..., description="Entity ID")
+    entity_type: str = Field(..., description="Entity type")
+    event_type: str = Field(..., description="Event type")
+    state_type: StateType = Field(..., description="State type")
+    from_state: Optional[str] = Field(None, description="Source state")
+    to_state: Optional[str] = Field(None, description="Target state")
+    event_data: Dict[str, Any] = Field(default_factory=dict, description="Event data")
+    user_id: Optional[str] = Field(None, description="User who triggered the event")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Event timestamp")
+    correlation_id: Optional[str] = Field(None, description="Correlation ID for related events")
+
+
+class StateManagerConfig(BaseModel):
+    """StateManager configuration"""
+    config_id: str = Field(..., description="Unique config identifier")
+    state_type: StateType = Field(..., description="State type")
+    initial_state: str = Field(..., description="Initial state")
+    allowed_transitions: List[StateTransition] = Field(default_factory=list, description="Allowed transitions")
+    state_timeouts: Dict[str, int] = Field(default_factory=dict, description="State timeouts in seconds")
+    persistence_config: Dict[str, Any] = Field(default_factory=dict, description="Persistence configuration")
+    notification_config: Dict[str, Any] = Field(default_factory=dict, description="Notification configuration")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
+
+
+# ============================================================================
+# OAUTH MODELS FOR SMART CODING AI
+# ============================================================================
+
+class OAuthProvider(str, Enum):
+    """OAuth providers supported by Smart Coding AI"""
+    GOOGLE = "google"
+    GITHUB = "github"
+    MICROSOFT = "microsoft"
+    APPLE = "apple"
+
+
+class OAuthRequest(BaseModel):
+    """OAuth login request"""
+    provider: OAuthProvider = Field(..., description="OAuth provider")
+    redirect_uri: Optional[str] = Field(None, description="Redirect URI after authentication")
+    state: Optional[str] = Field(None, description="State parameter for security")
+    scope: Optional[List[str]] = Field(default_factory=list, description="Requested OAuth scopes")
+
+
+class OAuthResponse(BaseModel):
+    """OAuth response"""
+    auth_url: str = Field(..., description="OAuth authorization URL")
+    state: str = Field(..., description="State parameter for security")
+    expires_at: datetime = Field(..., description="When the auth URL expires")
+    provider: OAuthProvider = Field(..., description="OAuth provider")
+
+
+class OAuthCallbackRequest(BaseModel):
+    """OAuth callback request"""
+    code: str = Field(..., description="Authorization code from OAuth provider")
+    state: str = Field(..., description="State parameter for security")
+    provider: OAuthProvider = Field(..., description="OAuth provider")
+
+
+class OAuthTokenResponse(BaseModel):
+    """OAuth token response"""
+    access_token: str = Field(..., description="OAuth access token")
+    refresh_token: Optional[str] = Field(None, description="OAuth refresh token")
+    token_type: str = Field("Bearer", description="Token type")
+    expires_in: int = Field(..., description="Token expiration time in seconds")
+    scope: Optional[str] = Field(None, description="Token scope")
+    provider: OAuthProvider = Field(..., description="OAuth provider")
+
+
+class OAuthUserInfo(BaseModel):
+    """OAuth user information"""
+    provider: OAuthProvider = Field(..., description="OAuth provider")
+    provider_id: str = Field(..., description="User ID from OAuth provider")
+    email: str = Field(..., description="User email")
+    name: Optional[str] = Field(None, description="User display name")
+    avatar_url: Optional[str] = Field(None, description="User avatar URL")
+    username: Optional[str] = Field(None, description="Username from provider")
+    profile_data: Dict[str, Any] = Field(default_factory=dict, description="Additional profile data")
+
+
+class OAuthLoginResponse(BaseModel):
+    """OAuth login response"""
+    user: User = Field(..., description="User information")
+    access_token: str = Field(..., description="Smart Coding AI access token")
+    refresh_token: str = Field(..., description="Smart Coding AI refresh token")
+    expires_in: int = Field(..., description="Token expiration time")
+    oauth_provider: OAuthProvider = Field(..., description="OAuth provider used")
+    is_new_user: bool = Field(False, description="Whether this is a new user")
+    requires_profile_completion: bool = Field(False, description="Whether profile completion is required")
+
+
+class OAuthConfig(BaseModel):
+    """OAuth configuration for Smart Coding AI"""
+    provider: OAuthProvider = Field(..., description="OAuth provider")
+    client_id: str = Field(..., description="OAuth client ID")
+    client_secret: str = Field(..., description="OAuth client secret")
+    redirect_uri: str = Field(..., description="OAuth redirect URI")
+    scopes: List[str] = Field(default_factory=list, description="OAuth scopes")
+    auth_url: str = Field(..., description="OAuth authorization URL")
+    token_url: str = Field(..., description="OAuth token URL")
+    user_info_url: str = Field(..., description="OAuth user info URL")
+    is_enabled: bool = Field(True, description="Whether OAuth provider is enabled")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.now, description="Last update timestamp")
+
+
+# ============================================================================
+# CACHE/QUEUE/TELEMETRY INFRASTRUCTURE MODELS
+# ============================================================================
+
+class CacheType(str, Enum):
+    """Cache types for Smart Coding AI"""
+    REDIS = "redis"
+    MEMORY = "memory"
+    FILE = "file"
+    DATABASE = "database"
+
+
+class CacheStrategy(str, Enum):
+    """Cache strategies"""
+    LRU = "lru"  # Least Recently Used
+    LFU = "lfu"  # Least Frequently Used
+    TTL = "ttl"  # Time To Live
+    WRITE_THROUGH = "write_through"
+    WRITE_BACK = "write_back"
+
+
+class CacheOperation(str, Enum):
+    """Cache operations"""
+    GET = "get"
+    SET = "set"
+    DELETE = "delete"
+    CLEAR = "clear"
+    EXISTS = "exists"
+    KEYS = "keys"
+    STATS = "stats"
+
+
+class CacheItem(BaseModel):
+    """Cache item"""
+    key: str = Field(..., description="Cache key")
+    value: Any = Field(..., description="Cached value")
+    ttl: Optional[int] = Field(None, description="Time to live in seconds")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    accessed_at: Optional[datetime] = Field(None, description="Last access timestamp")
+    access_count: int = Field(0, description="Number of times accessed")
+    size_bytes: int = Field(0, description="Size in bytes")
+
+
+class CacheStats(BaseModel):
+    """Cache statistics"""
+    total_items: int = Field(0, description="Total cached items")
+    total_size_bytes: int = Field(0, description="Total cache size in bytes")
+    hit_count: int = Field(0, description="Cache hits")
+    miss_count: int = Field(0, description="Cache misses")
+    hit_rate: float = Field(0.0, description="Cache hit rate")
+    eviction_count: int = Field(0, description="Number of evictions")
+    memory_usage: float = Field(0.0, description="Memory usage percentage")
+    created_at: datetime = Field(default_factory=datetime.now, description="Stats timestamp")
+
+
+class CacheRequest(BaseModel):
+    """Cache operation request"""
+    operation: CacheOperation = Field(..., description="Cache operation")
+    key: Optional[str] = Field(None, description="Cache key")
+    value: Optional[Any] = Field(None, description="Value to cache")
+    ttl: Optional[int] = Field(None, description="Time to live in seconds")
+    namespace: Optional[str] = Field("default", description="Cache namespace")
+
+
+class CacheResponse(BaseModel):
+    """Cache operation response"""
+    success: bool = Field(..., description="Operation success")
+    value: Optional[Any] = Field(None, description="Retrieved value")
+    message: str = Field("", description="Response message")
+    stats: Optional[CacheStats] = Field(None, description="Cache statistics")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Response timestamp")
+
+
+class QueueType(str, Enum):
+    """Queue types"""
+    REDIS = "redis"
+    MEMORY = "memory"
+    DATABASE = "database"
+    RABBITMQ = "rabbitmq"
+    SQS = "sqs"
+
+
+class QueuePriority(str, Enum):
+    """Queue priorities"""
+    LOW = "low"
+    NORMAL = "normal"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class QueueStatus(str, Enum):
+    """Queue status"""
+    PENDING = "pending"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    RETRY = "retry"
+    CANCELLED = "cancelled"
+
+
+class QueueItem(BaseModel):
+    """Queue item"""
+    id: str = Field(..., description="Queue item ID")
+    queue_name: str = Field(..., description="Queue name")
+    data: Dict[str, Any] = Field(..., description="Queue item data")
+    priority: QueuePriority = Field(QueuePriority.NORMAL, description="Item priority")
+    status: QueueStatus = Field(QueueStatus.PENDING, description="Item status")
+    created_at: datetime = Field(default_factory=datetime.now, description="Creation timestamp")
+    started_at: Optional[datetime] = Field(None, description="Processing start time")
+    completed_at: Optional[datetime] = Field(None, description="Completion time")
+    retry_count: int = Field(0, description="Number of retries")
+    max_retries: int = Field(3, description="Maximum retries")
+    error_message: Optional[str] = Field(None, description="Error message if failed")
+
+
+class QueueStats(BaseModel):
+    """Queue statistics"""
+    queue_name: str = Field(..., description="Queue name")
+    total_items: int = Field(0, description="Total items")
+    pending_items: int = Field(0, description="Pending items")
+    processing_items: int = Field(0, description="Processing items")
+    completed_items: int = Field(0, description="Completed items")
+    failed_items: int = Field(0, description="Failed items")
+    avg_processing_time: float = Field(0.0, description="Average processing time in seconds")
+    throughput_per_minute: float = Field(0.0, description="Items processed per minute")
+    created_at: datetime = Field(default_factory=datetime.now, description="Stats timestamp")
+
+
+class QueueRequest(BaseModel):
+    """Queue operation request"""
+    queue_name: str = Field(..., description="Queue name")
+    data: Dict[str, Any] = Field(..., description="Data to queue")
+    priority: QueuePriority = Field(QueuePriority.NORMAL, description="Item priority")
+    delay: Optional[int] = Field(None, description="Delay in seconds before processing")
+    max_retries: int = Field(3, description="Maximum retries")
+
+
+class QueueResponse(BaseModel):
+    """Queue operation response"""
+    success: bool = Field(..., description="Operation success")
+    item_id: Optional[str] = Field(None, description="Queue item ID")
+    message: str = Field("", description="Response message")
+    stats: Optional[QueueStats] = Field(None, description="Queue statistics")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Response timestamp")
+
+
+class TelemetryType(str, Enum):
+    """Telemetry types"""
+    METRIC = "metric"
+    EVENT = "event"
+    LOG = "log"
+    TRACE = "trace"
+    PERFORMANCE = "performance"
+    ERROR = "error"
+
+
+class TelemetryLevel(str, Enum):
+    """Telemetry levels"""
+    DEBUG = "debug"
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+
+
+class TelemetryMetric(BaseModel):
+    """Telemetry metric"""
+    name: str = Field(..., description="Metric name")
+    value: float = Field(..., description="Metric value")
+    type: TelemetryType = Field(TelemetryType.METRIC, description="Telemetry type")
+    level: TelemetryLevel = Field(TelemetryLevel.INFO, description="Telemetry level")
+    tags: Dict[str, str] = Field(default_factory=dict, description="Metric tags")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Metric timestamp")
+    source: str = Field("smart_coding_ai", description="Source system")
+    user_id: Optional[str] = Field(None, description="User ID if applicable")
+    session_id: Optional[str] = Field(None, description="Session ID if applicable")
+
+
+class TelemetryEvent(BaseModel):
+    """Telemetry event"""
+    event_name: str = Field(..., description="Event name")
+    event_data: Dict[str, Any] = Field(..., description="Event data")
+    type: TelemetryType = Field(TelemetryType.EVENT, description="Telemetry type")
+    level: TelemetryLevel = Field(TelemetryLevel.INFO, description="Telemetry level")
+    tags: Dict[str, str] = Field(default_factory=dict, description="Event tags")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Event timestamp")
+    source: str = Field("smart_coding_ai", description="Source system")
+    user_id: Optional[str] = Field(None, description="User ID if applicable")
+    session_id: Optional[str] = Field(None, description="Session ID if applicable")
+
+
+class TelemetryRequest(BaseModel):
+    """Telemetry request"""
+    metrics: List[TelemetryMetric] = Field(default_factory=list, description="Metrics to record")
+    events: List[TelemetryEvent] = Field(default_factory=list, description="Events to record")
+    batch_size: int = Field(100, description="Batch size for processing")
+
+
+class TelemetryResponse(BaseModel):
+    """Telemetry response"""
+    success: bool = Field(..., description="Operation success")
+    metrics_recorded: int = Field(0, description="Number of metrics recorded")
+    events_recorded: int = Field(0, description="Number of events recorded")
+    message: str = Field("", description="Response message")
+    timestamp: datetime = Field(default_factory=datetime.now, description="Response timestamp")
 
 
 # ============================================================================

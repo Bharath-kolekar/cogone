@@ -881,8 +881,9 @@ class UnifiedAIComponentOrchestrator:
         self.autonomous_innovation_engine = None
         
         # Management systems
-        self.intelligent_task_decomposer = None
-        self.multi_agent_coordinator = None
+        from .ai_orchestration_layer import IntelligentTaskDecomposer, MultiAgentCoordinator
+        self.intelligent_task_decomposer = IntelligentTaskDecomposer()
+        self.multi_agent_coordinator = MultiAgentCoordinator()
         self.workflow_manager = None
         self.quality_assurance_manager = None
         self.state_manager = None
@@ -1375,6 +1376,131 @@ class UnifiedAIComponentOrchestrator:
             ],
             "timestamp": datetime.now().isoformat()
         }
+    
+    # ========================================================================
+    # INTELLIGENT TASK DECOMPOSITION METHODS
+    # ========================================================================
+    
+    async def decompose_complex_task(self, requirement: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Decompose complex requirements into manageable tasks using IntelligentTaskDecomposer"""
+        try:
+            if not self.intelligent_task_decomposer:
+                return {
+                    "error": "IntelligentTaskDecomposer not initialized",
+                    "subtasks": []
+                }
+            
+            if context is None:
+                context = {}
+            
+            # Use IntelligentTaskDecomposer to break down the requirement
+            decomposition_result = await self.intelligent_task_decomposer.decompose_task(requirement, context)
+            
+            logger.info(f"Task decomposed successfully", 
+                       requirement=requirement, 
+                       subtasks_count=len(decomposition_result.get("subtasks", [])))
+            
+            return decomposition_result
+            
+        except Exception as e:
+            logger.error(f"Task decomposition failed", requirement=requirement, error=str(e))
+            return {
+                "error": str(e),
+                "subtasks": []
+            }
+    
+    async def get_task_decomposition_strategies(self) -> Dict[str, Any]:
+        """Get available task decomposition strategies"""
+        try:
+            if not self.intelligent_task_decomposer:
+                return {"strategies": []}
+            
+            strategies = self.intelligent_task_decomposer.decomposition_strategies
+            templates = self.intelligent_task_decomposer.task_templates
+            complexity_rules = self.intelligent_task_decomposer.complexity_analyzer
+            
+            return {
+                "decomposition_strategies": strategies,
+                "task_templates": templates,
+                "complexity_analysis_rules": complexity_rules
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to get decomposition strategies", error=str(e))
+            return {"strategies": [], "error": str(e)}
+    
+    # ========================================================================
+    # MULTI-AGENT COORDINATION METHODS
+    # ========================================================================
+    
+    async def coordinate_multi_agent_task(self, task: Dict[str, Any], context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Coordinate multiple agents for complex task execution"""
+        try:
+            if not self.multi_agent_coordinator:
+                return {
+                    "error": "MultiAgentCoordinator not initialized",
+                    "coordination_result": {}
+                }
+            
+            if context is None:
+                context = {}
+            
+            # Use MultiAgentCoordinator to coordinate agents
+            coordination_result = await self.multi_agent_coordinator.coordinate_agents(task, context)
+            
+            logger.info(f"Multi-agent coordination completed", 
+                       task_id=task.get("id", "unknown"),
+                       coordination_id=coordination_result.get("coordination_id"),
+                       strategy=coordination_result.get("coordination_strategy"),
+                       agents_count=len(coordination_result.get("agent_assignments", {})))
+            
+            return coordination_result
+            
+        except Exception as e:
+            logger.error(f"Multi-agent coordination failed", task_id=task.get("id", "unknown"), error=str(e))
+            return {
+                "error": str(e),
+                "coordination_result": {}
+            }
+    
+    async def get_agent_registry_status(self) -> Dict[str, Any]:
+        """Get current status of all agents in the registry"""
+        try:
+            if not self.multi_agent_coordinator:
+                return {"error": "MultiAgentCoordinator not initialized"}
+            
+            registry_status = await self.multi_agent_coordinator.get_agent_registry_status()
+            return registry_status
+            
+        except Exception as e:
+            logger.error(f"Failed to get agent registry status", error=str(e))
+            return {"error": str(e)}
+    
+    async def get_coordination_analytics(self) -> Dict[str, Any]:
+        """Get comprehensive coordination analytics"""
+        try:
+            if not self.multi_agent_coordinator:
+                return {"error": "MultiAgentCoordinator not initialized"}
+            
+            analytics = await self.multi_agent_coordinator.get_performance_analytics()
+            return analytics
+            
+        except Exception as e:
+            logger.error(f"Failed to get coordination analytics", error=str(e))
+            return {"error": str(e)}
+    
+    async def optimize_agent_assignments(self, task_requirements: Dict[str, Any]) -> Dict[str, Any]:
+        """Get optimized agent assignments for task requirements"""
+        try:
+            if not self.multi_agent_coordinator:
+                return {"error": "MultiAgentCoordinator not initialized"}
+            
+            recommendations = await self.multi_agent_coordinator.optimize_agent_assignments(task_requirements)
+            return recommendations
+            
+        except Exception as e:
+            logger.error(f"Failed to optimize agent assignments", error=str(e))
+            return {"error": str(e)}
     
     async def _cleanup_expired_contexts(self):
         """Clean up expired cross-component contexts"""
