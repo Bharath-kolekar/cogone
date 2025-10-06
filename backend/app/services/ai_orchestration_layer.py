@@ -2609,7 +2609,8 @@ class EnhancedAutonomousAIOrchestrationLayer(AutonomousAIOrchestrationLayer):
         self.workflow_manager = WorkflowManager()
         self.quality_assurance_manager = QualityAssuranceManager()
         self.state_manager = StateManager()
-        self.context_manager = ContextManager()
+        # self.context_manager = ContextManager()  # Not yet implemented
+        self.context_manager = None
         
         # Autonomous decision making
         self.decision_engine = AutonomousDecisionEngine()

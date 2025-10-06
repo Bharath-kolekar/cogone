@@ -11,6 +11,15 @@ from fastapi.staticfiles import StaticFiles
 import structlog
 import time
 from contextlib import asynccontextmanager
+from fastapi import FastAPI
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn="https://375a87b3ebca79238dd7395edd6abd6a@o4510140654092288.ingest.de.sentry.io/4510140671524944",
+    integrations=[FastApiIntegration()],
+    traces_sample_rate=1.0,  # 100% of transactions
+    environment="development"  # or "production"
+)
 
 from app.core.config import settings
 from app.core.database import init_db

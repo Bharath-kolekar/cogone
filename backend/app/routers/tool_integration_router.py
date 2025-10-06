@@ -13,7 +13,7 @@ from ..models.tool_integration_models import (
     ToolIntegration, ToolType, ToolStatus, ToolPriority, ToolCapability,
     ToolRegistrationRequest, ToolUpdateRequest, ToolExecutionRequest,
     ToolExecutionResponse, ToolListResponse, ToolHealthResponse,
-    ToolIntegrationStats
+    ToolIntegrationStats, ToolMetadata
 )
 from ..services.tool_integration_manager import ToolIntegrationManager, GroqConfig
 from ..core.dependencies import get_current_user, require_permission

@@ -4,7 +4,7 @@ Activate with Ctrl+L, describe what you want, and the agent autonomously impleme
 """
 
 import structlog
-from fastapi import APIRouter, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, HTTPException, status, BackgroundTasks, Depends
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from uuid import UUID

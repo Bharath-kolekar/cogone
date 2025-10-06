@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from typing import Dict, List, Any, Optional
 from pydantic import BaseModel
 import structlog
+import time
 
 from app.services.optimized_service_factory import (
     OptimizedServiceFactory,

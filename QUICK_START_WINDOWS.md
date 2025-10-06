@@ -39,7 +39,7 @@ Create `C:\cogone\.env`:
 
 ```bash
 # Copy from template
-copy ENHANCED_ENV_TEMPLATE.md .env
+copy env.example .env
 
 # Edit with notepad
 notepad .env

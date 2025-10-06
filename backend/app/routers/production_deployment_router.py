@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Any
 from enum import Enum
 import structlog
 from datetime import datetime
+import uuid
 
 from app.services.production_deployment_service import (
     production_deployment_service,

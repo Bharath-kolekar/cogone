@@ -529,7 +529,7 @@ class EnhancedVoiceToAppService:
         return {
             'app_name': self._generate_app_name(parsed_requirements.get('app_type', 'web_app'), request.user_id),
             'version': '1.0.0',
-            'description': f"Generated from voice: {response.transcript[:100]}...",
+            'description': f"Generated from voice: {request.user_id}",
             'author': request.user_id,
             'created_at': datetime.now().isoformat(),
             'language': request.language,

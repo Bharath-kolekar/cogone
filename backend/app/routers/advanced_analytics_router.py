@@ -23,6 +23,9 @@ from app.core.predictive_scaling import (
 )
 from app.core.dependencies import get_current_user
 
+# Alias for compatibility
+get_current_active_user = get_current_user
+
 logger = structlog.get_logger()
 router = APIRouter()
 

@@ -4,9 +4,12 @@ Follows Strategy Pattern and Open/Closed Principle
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 from enum import Enum
 import structlog
+
+if TYPE_CHECKING:
+    import aiohttp
 
 logger = structlog.get_logger()
 

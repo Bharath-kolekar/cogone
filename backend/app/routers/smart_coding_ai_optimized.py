@@ -3,7 +3,7 @@ Optimized Smart Coding AI API endpoints with 100% accuracy
 """
 
 import structlog
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Query
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from uuid import UUID, uuid4

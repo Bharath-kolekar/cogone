@@ -11,6 +11,8 @@ from enum import Enum
 import structlog
 from datetime import datetime
 
+from app.core.config import settings
+
 from app.services.enhanced_payment_service import (
     enhanced_payment_service,
     PaymentProvider,

@@ -1814,6 +1814,8 @@ class CodebaseMemorySystem:
     """Main codebase memory system with photographic memory capabilities"""
     
     def __init__(self):
+        # Import from codebase_memory_system module
+        from app.services.codebase_memory_system import FileStructureAnalyzer
         self.file_analyzer = FileStructureAnalyzer()
         self.pattern_recognizer = CodingPatternRecognizer()
         self.dependency_tracker = DependencyTracker()

@@ -7,7 +7,7 @@ import asyncio
 import time
 import psutil
 import threading
-from typing import Any, Dict, List, Optional, Callable
+from typing import Any, Dict, List, Optional, Callable, Union
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum

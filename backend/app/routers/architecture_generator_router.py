@@ -17,7 +17,10 @@ from app.services.architecture_generator import (
 from app.models.architecture_generator_models import (
     ArchitectureCreateRequest, ArchitectureResponse, DiagramGenerateRequest,
     DiagramResponse, AnalysisResponse, ComponentCreateRequest, RelationshipCreateRequest,
-    ArchitectureListResponse, DiagramListResponse, AnalysisListResponse
+    ArchitectureListResponse, DiagramListResponse, AnalysisListResponse,
+    DiagramRepairRequest, DiagramRepairResponse,
+    DiagramAnalysisRequest, DiagramAnalysisResponse,
+    DiagramOptimizationRequest, DiagramOptimizationResponse
 )
 from app.routers.auth import AuthDependencies
 from app.models.user import User

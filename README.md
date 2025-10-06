@@ -201,19 +201,46 @@ See `PERFORMANCE_OPTIMIZATION_PROTOCOL.md` for complete details.
 
 ## 🚀 Quick Start
 
+### 🎯 New to CognOmega? Start Here!
+
+**Choose your path**:
+
+| Experience Level | Start With | Time Required |
+|------------------|------------|---------------|
+| 👶 **First time setup?** | [📘 Complete Windows Guide](WINDOWS_LOCAL_SETUP_GUIDE.md) | 45-60 min |
+| 👨‍💻 **Experienced developer?** | [⚡ Quick Start Guide](QUICK_START_WINDOWS.md) | 15-20 min |
+| 🔧 **Just need .env help?** | [🔧 Environment Setup](ENV_SETUP_GUIDE.md) | 10 min |
+| 📊 **Want an overview?** | [📊 Setup Summary](SETUP_SUMMARY.md) | 5 min read |
+| 🗺️ **Visual learner?** | [🗺️ Setup Flowchart](SETUP_FLOWCHART.md) | 5 min read |
+
 ### Prerequisites
 - Node.js 18+
 - Python 3.10+
-- Docker (for local development)
+- Supabase account (free)
+- Docker (optional for local development)
+
+### Windows Local Setup
+
+**Complete Setup Documentation**:
+- **📘 [WINDOWS_LOCAL_SETUP_GUIDE.md](WINDOWS_LOCAL_SETUP_GUIDE.md)** - Detailed step-by-step instructions
+- **⚡ [QUICK_START_WINDOWS.md](QUICK_START_WINDOWS.md)** - Quick reference for experienced devs
+- **🔧 [ENV_SETUP_GUIDE.md](ENV_SETUP_GUIDE.md)** - Environment variables explained
+- **📊 [SETUP_SUMMARY.md](SETUP_SUMMARY.md)** - Complete documentation index
+- **🗺️ [SETUP_FLOWCHART.md](SETUP_FLOWCHART.md)** - Visual setup guide
+- **📝 [env.example](env.example)** - Environment template file
 
 ### Environment Setup
 
 1. Copy environment variables:
 ```bash
-cp .env.example .env.local
+# Windows
+copy env.example .env
+
+# Linux/Mac
+cp env.example .env
 ```
 
-2. Fill in your API keys (see `.env.example` for required variables)
+2. Fill in your API keys (see `ENV_SETUP_GUIDE.md` for detailed instructions)
 
 ### Local Development
 

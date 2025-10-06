@@ -54,7 +54,7 @@ Create a `.env` file in the project root:
 
 ```powershell
 # Copy the template
-copy ENHANCED_ENV_TEMPLATE.md .env
+copy env.example .env
 
 # Open in notepad to edit
 notepad .env

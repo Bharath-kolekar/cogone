@@ -16,6 +16,7 @@ import structlog
 from abc import ABC, abstractmethod
 import weakref
 from collections import defaultdict
+from functools import wraps
 import sys
 import os
 
