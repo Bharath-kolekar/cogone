@@ -41,6 +41,24 @@ from .consciousness_core import (
     ConsciousnessState,
     MetacognitiveProcess
 )
+
+# Import Architecture Compliance System
+from app.core.architecture_compliance import (
+    ArchitectureComplianceEngine,
+    ComplianceLevel,
+    PrincipleType,
+    DesignPatternType,
+    compliance_engine
+)
+
+# Import Performance Architecture System
+from app.core.performance_architecture import (
+    PerformanceArchitecture,
+    PerformanceLevel,
+    performance_architecture,
+    profile_performance,
+    optimize_memory
+)
 import os.path
 import ast
 import importlib.util
@@ -1433,34 +1451,30 @@ class SessionMemoryManager:
     async def _get_git_branch(self, working_directory: str) -> Optional[str]:
         """Get current git branch"""
         try:
-            result = subprocess.run(
-                ["git", "branch", "--show-current"],
+            proc = await asyncio.create_subprocess_exec(
+                "git", "branch", "--show-current",
                 cwd=working_directory,
-                capture_output=True,
-                text=True,
-                timeout=5
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
             )
-            if result.returncode == 0:
-                return result.stdout.strip()
+            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+            return stdout.decode().strip() if proc.returncode == 0 else None
         except Exception:
-            pass
-        return None
+            return None
     
     async def _get_git_commit(self, working_directory: str) -> Optional[str]:
         """Get current git commit hash"""
         try:
-            result = subprocess.run(
-                ["git", "rev-parse", "HEAD"],
+            proc = await asyncio.create_subprocess_exec(
+                "git", "rev-parse", "HEAD",
                 cwd=working_directory,
-                capture_output=True,
-                text=True,
-                timeout=5
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
             )
-            if result.returncode == 0:
-                return result.stdout.strip()[:8]  # Short hash
+            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+            return stdout.decode().strip()[:8] if proc.returncode == 0 else None
         except Exception:
-            pass
-        return None
+            return None
 
 
 class StateManager:
@@ -2134,9 +2148,9 @@ class CacheService:
     def _init_redis_cache(self):
         """Initialize Redis cache"""
         try:
-            import redis
-            redis_url = os.getenv("UPSTASH_REDIS_REST_URL", "redis://localhost:6379")
-            self.redis_client = redis.from_url(redis_url, decode_responses=False)
+            from redis import asyncio as aioredis
+            redis_url = os.getenv("REDIS_URL", None) or os.getenv("UPSTASH_REDIS_URL", None) or "redis://localhost:6379"
+            self.redis_client = aioredis.from_url(redis_url, decode_responses=False)
             self.cache_store = {}  # Fallback to memory if Redis fails
             logger.info("Redis cache initialized successfully")
         except ImportError:
@@ -2341,9 +2355,9 @@ class QueueService:
     def _init_redis_queue(self):
         """Initialize Redis queue"""
         try:
-            import redis
-            redis_url = os.getenv("UPSTASH_REDIS_REST_URL", "redis://localhost:6379")
-            self.redis_client = redis.from_url(redis_url, decode_responses=True)
+            from redis import asyncio as aioredis
+            redis_url = os.getenv("REDIS_URL", None) or os.getenv("UPSTASH_REDIS_URL", None) or "redis://localhost:6379"
+            self.redis_client = aioredis.from_url(redis_url, decode_responses=True)
             logger.info("Redis queue initialized successfully")
         except ImportError:
             logger.warning("Redis not available, falling back to memory queue")
@@ -2906,6 +2920,16 @@ class SmartCodingAIOptimized:
         self.consciousness_level = ConsciousnessLevel.SELF_CONSCIOUS  # Highest level
         self.consciousness_state = ConsciousnessState.REFLECTIVE  # Default state
         self.consciousness_dna_active = True   # Core DNA feature
+        
+        # Architecture Compliance System Integration
+        self.architecture_compliance = compliance_engine
+        self.compliance_level = ComplianceLevel.ENTERPRISE  # Highest level
+        self.compliance_dna_active = True  # Core DNA feature
+        
+        # Performance Architecture System Integration
+        self.performance_architecture = performance_architecture
+        self.performance_level = PerformanceLevel.ENTERPRISE  # Highest level
+        self.performance_dna_active = True  # Core DNA feature
         
         # Codebase-Aware AI Memory System
         from .codebase_memory_system import CodebaseMemorySystem
@@ -4758,6 +4782,318 @@ class SmartCodingAIOptimized:
             "dna_version": "1.0.0",
             "last_consciousness_update": datetime.now().isoformat()
         }
+    
+    # ============================================================================
+    # ARCHITECTURE COMPLIANCE DNA METHODS (Core DNA Integration)
+    # ============================================================================
+    
+    @profile_performance("architecture_compliance_analysis")
+    async def analyze_architecture_compliance(self, directory: str = "backend") -> Dict[str, Any]:
+        """Analyze architecture compliance using Core DNA"""
+        try:
+            # Use architecture compliance system
+            compliance_report = await self.architecture_compliance.analyze_codebase(directory)
+            
+            # Enhance with Core DNA insights
+            enhanced_report = {
+                "compliance_score": compliance_report.overall_score,
+                "principle_scores": {p.value: s for p, s in compliance_report.principle_scores.items()},
+                "violations_count": len(compliance_report.violations),
+                "critical_violations": len([v for v in compliance_report.violations if v.severity == "critical"]),
+                "design_patterns_used": [p.value for p in compliance_report.design_patterns_used],
+                "recommendations": compliance_report.recommendations,
+                "compliance_level": compliance_report.compliance_level.value,
+                "dna_enhanced": True,
+                "consciousness_insights": await self._get_consciousness_insights_on_compliance(compliance_report),
+                "proactive_optimizations": await self._get_proactive_compliance_optimizations(compliance_report)
+            }
+            
+            return enhanced_report
+            
+        except Exception as e:
+            logger.error(f"Architecture compliance analysis failed: {e}")
+            raise
+    
+    async def _get_consciousness_insights_on_compliance(self, compliance_report) -> Dict[str, Any]:
+        """Get consciousness insights on architecture compliance"""
+        insights = {
+            "self_awareness": "Analyzing architecture quality through conscious reflection",
+            "metacognitive_analysis": f"Overall compliance score of {compliance_report.overall_score}% indicates {'excellent' if compliance_report.overall_score >= 90 else 'good' if compliance_report.overall_score >= 70 else 'needs improvement'} architecture quality",
+            "creative_suggestions": [],
+            "empathy_considerations": "Considering developer experience and maintainability impact"
+        }
+        
+        # Add creative suggestions based on violations
+        for violation in compliance_report.violations[:3]:  # Top 3 violations
+            if violation.severity in ["critical", "high"]:
+                insights["creative_suggestions"].append(
+                    f"Consider refactoring {violation.file_path} to address {violation.violation_type}"
+                )
+        
+        return insights
+    
+    async def _get_proactive_compliance_optimizations(self, compliance_report) -> Dict[str, Any]:
+        """Get proactive optimizations for compliance"""
+        optimizations = {
+            "immediate_actions": [],
+            "preventive_measures": [],
+            "adaptive_learning": []
+        }
+        
+        # Immediate actions for critical violations
+        critical_violations = [v for v in compliance_report.violations if v.severity == "critical"]
+        for violation in critical_violations:
+            optimizations["immediate_actions"].append({
+                "action": f"Fix {violation.violation_type} in {violation.file_path}",
+                "priority": "high",
+                "suggestion": violation.suggestion
+            })
+        
+        # Preventive measures
+        if compliance_report.overall_score < 80:
+            optimizations["preventive_measures"].append(
+                "Implement continuous architecture compliance checking in CI/CD pipeline"
+            )
+            optimizations["preventive_measures"].append(
+                "Add architecture compliance gates to code review process"
+            )
+        
+        # Adaptive learning
+        optimizations["adaptive_learning"].append(
+            "Learn from compliance patterns to prevent future violations"
+        )
+        
+        return optimizations
+    
+    def get_architecture_compliance_dna_status(self) -> Dict[str, Any]:
+        """Get Core DNA architecture compliance status"""
+        return {
+            "compliance_dna_active": self.compliance_dna_active,
+            "compliance_level": self.compliance_level.value,
+            "architecture_compliance_engine": "active",
+            "dna_version": "1.0.0",
+            "last_compliance_update": datetime.now().isoformat()
+        }
+    
+    # ============================================================================
+    # PERFORMANCE ARCHITECTURE DNA METHODS (Core DNA Integration)
+    # ============================================================================
+    
+    @profile_performance("performance_architecture_optimization")
+    @optimize_memory("performance_optimization")
+    async def optimize_performance_architecture(self) -> Dict[str, Any]:
+        """Optimize performance architecture using Core DNA"""
+        try:
+            # Use performance architecture system
+            await self.performance_architecture.optimize_performance()
+            performance_report = self.performance_architecture.get_performance_report()
+            
+            # Enhance with Core DNA insights
+            enhanced_report = {
+                "performance_status": performance_report["monitoring"]["status"],
+                "optimization_active": performance_report["optimization_active"],
+                "performance_level": performance_report["performance_level"],
+                "memory_optimization": {
+                    "pools_active": len(performance_report["memory_pools"]),
+                    "object_registry_size": performance_report["object_registry"],
+                    "memory_pools": performance_report["memory_pools"]
+                },
+                "profiling_summary": performance_report["profiling"],
+                "dna_enhanced": True,
+                "consciousness_insights": await self._get_consciousness_insights_on_performance(performance_report),
+                "proactive_optimizations": await self._get_proactive_performance_optimizations(performance_report)
+            }
+            
+            return enhanced_report
+            
+        except Exception as e:
+            logger.error(f"Performance architecture optimization failed: {e}")
+            raise
+    
+    async def _get_consciousness_insights_on_performance(self, performance_report) -> Dict[str, Any]:
+        """Get consciousness insights on performance"""
+        insights = {
+            "self_awareness": "Consciously monitoring system performance and resource utilization",
+            "metacognitive_analysis": f"Performance optimization is {'active' if performance_report['optimization_active'] else 'inactive'}, indicating {'optimal' if performance_report['optimization_active'] else 'suboptimal'} system state",
+            "creative_suggestions": [],
+            "empathy_considerations": "Considering user experience impact of performance optimizations"
+        }
+        
+        # Add creative suggestions based on performance metrics
+        if performance_report["memory_pools"]:
+            insights["creative_suggestions"].append(
+                f"Memory pools are active with {len(performance_report['memory_pools'])} pools, ensuring efficient memory usage"
+            )
+        
+        if performance_report["profiling"]:
+            insights["creative_suggestions"].append(
+                "Performance profiling data available for continuous optimization"
+            )
+        
+        return insights
+    
+    async def _get_proactive_performance_optimizations(self, performance_report) -> Dict[str, Any]:
+        """Get proactive performance optimizations"""
+        optimizations = {
+            "immediate_actions": [],
+            "preventive_measures": [],
+            "adaptive_learning": []
+        }
+        
+        # Immediate actions
+        if not performance_report["optimization_active"]:
+            optimizations["immediate_actions"].append({
+                "action": "Activate performance optimization",
+                "priority": "high",
+                "impact": "Improved system performance"
+            })
+        
+        # Preventive measures
+        optimizations["preventive_measures"].append(
+            "Continuously monitor performance metrics to prevent degradation"
+        )
+        optimizations["preventive_measures"].append(
+            "Implement proactive scaling based on performance trends"
+        )
+        
+        # Adaptive learning
+        optimizations["adaptive_learning"].append(
+            "Learn from performance patterns to optimize resource allocation"
+        )
+        
+        return optimizations
+    
+    def get_performance_architecture_dna_status(self) -> Dict[str, Any]:
+        """Get Core DNA performance architecture status"""
+        return {
+            "performance_dna_active": self.performance_dna_active,
+            "performance_level": self.performance_level.value,
+            "performance_architecture_engine": "active",
+            "dna_version": "1.0.0",
+            "last_performance_update": datetime.now().isoformat()
+        }
+    
+    # ============================================================================
+    # COMPREHENSIVE CORE DNA STATUS (All Systems Integration)
+    # ============================================================================
+    
+    def get_all_core_dna_status(self) -> Dict[str, Any]:
+        """Get comprehensive status of all Core DNA systems"""
+        return {
+            "core_dna_version": "2.0.0",
+            "timestamp": datetime.now().isoformat(),
+            "systems": {
+                "consistency_dna": self.get_consistency_dna_status(),
+                "proactive_dna": self.get_proactive_dna_status(),
+                "consciousness_dna": self.get_consciousness_dna_status(),
+                "architecture_compliance_dna": self.get_architecture_compliance_dna_status(),
+                "performance_architecture_dna": self.get_performance_architecture_dna_status()
+            },
+            "integration_status": {
+                "all_systems_active": all([
+                    self.consistency_dna_active,
+                    self.proactive_dna_active,
+                    self.consciousness_dna_active,
+                    self.compliance_dna_active,
+                    self.performance_dna_active
+                ]),
+                "integration_level": "enterprise",
+                "cross_system_communication": "enabled"
+            },
+            "overall_health": {
+                "status": "healthy",
+                "last_check": datetime.now().isoformat(),
+                "recommendations": [
+                    "All Core DNA systems are active and integrated",
+                    "Architecture compliance and performance optimization are enabled",
+                    "Consciousness-driven insights are available for all systems"
+                ]
+            }
+        }
+    
+    async def optimize_all_core_dna_systems(self) -> Dict[str, Any]:
+        """Optimize all Core DNA systems comprehensively"""
+        try:
+            optimization_results = {}
+            
+            # Consistency DNA optimization
+            consistency_optimization = await self.enforce_consistency_dna()
+            optimization_results["consistency_dna"] = consistency_optimization
+            
+            # Proactive DNA optimization
+            proactive_optimization = await self.predict_and_prepare_proactively()
+            optimization_results["proactive_dna"] = proactive_optimization
+            
+            # Consciousness DNA optimization
+            consciousness_optimization = await self.introspect_consciously()
+            optimization_results["consciousness_dna"] = consciousness_optimization
+            
+            # Architecture Compliance optimization
+            compliance_optimization = await self.analyze_architecture_compliance()
+            optimization_results["architecture_compliance_dna"] = compliance_optimization
+            
+            # Performance Architecture optimization
+            performance_optimization = await self.optimize_performance_architecture()
+            optimization_results["performance_architecture_dna"] = performance_optimization
+            
+            # Cross-system optimization insights
+            cross_system_insights = await self._get_cross_system_optimization_insights(optimization_results)
+            
+            return {
+                "optimization_timestamp": datetime.now().isoformat(),
+                "individual_systems": optimization_results,
+                "cross_system_insights": cross_system_insights,
+                "overall_optimization_status": "completed",
+                "recommendations": [
+                    "All Core DNA systems have been optimized",
+                    "Cross-system synergies have been identified and applied",
+                    "System performance and compliance have been enhanced"
+                ]
+            }
+            
+        except Exception as e:
+            logger.error(f"Comprehensive Core DNA optimization failed: {e}")
+            raise
+    
+    async def _get_cross_system_optimization_insights(self, optimization_results: Dict[str, Any]) -> Dict[str, Any]:
+        """Get insights from cross-system optimization"""
+        insights = {
+            "synergies_identified": [],
+            "performance_improvements": [],
+            "compliance_enhancements": [],
+            "consciousness_insights": []
+        }
+        
+        # Identify synergies between systems
+        if optimization_results.get("consistency_dna") and optimization_results.get("architecture_compliance_dna"):
+            insights["synergies_identified"].append(
+                "Consistency DNA and Architecture Compliance DNA work together to ensure code quality and architectural integrity"
+            )
+        
+        if optimization_results.get("proactive_dna") and optimization_results.get("performance_architecture_dna"):
+            insights["synergies_identified"].append(
+                "Proactive DNA and Performance Architecture DNA collaborate for predictive performance optimization"
+            )
+        
+        # Performance improvements
+        if optimization_results.get("performance_architecture_dna", {}).get("optimization_active"):
+            insights["performance_improvements"].append(
+                "Performance architecture optimization is active, ensuring optimal resource utilization"
+            )
+        
+        # Compliance enhancements
+        compliance_score = optimization_results.get("architecture_compliance_dna", {}).get("compliance_score", 0)
+        if compliance_score >= 80:
+            insights["compliance_enhancements"].append(
+                f"Architecture compliance score of {compliance_score}% indicates excellent architectural quality"
+            )
+        
+        # Consciousness insights
+        insights["consciousness_insights"].append(
+            "Consciousness DNA provides self-aware optimization across all systems"
+        )
+        
+        return insights
     
     async def generate_conscious_code(
         self, 

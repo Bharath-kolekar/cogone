@@ -5,6 +5,7 @@ Configuration management for Voice-to-App SaaS Platform
 from pydantic_settings import BaseSettings
 from typing import List, Optional
 import os
+import structlog
 
 
 class Settings(BaseSettings):
@@ -30,8 +31,10 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     
     # Redis
-    UPSTASH_REDIS_REST_URL: str
-    UPSTASH_REDIS_REST_TOKEN: str
+    REDIS_URL: Optional[str] = None
+    UPSTASH_REDIS_URL: Optional[str] = None
+    UPSTASH_REDIS_REST_URL: Optional[str] = None
+    UPSTASH_REDIS_REST_TOKEN: Optional[str] = None
     
     # Payment Providers
     RAZORPAY_KEY_ID: str
@@ -44,20 +47,27 @@ class Settings(BaseSettings):
     
     GOOGLE_PAY_MERCHANT_ID: str
     
-    # AI Providers (NO OpenAI)
+    # AI Providers (Zero-Cost Configuration)
+    # Primary: Groq (FREE for developers)
+    GROQ_API_KEY: Optional[str] = None
+    GROQ_MODEL_NAME: str = "llama2-70b-4096"  # Fast, free for developers
+    
+    # Secondary: Together AI ($5 credit)
+    TOGETHER_API_KEY: Optional[str] = None
+    TOGETHER_MODEL_NAME: str = "meta-llama/Llama-2-70b-chat-hf"
+    
+    # Fallback: Hugging Face (FREE tier)
     HF_API_KEY: Optional[str] = None
     HF_MODEL_NAME: str = "microsoft/DialoGPT-medium"
     
-    TOGETHER_API_KEY: Optional[str] = None
-    TOGETHER_MODEL_NAME: str = "meta-llama/Llama-2-7b-chat-hf"
-    
-    GROQ_API_KEY: Optional[str] = None
-    GROQ_MODEL_NAME: str = "llama2-7b-chat"
-    
-    # Local AI Configuration
+    # Local AI Configuration (FREE)
     ALLOW_LOCAL_LLM: bool = True
     ENABLE_VOICE_COMMANDS: bool = True
     LOCAL_MODEL_PATH: str = "./models/"
+    
+    # AI Provider Priority (for zero-cost optimization)
+    AI_PROVIDER_PRIORITY: List[str] = ["groq", "together", "local_llm", "huggingface"]
+    ENABLE_AI_PROVIDER_FALLBACK: bool = True
     
     # WhatsApp Business API (Replaces SMS Provider)
     WHATSAPP_WEBHOOK_URL: Optional[str] = None
@@ -66,10 +76,25 @@ class Settings(BaseSettings):
     WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None
     WHATSAPP_BUSINESS_ACCOUNT_ID: Optional[str] = None
     
-    # Cloudflare Services (Free Tier)
+    # Cloudflare Services (Frontend CDN only - FREE)
     CLOUDFLARE_API_TOKEN: Optional[str] = None
     CLOUDFLARE_ACCOUNT_ID: Optional[str] = None
     CLOUDFLARE_ZONE_ID: Optional[str] = None
+    
+    # Railway (Backend hosting - FREE $5 credit/month)
+    RAILWAY_API_TOKEN: Optional[str] = None
+    RAILWAY_PROJECT_ID: Optional[str] = None
+    
+    # Render (Alternative backend - FREE 750 hours/month)
+    RENDER_API_KEY: Optional[str] = None
+    RENDER_SERVICE_ID: Optional[str] = None
+    
+    # Zero-Cost Deployment Mode
+    ZERO_COST_MODE: bool = True
+    DEPLOYMENT_PLATFORM: str = "railway"  # railway, render, or local
+    MAX_WORKERS: int = 4  # Limit for zero-cost
+    MAX_MEMORY_MB: int = 512  # Railway free tier limit
+    MAX_CONCURRENT_REQUESTS: int = 10  # Limit for free tier
     
     # Email Configuration (PrivateEmail via Namecheap)
     SMTP_HOST: str = "mail.cognomega.com"
@@ -115,6 +140,7 @@ class Settings(BaseSettings):
     # Development
     LOG_LEVEL: str = "INFO"
     ENABLE_CORS: bool = True
+    ENABLE_AUTH_MIDDLEWARE: bool = False
     
     class Config:
         env_file = ".env"
@@ -155,3 +181,26 @@ def validate_settings():
 # Validate settings on import
 if not settings.DEBUG:
     validate_settings()
+
+
+def get_settings() -> Settings:
+    """Compatibility helper to retrieve settings instance."""
+    return settings
+
+
+# Structured logger accessor
+def get_logger():
+    return structlog.get_logger()
+
+
+# Provide a logger property for compatibility (read-only)
+@property
+def _logger_property(self):
+    return structlog.get_logger()
+
+# Attach property dynamically for backward compatibility
+if not hasattr(Settings, 'logger'):
+    try:
+        Settings.logger = _logger_property  # type: ignore
+    except Exception:
+        pass

@@ -144,6 +144,8 @@ class CodebaseAnalyzer:
         }
         
         for root, dirs, files in os.walk(self.project_root):
+            # Skip heavy directories
+            dirs[:] = [d for d in dirs if d not in {'.git', 'node_modules', 'dist', 'build', '.venv', '.tox', '.mypy_cache', '.pytest_cache'}]
             for file in files:
                 file_path = Path(root) / file
                 relative_path = file_path.relative_to(self.project_root)
@@ -227,6 +229,8 @@ class CodebaseAnalyzer:
         }
         
         for root, dirs, files in os.walk(self.project_root):
+            # Skip heavy directories
+            dirs[:] = [d for d in dirs if d not in {'.git', 'node_modules', 'dist', 'build', '.venv', '.tox', '.mypy_cache', '.pytest_cache'}]
             for file in files:
                 if file.endswith(('.py', '.js', '.ts', '.jsx', '.tsx')):
                     file_path = Path(root) / file
@@ -579,19 +583,24 @@ class DependencyManager:
                     continue
                 
                 # Install dependency
-                result = subprocess.run(
-                    ["pip", "install", dep],
-                    capture_output=True,
-                    text=True,
-                    timeout=60
+                proc = await asyncio.create_subprocess_exec(
+                    "pip", "install", dep,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
                 )
+                try:
+                    stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=60)
+                except asyncio.TimeoutError:
+                    proc.kill()
+                    await proc.wait()
+                    stdout, stderr = b"", b"timeout"
                 
-                if result.returncode == 0:
+                if proc.returncode == 0:
                     results["installed"].append(dep)
                 else:
                     results["failed"].append({
                         "dependency": dep,
-                        "error": result.stderr
+                        "error": (stderr or b"").decode(errors='ignore')
                     })
                     
             except Exception as e:
@@ -605,12 +614,13 @@ class DependencyManager:
     async def _is_dependency_installed(self, dependency: str) -> bool:
         """Check if a dependency is already installed"""
         try:
-            result = subprocess.run(
-                ["pip", "show", dependency],
-                capture_output=True,
-                text=True
+            proc = await asyncio.create_subprocess_exec(
+                "pip", "show", dependency,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
             )
-            return result.returncode == 0
+            stdout, stderr = await proc.communicate()
+            return proc.returncode == 0
         except:
             return False
 
@@ -634,19 +644,23 @@ class TestRunner:
         try:
             # Run pytest if available
             if (self.project_root / "pytest.ini").exists() or (self.project_root / "pyproject.toml").exists():
-                result = subprocess.run(
-                    ["python", "-m", "pytest", "-v"],
-                    capture_output=True,
-                    text=True,
-                    timeout=300
+                proc = await asyncio.create_subprocess_exec(
+                    "python", "-m", "pytest", "-v",
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
                 )
-                
-                results["tests_run"] = self._count_tests_run(result.stdout)
-                results["tests_passed"] = self._count_tests_passed(result.stdout)
-                results["tests_failed"] = self._count_tests_failed(result.stdout)
-                
-                if result.returncode != 0:
-                    results["errors"].append(result.stderr)
+                try:
+                    stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=300)
+                except asyncio.TimeoutError:
+                    proc.kill()
+                    await proc.wait()
+                    stdout, stderr = b"", b"timeout"
+                out_text = (stdout or b"").decode(errors='ignore')
+                results["tests_run"] = self._count_tests_run(out_text)
+                results["tests_passed"] = self._count_tests_passed(out_text)
+                results["tests_failed"] = self._count_tests_failed(out_text)
+                if proc.returncode != 0:
+                    results["errors"].append((stderr or b"").decode(errors='ignore'))
             
             # Run basic syntax checks
             await self._run_syntax_checks(changes, results)

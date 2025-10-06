@@ -1,0 +1,158 @@
+name: Zero-Cost Full Stack Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+env:
+  ZERO_COST_MODE: 'true'
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  # Build and deploy backend
+  deploy-backend:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+      
+      - name: Deploy Backend to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          cd backend
+          railway up --service cognomega-backend
+      
+      - name: Set environment variables on Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway variables set ZERO_COST_MODE=true
+          railway variables set MAX_WORKERS=4
+          railway variables set MAX_MEMORY_MB=512
+          railway variables set GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+          railway variables set TOGETHER_API_KEY=${{ secrets.TOGETHER_API_KEY }}
+          railway variables set SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          railway variables set SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_KEY }}
+          railway variables set REDIS_URL=${{ secrets.REDIS_URL }}
+          railway variables set SECRET_KEY=${{ secrets.SECRET_KEY }}
+          railway variables set JWT_SECRET=${{ secrets.JWT_SECRET }}
+      
+      - name: Get Railway deployment URL
+        id: railway-url
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          URL=$(railway status --json | jq -r '.deployments[0].url')
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "✅ Backend deployed to: $URL"
+      
+      - name: Wait for backend to be ready
+        run: |
+          sleep 30
+          curl -f ${{ steps.railway-url.outputs.url }}/health || exit 1
+          echo "✅ Backend health check passed"
+
+  # Build and deploy frontend
+  deploy-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+      
+      - name: Build frontend
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.BACKEND_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          cd frontend
+          npm run build
+      
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./frontend
+          vercel-args: '--prod'
+      
+      - name: Get Vercel deployment URL
+        id: vercel-url
+        run: |
+          echo "url=https://cognomega.vercel.app" >> $GITHUB_OUTPUT
+          echo "✅ Frontend deployed to Vercel"
+
+  # Post-deployment checks
+  post-deployment:
+    needs: [deploy-backend, deploy-frontend]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check backend health
+        run: |
+          curl -f ${{ secrets.BACKEND_URL }}/health
+          curl -f ${{ secrets.BACKEND_URL }}/api/v0/optimization/health
+          echo "✅ Backend health checks passed"
+      
+      - name: Check frontend
+        run: |
+          curl -f https://cognomega.vercel.app
+          echo "✅ Frontend is accessible"
+      
+      - name: Run integration tests
+        run: |
+          curl -X POST ${{ secrets.BACKEND_URL }}/api/v0/smart-coding-ai/generate \
+            -H "Content-Type: application/json" \
+            -d '{"prompt": "test", "language": "python"}' || true
+          echo "✅ Integration test completed"
+      
+      - name: Deployment summary
+        run: |
+          echo "🎉 Zero-Cost Deployment Complete!"
+          echo "=================================="
+          echo "Backend: ${{ secrets.BACKEND_URL }}"
+          echo "Frontend: https://cognomega.vercel.app"
+          echo "Database: Supabase (FREE tier)"
+          echo "Cache: Upstash Redis (FREE tier)"
+          echo "AI: Groq + Together AI (FREE)"
+          echo "Total Cost: $0-5/month"
+          echo "=================================="

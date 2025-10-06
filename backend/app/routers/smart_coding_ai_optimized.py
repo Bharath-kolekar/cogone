@@ -2508,3 +2508,94 @@ async def get_inline_completion_status():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get in-line completion status: {e}"
         )
+
+
+# ============================================================================
+# CORE DNA INTEGRATION ENDPOINTS (Architecture Compliance & Performance)
+# ============================================================================
+
+@router.get("/core-dna/status", response_model=Dict[str, Any])
+async def get_all_core_dna_status():
+    """Get comprehensive status of all Core DNA systems"""
+    try:
+        status = smart_coding_ai_optimized.get_all_core_dna_status()
+        return status
+        
+    except Exception as e:
+        logger.error("Failed to get Core DNA status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get Core DNA status: {e}"
+        )
+
+@router.post("/core-dna/optimize-all", response_model=Dict[str, Any])
+async def optimize_all_core_dna_systems():
+    """Optimize all Core DNA systems comprehensively"""
+    try:
+        optimization_result = await smart_coding_ai_optimized.optimize_all_core_dna_systems()
+        return optimization_result
+        
+    except Exception as e:
+        logger.error("Failed to optimize Core DNA systems", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to optimize Core DNA systems: {e}"
+        )
+
+@router.post("/core-dna/architecture-compliance/analyze", response_model=Dict[str, Any])
+async def analyze_architecture_compliance(
+    directory: str = "backend"
+):
+    """Analyze architecture compliance using Core DNA"""
+    try:
+        analysis_result = await smart_coding_ai_optimized.analyze_architecture_compliance(directory)
+        return analysis_result
+        
+    except Exception as e:
+        logger.error("Failed to analyze architecture compliance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to analyze architecture compliance: {e}"
+        )
+
+@router.get("/core-dna/architecture-compliance/status", response_model=Dict[str, Any])
+async def get_architecture_compliance_dna_status():
+    """Get Core DNA architecture compliance status"""
+    try:
+        status = smart_coding_ai_optimized.get_architecture_compliance_dna_status()
+        return status
+        
+    except Exception as e:
+        logger.error("Failed to get architecture compliance DNA status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get architecture compliance DNA status: {e}"
+        )
+
+@router.post("/core-dna/performance-architecture/optimize", response_model=Dict[str, Any])
+async def optimize_performance_architecture():
+    """Optimize performance architecture using Core DNA"""
+    try:
+        optimization_result = await smart_coding_ai_optimized.optimize_performance_architecture()
+        return optimization_result
+        
+    except Exception as e:
+        logger.error("Failed to optimize performance architecture", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to optimize performance architecture: {e}"
+        )
+
+@router.get("/core-dna/performance-architecture/status", response_model=Dict[str, Any])
+async def get_performance_architecture_dna_status():
+    """Get Core DNA performance architecture status"""
+    try:
+        status = smart_coding_ai_optimized.get_performance_architecture_dna_status()
+        return status
+        
+    except Exception as e:
+        logger.error("Failed to get performance architecture DNA status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get performance architecture DNA status: {e}"
+        )

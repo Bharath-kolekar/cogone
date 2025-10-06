@@ -13,7 +13,6 @@ from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime, timedelta
 from dataclasses import dataclass
 from enum import Enum
-import threading
 import time
 
 logger = structlog.get_logger()
@@ -69,7 +68,7 @@ class HardwareResourceOptimizer:
         self.resource_metrics: Dict[str, ResourceMetrics] = {}
         self.optimizations: Dict[str, HardwareOptimization] = {}
         self.monitoring_active = False
-        self.optimization_thread = None
+        self._monitor_task = None
         self._initialize_optimization_strategies()
     
     def _initialize_optimization_strategies(self):
@@ -120,8 +119,8 @@ class HardwareResourceOptimizer:
     async def get_system_resources(self) -> Dict[str, ResourceMetrics]:
         """Get current system resource usage"""
         try:
-            # CPU metrics
-            cpu_percent = psutil.cpu_percent(interval=1)
+            # CPU metrics (shorter interval to avoid blocking)
+            cpu_percent = psutil.cpu_percent(interval=0.1)
             cpu_count = psutil.cpu_count()
             cpu_freq = psutil.cpu_freq()
             
@@ -201,7 +200,7 @@ class HardwareResourceOptimizer:
             if gpu_metrics:
                 self.resource_metrics["gpu"] = gpu_metrics
             
-            logger.info("System resources monitored", 
+            logger.debug("System resources monitored", 
                        cpu_usage=cpu_percent,
                        memory_usage=memory.percent,
                        disk_usage=(disk.used / disk.total) * 100)
@@ -491,45 +490,44 @@ class HardwareResourceOptimizer:
             raise e
     
     async def start_monitoring(self):
-        """Start continuous resource monitoring"""
+        """Start continuous resource monitoring (async background task)"""
         if self.monitoring_active:
             return
-        
         self.monitoring_active = True
-        self.optimization_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
-        self.optimization_thread.start()
-        
+        self._monitor_task = asyncio.create_task(self._monitoring_loop_async())
         logger.info("Hardware resource monitoring started")
+
+    async def _monitoring_loop_async(self):
+        """Continuous monitoring loop (async)"""
+        try:
+            while self.monitoring_active:
+                try:
+                    # Get system resources
+                    await self.get_system_resources()
+
+                    # Check for optimization opportunities
+                    await self._check_optimization_opportunities_async()
+
+                    # Sleep for 120 seconds to reduce sampling overhead
+                    await asyncio.sleep(120)
+                except Exception as e:
+                    logger.error("Error in monitoring loop", error=str(e))
+                    await asyncio.sleep(20)
+        except asyncio.CancelledError:
+            logger.info("Monitoring loop cancelled")
     
-    def _monitoring_loop(self):
-        """Continuous monitoring loop"""
-        while self.monitoring_active:
-            try:
-                # Get system resources
-                asyncio.run(self.get_system_resources())
-                
-                # Check for optimization opportunities
-                self._check_optimization_opportunities()
-                
-                # Sleep for 60 seconds
-                time.sleep(60)
-                
-            except Exception as e:
-                logger.error("Error in monitoring loop", error=str(e))
-                time.sleep(10)
-    
-    def _check_optimization_opportunities(self):
-        """Check for optimization opportunities"""
+    async def _check_optimization_opportunities_async(self):
+        """Check for optimization opportunities (async)"""
         try:
             for resource_type, metrics in self.resource_metrics.items():
                 if metrics.current_usage > 80:
-                    logger.warning(f"High {resource_type} usage detected", 
-                                 usage=metrics.current_usage,
-                                 recommendations=metrics.recommendations)
-                    
+                    logger.warning(
+                        f"High {resource_type} usage detected",
+                        usage=metrics.current_usage,
+                        recommendations=metrics.recommendations,
+                    )
                     # Trigger optimization
-                    asyncio.run(self._trigger_optimization(resource_type))
-                    
+                    await self._trigger_optimization(resource_type)
         except Exception as e:
             logger.error("Error checking optimization opportunities", error=str(e))
     
@@ -551,9 +549,14 @@ class HardwareResourceOptimizer:
     async def stop_monitoring(self):
         """Stop continuous resource monitoring"""
         self.monitoring_active = False
-        if self.optimization_thread:
-            self.optimization_thread.join(timeout=5)
-        
+        if self._monitor_task:
+            self._monitor_task.cancel()
+            try:
+                await self._monitor_task
+            except asyncio.CancelledError:
+                pass
+            finally:
+                self._monitor_task = None
         logger.info("Hardware resource monitoring stopped")
     
     async def get_optimization_summary(self) -> Dict[str, Any]:

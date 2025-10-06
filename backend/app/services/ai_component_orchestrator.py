@@ -202,11 +202,6 @@ class AIComponentOrchestrator:
             except Exception as e:
                 logger.error("Health check loop error", error=str(e))
                 await asyncio.sleep(self.health_check_interval)
-    
-    async def _context_cleanup_loop(self):
-        """Background context cleanup loop"""
-        while True:
-            try:
                 await self._cleanup_expired_contexts()
                 await asyncio.sleep(self.context_cleanup_interval)
             except Exception as e:

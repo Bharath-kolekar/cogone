@@ -1,0 +1,159 @@
+name: CI - Tests and Quality Checks
+
+on:
+  push:
+    branches: [main, develop, production]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # Backend tests
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11']
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio pytest-cov flake8 black mypy
+      
+      - name: Lint with flake8
+        run: |
+          cd backend
+          flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 app --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      
+      - name: Check code formatting
+        run: |
+          cd backend
+          black app --check --diff
+        continue-on-error: true
+      
+      - name: Type checking with mypy
+        run: |
+          cd backend
+          mypy app --ignore-missing-imports
+        continue-on-error: true
+      
+      - name: Run tests with coverage
+        run: |
+          cd backend
+          pytest tests/ -v --cov=app --cov-report=xml --cov-report=term-missing
+        continue-on-error: true
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./backend/coverage.xml
+          flags: backend
+        continue-on-error: true
+
+  # Frontend tests
+  frontend-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+      
+      - name: Lint
+        run: |
+          cd frontend
+          npm run lint
+        continue-on-error: true
+      
+      - name: Type check
+        run: |
+          cd frontend
+          npm run type-check
+        continue-on-error: true
+      
+      - name: Build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+        run: |
+          cd frontend
+          npm run build
+      
+      - name: Run tests
+        run: |
+          cd frontend
+          npm test
+        continue-on-error: true
+
+  # Security scanning
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+        continue-on-error: true
+      
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+        continue-on-error: true
+      
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+        continue-on-error: true
+
+  # Code quality checks
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python, javascript
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        continue-on-error: true
+      
+      - name: Check code complexity
+        run: |
+          pip install radon
+          cd backend
+          radon cc app -a -nb
+        continue-on-error: true

@@ -656,28 +656,28 @@ class SessionMemoryManager:
     async def _get_git_branch(self, working_directory: str) -> Optional[str]:
         """Get current git branch"""
         try:
-            result = subprocess.run(
-                ["git", "branch", "--show-current"],
+            proc = await asyncio.create_subprocess_exec(
+                "git", "branch", "--show-current",
                 cwd=working_directory,
-                capture_output=True,
-                text=True,
-                timeout=5
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
             )
-            return result.stdout.strip() if result.returncode == 0 else None
+            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+            return stdout.decode().strip() if proc.returncode == 0 else None
         except Exception:
             return None
     
     async def _get_git_commit(self, working_directory: str) -> Optional[str]:
         """Get current git commit hash"""
         try:
-            result = subprocess.run(
-                ["git", "rev-parse", "HEAD"],
+            proc = await asyncio.create_subprocess_exec(
+                "git", "rev-parse", "HEAD",
                 cwd=working_directory,
-                capture_output=True,
-                text=True,
-                timeout=5
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
             )
-            return result.stdout.strip()[:8] if result.returncode == 0 else None
+            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+            return stdout.decode().strip()[:8] if proc.returncode == 0 else None
         except Exception:
             return None
 

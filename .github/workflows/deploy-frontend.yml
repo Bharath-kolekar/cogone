@@ -1,0 +1,152 @@
+name: Deploy Frontend to Vercel
+
+on:
+  push:
+    branches:
+      - main
+      - production
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+
+env:
+  NODE_VERSION: '18'
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  # Build and test frontend
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+      
+      - name: Run linting
+        run: |
+          cd frontend
+          npm run lint
+        continue-on-error: true
+      
+      - name: Run type checking
+        run: |
+          cd frontend
+          npm run type-check
+        continue-on-error: true
+      
+      - name: Build frontend
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.BACKEND_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          cd frontend
+          npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/.next
+
+  # Deploy to Vercel
+  deploy-vercel:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      
+      - name: Pull Vercel Environment
+        run: |
+          cd frontend
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Build Project
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.BACKEND_URL }}
+        run: |
+          cd frontend
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Deploy to Vercel
+        run: |
+          cd frontend
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Get deployment URL
+        id: vercel-url
+        run: |
+          cd frontend
+          URL=$(vercel ls --token=${{ secrets.VERCEL_TOKEN }} | grep production | head -1 | awk '{print $2}')
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "✅ Deployed to: $URL"
+      
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "🎉 Frontend deployment successful!"
+          echo "URL: ${{ steps.vercel-url.outputs.url }}"
+
+  # Alternative: Deploy to Cloudflare Pages
+  deploy-cloudflare:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+      
+      - name: Build for Cloudflare Pages
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.BACKEND_URL }}
+        run: |
+          cd frontend
+          npm run build
+      
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: cognomega
+          directory: frontend/out
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Notify deployment
+        run: |
+          echo "✅ Frontend deployed to Cloudflare Pages"

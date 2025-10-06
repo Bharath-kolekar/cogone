@@ -39,7 +39,23 @@ from app.routers import (
     consistency_dna_router,
     proactive_dna_router,
     consciousness_dna_router,
+    quality_optimization_router,
+    advanced_analytics_router,
+    architecture_compliance_router,
+    performance_architecture_router,
+    optimized_services_router,
+    ethical_ai_router,
+    ethical_ai_comprehensive_router,
+    smarty_ethical_router,
+    smarty_ai_orchestrator_router,
+    smarty_agent_integration_router,
+    enhanced_voice_to_app_router,
+    enhanced_payment_router,
+    zero_cost_infrastructure_router,
+    advanced_features_router,
+    production_deployment_router,
 )
+from app.trpc.app_router import get_trpc_router
 from app.middleware.rate_limiter import RateLimitMiddleware
 from app.middleware.auth import AuthMiddleware
 from app.middleware.logging import LoggingMiddleware
@@ -116,7 +132,9 @@ app.add_middleware(
 # Custom middleware
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(RateLimitMiddleware)
-app.add_middleware(AuthMiddleware)
+# Enable AuthMiddleware only when configured (prefer dependency-based auth)
+if settings.ENABLE_AUTH_MIDDLEWARE:
+    app.add_middleware(AuthMiddleware)
 
 # Include routers
 app.include_router(auth.router, prefix="/api/v0/auth", tags=["Authentication"])
@@ -142,6 +160,34 @@ app.include_router(tool_integration_router.router, prefix="/api/v0", tags=["Tool
 app.include_router(consistency_dna_router.router, prefix="/api/v0", tags=["Consistency DNA"])
 app.include_router(proactive_dna_router.router, prefix="/api/v0", tags=["Proactive DNA"])
 app.include_router(consciousness_dna_router.router, prefix="/api/v0", tags=["Consciousness DNA"])
+app.include_router(quality_optimization_router.router, prefix="/api/v0/quality", tags=["Quality Optimization"])
+app.include_router(advanced_analytics_router.router, prefix="/api/v0/analytics", tags=["Advanced Analytics"])
+app.include_router(architecture_compliance_router.router, prefix="/api/v0", tags=["Architecture Compliance"])
+app.include_router(performance_architecture_router.router, prefix="/api/v0", tags=["Performance Architecture"])
+app.include_router(optimized_services_router.router, prefix="/api/v0/optimized", tags=["Optimized Services"])
+app.include_router(ethical_ai_router.router, prefix="/api/v0/ethical", tags=["Ethical AI"])
+app.include_router(ethical_ai_comprehensive_router.router, prefix="/api/v0/ethical-ai", tags=["Ethical AI Comprehensive"])
+app.include_router(smarty_ethical_router.router, prefix="/api/v0/smarty-ethical", tags=["Smarty Ethical Integration"])
+app.include_router(smarty_ai_orchestrator_router.router, prefix="/api/v0/smarty-orchestrator", tags=["Smarty AI Orchestrator"])
+app.include_router(smarty_agent_integration_router.router, prefix="/api/v0/smarty-agents", tags=["Smarty Agent Integration"])
+app.include_router(enhanced_voice_to_app_router.router, prefix="/api/v0/voice-to-app", tags=["Enhanced Voice-to-App"])
+app.include_router(enhanced_payment_router.router, prefix="/api/v0/payments", tags=["Enhanced Payments"])
+
+# tRPC Router
+app.include_router(get_trpc_router(), prefix="/api", tags=["tRPC"])
+
+# Zero-Cost Infrastructure Router
+app.include_router(zero_cost_infrastructure_router.router, prefix="/api/v0/zero-cost", tags=["Zero-Cost Infrastructure"])
+
+# Advanced Features Router - Phase 2
+app.include_router(advanced_features_router.router, prefix="/api/v0/advanced-features", tags=["Advanced Features"])
+
+# Production Deployment Router - Phase 2
+app.include_router(production_deployment_router.router, prefix="/api/v0/deployment", tags=["Production Deployment"])
+
+# System Optimization Router - Current System Optimization
+from app.routers.system_optimization_router import router as system_optimization_router
+app.include_router(system_optimization_router, prefix="/api/v0/optimization", tags=["System Optimization"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")

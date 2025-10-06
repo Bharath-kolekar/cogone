@@ -1,0 +1,42 @@
+services:
+  # Backend API Service
+  - type: web
+    name: cognomega-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2
+    healthCheckPath: /health
+    envVars:
+      - key: ZERO_COST_MODE
+        value: true
+      - key: DEPLOYMENT_PLATFORM
+        value: render
+      - key: MAX_WORKERS
+        value: 4
+      - key: MAX_MEMORY_MB
+        value: 512
+      - key: MAX_CONCURRENT_REQUESTS
+        value: 10
+      - key: LOG_LEVEL
+        value: INFO
+      - key: ENVIRONMENT
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11
+      # Secrets from dashboard
+      - key: SECRET_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TOGETHER_API_KEY
+        sync: false
