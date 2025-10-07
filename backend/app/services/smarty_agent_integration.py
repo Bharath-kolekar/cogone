@@ -17,7 +17,7 @@ from enum import Enum
 import uuid
 
 # Import existing services
-from .ai_agent_consolidated_service import ConsolidatedAIAgentServices
+from .ai_agent_consolidated_service import ConsolidatedAIAgentService
 from .smart_coding_ai_optimized import SmartCodingAIOptimized
 from .smarty_ethical_integration import SmartyEthicalIntegration
 
@@ -110,7 +110,7 @@ class SmartyAgentIntegration:
     """Enhanced AI Agent integration with Smarty capabilities"""
     
     def __init__(self):
-        self.agent_services = ConsolidatedAIAgentServices()
+        self.agent_services = ConsolidatedAIAgentService()
         self.smarty_service = SmartCodingAIOptimized()
         self.ethical_smarty = SmartyEthicalIntegration()
         

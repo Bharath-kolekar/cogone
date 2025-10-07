@@ -20,7 +20,7 @@ from app.core.ethical_ai_core import ethical_ai_core
 from app.core.tool_integration_manager import tool_integration_manager
 from app.core.security_validator import security_validator
 from app.core.code_quality_analyzer import code_quality_analyzer
-from app.services.goal_integrity_service import goal_integrity_service
+from app.services.goal_integrity_service import get_goal_integrity_service
 from app.core.error_recovery_manager import error_recovery_manager
 from app.core.factual_accuracy_validator import factual_accuracy_validator
 from app.core.consistency_enforcer import consistency_enforcer
@@ -108,7 +108,7 @@ class SmartyEthicalIntegration:
         self.tool_integration_manager = tool_integration_manager
         self.security_validator = security_validator
         self.code_quality_analyzer = code_quality_analyzer
-        self.goal_integrity_service = goal_integrity_service
+        self.goal_integrity_service = get_goal_integrity_service()
         self.error_recovery_manager = error_recovery_manager
         self.factual_accuracy_validator = factual_accuracy_validator
         self.consistency_enforcer = consistency_enforcer
@@ -334,7 +334,7 @@ class SmartyEthicalIntegration:
                     "generated_code": generated_code,
                     "context": request.context
                 }
-                integrity_report = await self.goal_integrity_service.validate_goal_integrity(goal_data)
+                integrity_report = await get_goal_integrity_service().validate_goal_integrity(goal_data)
                 validation_results["goal_integrity"] = {
                     "overall_score": integrity_report.overall_score,
                     "integrity_level": integrity_report.integrity_level.value,

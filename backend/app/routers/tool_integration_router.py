@@ -4,7 +4,7 @@ API endpoints for managing external tool integrations
 """
 
 from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Body
 from fastapi.responses import JSONResponse
 import logging
 from datetime import datetime
@@ -481,7 +481,7 @@ async def generate_with_ai(
 
 @router.post("/ai/chat", response_model=Dict[str, Any])
 async def chat_with_ai(
-    messages: List[Dict[str, str]] = Query(..., description="Chat messages"),
+    messages: List[Dict[str, str]] = Body(..., description="Chat messages"),
     model: Optional[str] = Query(None, description="AI model to use"),
     temperature: Optional[float] = Query(0.7, ge=0.0, le=2.0, description="Temperature for generation"),
     current_user: dict = Depends(get_current_user),

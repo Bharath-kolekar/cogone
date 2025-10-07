@@ -4,6 +4,20 @@ import './globals.css'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/toaster'
 
+import * as Sentry from "@sentry/nextjs";
+
+Sentry.init({
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  integrations: [
+    new Sentry.BrowserTracing(),
+    new Sentry.Replay(),
+  ],
+  tracesSampleRate: 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+  environment: process.env.NODE_ENV,
+});
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -48,8 +62,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          {children}
-          <Toaster />
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            {children}
+            <Toaster />
+          </div>
         </Providers>
       </body>
     </html>

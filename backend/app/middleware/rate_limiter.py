@@ -18,11 +18,13 @@ class RateLimitMiddleware:
     
     def __init__(
         self,
+        app,
         requests_per_minute: int = 60,
         requests_per_hour: int = 1000,
         requests_per_day: int = 10000,
         burst_limit: int = 10
     ):
+        self.app = app
         self.requests_per_minute = requests_per_minute
         self.requests_per_hour = requests_per_hour
         self.requests_per_day = requests_per_day
@@ -194,3 +196,12 @@ class RateLimitMiddleware:
         
         if expired_clients:
             logger.info(f"Cleaned up {len(expired_clients)} expired clients")
+    
+    async def __call__(self, scope, receive, send):
+        """ASGI interface for middleware"""
+        if scope["type"] == "http":
+            # Handle HTTP requests
+            await self.app(scope, receive, send)
+        else:
+            # Pass through other types
+            await self.app(scope, receive, send)

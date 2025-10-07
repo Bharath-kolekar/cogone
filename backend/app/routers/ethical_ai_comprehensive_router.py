@@ -22,6 +22,8 @@ from app.core.consistency_enforcer import consistency_enforcer
 from app.core.enhanced_ai_assistant_core import enhanced_ai_assistant_core, AssistantRequest, AssistantContext, AssistantCapability, AssistantMode
 from app.core.enhanced_context_sharing import enhanced_context_sharing, ContextType, ContextPriority, ContextAccess
 from app.core.enhanced_monitoring_analytics import enhanced_monitoring_analytics, MetricType, AlertSeverity, ComponentStatus
+from app.services.enhanced_governance_service import enhanced_governance_service
+from app.core.governance_monitor import governance_monitor
 
 logger = structlog.get_logger(__name__)
 
@@ -837,4 +839,173 @@ async def health_check():
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=f"Health check failed: {str(e)}"
+        )
+
+
+# ============================================================================
+# GOVERNANCE INTEGRATION ENDPOINTS FOR ETHICAL AI
+# ============================================================================
+
+@router.post("/governance/ethical-compliance-check")
+async def check_ethical_governance_compliance(
+    request_data: Dict[str, Any],
+    background_tasks: BackgroundTasks
+):
+    """Check governance compliance for Ethical AI operations"""
+    try:
+        # Get governance status
+        governance_status = await enhanced_governance_service.get_overall_governance_status()
+        
+        # Check if Ethical AI meets governance requirements
+        compliance_score = governance_status.get("overall_score", 0)
+        is_compliant = compliance_score >= 98.0  # 98%+ compliance required for Ethical AI
+        
+        # Process through Ethical AI Core for additional validation
+        ethical_result = await ethical_ai_core.process_user_request(request_data)
+        
+        compliance_result = {
+            "compliance_score": compliance_score,
+            "is_compliant": is_compliant,
+            "governance_status": governance_status.get("overall_status", "unknown"),
+            "ethical_validation": ethical_result,
+            "active_violations": governance_status.get("active_violations_count", 0),
+            "recommendations": governance_status.get("recommendations", []),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        if not is_compliant:
+            logger.warning("Ethical AI governance compliance below threshold", 
+                          compliance_score=compliance_score)
+            # Trigger governance enforcement
+            background_tasks.add_task(
+                enhanced_governance_service.enforce_policy_check,
+                "ethical_ai_compliance",
+                {"request_data": request_data, "compliance_score": compliance_score}
+            )
+        
+        return compliance_result
+        
+    except Exception as e:
+        logger.error("Failed to check ethical governance compliance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to check ethical governance compliance: {e}"
+        )
+
+
+@router.post("/governance/ethical-principles-enforcement")
+async def enforce_ethical_principles_governance(
+    request_data: Dict[str, Any],
+    principle_threshold: float = 99.0
+):
+    """Enforce ethical principles governance for Ethical AI"""
+    try:
+        # Get current governance metrics
+        governance_metrics = enhanced_governance_service.get_governance_metrics()
+        
+        # Check if ethical principles meet governance standards
+        current_ethical_score = governance_metrics.overall_score
+        meets_standards = current_ethical_score >= principle_threshold
+        
+        # Validate through Ethical AI Core
+        ethical_validation = await ethical_ai_core.process_user_request(request_data)
+        
+        enforcement_result = {
+            "current_ethical_score": current_ethical_score,
+            "required_ethical_score": principle_threshold,
+            "meets_standards": meets_standards,
+            "ethical_validation": ethical_validation,
+            "enforcement_actions": [],
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        if not meets_standards:
+            # Trigger ethical improvement actions
+            enforcement_result["enforcement_actions"] = [
+                "Activating enhanced ethical validation",
+                "Enforcing non-harm principle protocols",
+                "Triggering ethical AI optimization"
+            ]
+            
+            logger.warning("Ethical principles below governance threshold", 
+                          current_score=current_ethical_score, required_score=principle_threshold)
+        
+        return enforcement_result
+        
+    except Exception as e:
+        logger.error("Failed to enforce ethical principles governance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enforce ethical principles governance: {e}"
+        )
+
+
+@router.get("/governance/ethical-ai-metrics")
+async def get_ethical_ai_governance_metrics():
+    """Get governance metrics specific to Ethical AI"""
+    try:
+        # Get overall governance metrics
+        governance_metrics = enhanced_governance_service.get_governance_metrics()
+        
+        # Get Ethical AI specific status
+        ethical_ai_status = await ethical_ai_core.get_status()
+        
+        # Combine metrics
+        combined_metrics = {
+            "governance_metrics": governance_metrics,
+            "ethical_ai_status": ethical_ai_status,
+            "compliance_rate": governance_metrics.compliance_rate,
+            "overall_score": governance_metrics.overall_score,
+            "active_violations": governance_metrics.active_violations,
+            "ethical_principles_status": "active",
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        return combined_metrics
+        
+    except Exception as e:
+        logger.error("Failed to get Ethical AI governance metrics", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get Ethical AI governance metrics: {e}"
+        )
+
+
+@router.post("/governance/ethical-violation-detection")
+async def detect_ethical_governance_violations(
+    request_data: Dict[str, Any]
+):
+    """Detect ethical governance violations"""
+    try:
+        # Process through Ethical AI Core for violation detection
+        ethical_analysis = await ethical_ai_core.process_user_request(request_data)
+        
+        # Check for potential violations
+        violations_detected = []
+        if ethical_analysis.get("harm_potential", 0) > 0.1:
+            violations_detected.append("Potential harm detected")
+        if ethical_analysis.get("bias_potential", 0) > 0.1:
+            violations_detected.append("Potential bias detected")
+        if ethical_analysis.get("privacy_risk", 0) > 0.1:
+            violations_detected.append("Privacy risk detected")
+        
+        violation_result = {
+            "violations_detected": violations_detected,
+            "violation_count": len(violations_detected),
+            "ethical_analysis": ethical_analysis,
+            "requires_intervention": len(violations_detected) > 0,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        if violations_detected:
+            logger.warning("Ethical governance violations detected", 
+                          violations=violations_detected)
+        
+        return violation_result
+        
+    except Exception as e:
+        logger.error("Failed to detect ethical governance violations", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to detect ethical governance violations: {e}"
         )

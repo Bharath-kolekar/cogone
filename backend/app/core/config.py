@@ -18,17 +18,17 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     
     # Security
-    SECRET_KEY: str
-    JWT_SECRET: str
-    ENCRYPTION_KEY: str
+    SECRET_KEY: str = "dev-secret-key-change-in-production-min-32-chars"
+    JWT_SECRET: str = "dev-jwt-secret-change-in-production-min-32-chars"
+    ENCRYPTION_KEY: str = "dev-encryption-key-change-in-production-min-32-chars"
     ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1"]
     CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
     
     # Database
-    SUPABASE_URL: str
-    SUPABASE_ANON_KEY: str
-    SUPABASE_SERVICE_KEY: str
-    DATABASE_URL: str
+    SUPABASE_URL: str = "https://your-project.supabase.co"
+    SUPABASE_ANON_KEY: str = "your-anon-key"
+    SUPABASE_SERVICE_KEY: str = "your-service-key"
+    DATABASE_URL: str = "postgresql://user:password@localhost:5432/cogone"
     
     # Redis
     REDIS_URL: Optional[str] = None
@@ -37,15 +37,26 @@ class Settings(BaseSettings):
     UPSTASH_REDIS_REST_TOKEN: Optional[str] = None
     
     # Payment Providers
-    RAZORPAY_KEY_ID: str
-    RAZORPAY_KEY_SECRET: str
-    RAZORPAY_WEBHOOK_SECRET: str
+    RAZORPAY_KEY_ID: str = "dev-razorpay-key-id"
+    RAZORPAY_KEY_SECRET: str = "dev-razorpay-key-secret"
+    RAZORPAY_API_KEY: str = "dev-razorpay-api-key"
+    RAZORPAY_API_SECRET: str = "dev-razorpay-api-secret"
+    RAZORPAY_WEBHOOK_SECRET: str = "dev-razorpay-webhook-secret"
     
-    PAYPAL_CLIENT_ID: str
-    PAYPAL_CLIENT_SECRET: str
-    PAYPAL_WEBHOOK_ID: str
+    PAYPAL_CLIENT_ID: str = "dev-paypal-client-id"
+    PAYPAL_CLIENT_SECRET: str = "dev-paypal-client-secret"
+    PAYPAL_WEBHOOK_ID: str = "dev-paypal-webhook-id"
+    PAYPAL_SANDBOX: str = "true"
     
-    GOOGLE_PAY_MERCHANT_ID: str
+    GOOGLE_PAY_MERCHANT_ID: str = "dev-google-pay-merchant-id"
+    GOOGLE_PAY_API_KEY: str = "dev-google-pay-api-key"
+    UPI_MERCHANT_ID: str = "dev-upi-merchant-id"
+    UPI_MERCHANT_NAME: str = "dev-upi-merchant-name"
+    BASE_URL: str = "http://localhost:8000"
+    NEON_API_KEY: str = "dev-neon-api-key"
+    NEON_PROJECT_ID: str = "dev-neon-project-id"
+    TWILIO_ACCOUNT_SID: str = "dev-twilio-account-sid"
+    TWILIO_AUTH_TOKEN: str = "dev-twilio-auth-token"
     
     # AI Providers (Zero-Cost Configuration)
     # Primary: Groq (FREE for developers)
@@ -72,8 +83,8 @@ class Settings(BaseSettings):
     # WhatsApp Business API (Replaces SMS Provider)
     WHATSAPP_WEBHOOK_URL: Optional[str] = None
     WHATSAPP_VERIFY_TOKEN: Optional[str] = None
-    WHATSAPP_ACCESS_TOKEN: Optional[str] = None
-    WHATSAPP_PHONE_NUMBER_ID: Optional[str] = None
+    WHATSAPP_ACCESS_TOKEN: str = "dev-whatsapp-access-token"
+    WHATSAPP_PHONE_NUMBER_ID: str = "dev-whatsapp-phone-number-id"
     WHATSAPP_BUSINESS_ACCOUNT_ID: Optional[str] = None
     
     # Cloudflare Services (Frontend CDN only - FREE)
@@ -97,10 +108,15 @@ class Settings(BaseSettings):
     MAX_CONCURRENT_REQUESTS: int = 10  # Limit for free tier
     
     # Email Configuration (PrivateEmail via Namecheap)
-    SMTP_HOST: str = "mail.cognomega.com"
+    SMTP_HOST: str = "smtp.privateemail.com"
     SMTP_PORT: int = 587
-    SMTP_USER: str = "postmaster@cognomega.com"
-    SMTP_PASS: str
+    SMTP_USER: str = "dev-smtp-user"
+    SMTP_PASS: str = "dev-smtp-password"
+    SMTP_FROM: str = "noreply@yourdomain.com"
+    
+    # Webhook URLs
+    RAZORPAY_WEBHOOK_URL: str = "http://localhost:8000/api/v0/webhooks/razorpay"
+    PAYPAL_WEBHOOK_URL: str = "http://localhost:8000/api/v0/webhooks/paypal"
     
     # WhatsApp Business API Configuration
     WHATSAPP_MESSAGE_TEMPLATES: Optional[str] = None

@@ -99,9 +99,15 @@ class AutoSaveService:
             "compression_enabled": False
         }
         
-        # Start auto-save background task
+        # Start auto-save background task (deferred until event loop is running)
         self._auto_save_task = None
-        self._start_auto_save_task()
+        self._auto_save_started = False
+    
+    async def _ensure_auto_save_started(self):
+        """Ensure auto save task is started when event loop is running"""
+        if not self._auto_save_started and self.auto_save_enabled:
+            self._start_auto_save_task()
+            self._auto_save_started = True
     
     def _start_auto_save_task(self):
         """Start background auto-save task"""

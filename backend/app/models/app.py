@@ -47,6 +47,25 @@ class AppUpdateResponse(BaseModel):
     updated_fields: Dict[str, Any]
 
 
+class GeneratedApp(BaseModel):
+    id: str
+    user_id: str
+    title: str
+    description: Optional[str] = None
+    voice_command: str
+    repo_url: Optional[str] = None
+    zip_url: Optional[str] = None
+    preview_url: Optional[str] = None
+    status: AppStatus
+    metadata: Dict[str, Any]
+    generation_time_ms: Optional[int] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class AppListRequest(BaseModel):
     status: Optional[AppStatus] = None
     limit: int = 10
@@ -55,7 +74,7 @@ class AppListRequest(BaseModel):
 
 
 class AppListResponse(BaseModel):
-    apps: List["GeneratedApp"]
+    apps: List[GeneratedApp]
     total: int
     limit: int
     offset: int
@@ -77,6 +96,26 @@ class TemplateCreateResponse(BaseModel):
     marketplace_url: Optional[str] = None
 
 
+class AppTemplate(BaseModel):
+    id: str
+    creator_id: str
+    title: str
+    description: str
+    category: str
+    tags: List[str]
+    template_data: Dict[str, Any]
+    is_public: bool
+    download_count: int
+    rating: float
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+
+
 class TemplateListRequest(BaseModel):
     category: Optional[str] = None
     tags: Optional[List[str]] = None
@@ -86,7 +125,7 @@ class TemplateListRequest(BaseModel):
 
 
 class TemplateListResponse(BaseModel):
-    templates: List["AppTemplate"]
+    templates: List[AppTemplate]
     total: int
     limit: int
     offset: int
@@ -102,25 +141,6 @@ class CollaborationInviteResponse(BaseModel):
     invitation_id: str
     status: str
     message: str
-
-
-class GeneratedApp(BaseModel):
-    id: str
-    user_id: str
-    title: str
-    description: Optional[str] = None
-    voice_command: str
-    repo_url: Optional[str] = None
-    zip_url: Optional[str] = None
-    preview_url: Optional[str] = None
-    status: AppStatus
-    metadata: Dict[str, Any]
-    generation_time_ms: Optional[int] = None
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class AppTemplate(BaseModel):

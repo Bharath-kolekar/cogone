@@ -11,6 +11,8 @@ from app.services.smart_coding_ai_optimized import (
     smart_coding_ai_optimized, AccuracyLevel, OptimizationStrategy,
     Language, CompletionType, SuggestionType, CodeContext
 )
+from app.services.enhanced_governance_service import enhanced_governance_service
+from app.core.governance_monitor import governance_monitor
 from app.models.smart_coding_ai_optimized import (
     OptimizedCompletionRequest, OptimizedCompletionResponse,
     AccuracyReportResponse, OptimizationStatusResponse,
@@ -60,8 +62,7 @@ from app.models.ai_agent import (
 )
 from app.routers.auth import AuthDependencies
 from app.models.user import User
-from app.core.database import get_database
-from sqlalchemy import select
+from app.services.database_service import database_service
 
 logger = structlog.get_logger()
 router = APIRouter()
@@ -283,13 +284,10 @@ async def create_ai_agent(
             agent.config.custom_instructions = request.custom_instructions
         
         # Save to database
-        async with get_database() as db:
-            db.add(agent)
-            await db.commit()
-            await db.refresh(agent)
+        saved_agent = await database_service.create_agent(agent)
         
-        logger.info(f"Created optimized AI agent: {agent.id}")
-        return agent
+        logger.info(f"Created optimized AI agent: {saved_agent.id}")
+        return saved_agent
         
     except Exception as e:
         logger.error(f"Failed to create agent: {e}")
@@ -309,22 +307,19 @@ async def list_ai_agents(
 ):
     """List user's AI agents with optimization metrics"""
     try:
-        async with get_database() as db:
-            query = select(AgentDefinition).where(AgentDefinition.user_id == current_user.id)
-            
-            if agent_type:
-                query = query.where(AgentDefinition.type == agent_type)
-            if status:
-                query = query.where(AgentDefinition.status == status)
-            
-            # Add pagination
-            offset = (page - 1) * limit
-            query = query.offset(offset).limit(limit)
-            
-            result = await db.execute(query)
-            agents = result.scalars().all()
-            
-            return agents
+        # Calculate offset for pagination
+        offset = (page - 1) * limit
+        
+        # Get agents from database
+        agents = await database_service.list_agents(
+            user_id=str(current_user.id),
+            agent_type=agent_type.value if agent_type else None,
+            status=status.value if status else None,
+            limit=limit,
+            offset=offset
+        )
+        
+        return agents
             
     except Exception as e:
         logger.error(f"Failed to list agents: {e}")
@@ -341,21 +336,19 @@ async def get_ai_agent(
 ):
     """Get a specific AI agent with optimization status"""
     try:
-        async with get_database() as db:
-            query = select(AgentDefinition).where(
-                AgentDefinition.id == agent_id,
-                AgentDefinition.user_id == current_user.id
+        # Get agent from database
+        agent = await database_service.get_agent(
+            agent_id=str(agent_id),
+            user_id=str(current_user.id)
+        )
+        
+        if not agent:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Agent not found"
             )
-            result = await db.execute(query)
-            agent = result.scalar_one_or_none()
-            
-            if not agent:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Agent not found"
-                )
-            
-            return agent
+        
+        return agent
             
     except HTTPException:
         raise
@@ -375,43 +368,50 @@ async def update_ai_agent(
 ):
     """Update an AI agent with optimization features"""
     try:
-        async with get_database() as db:
-            query = select(AgentDefinition).where(
-                AgentDefinition.id == agent_id,
-                AgentDefinition.user_id == current_user.id
+        # Get existing agent
+        agent = await database_service.get_agent(
+            agent_id=str(agent_id),
+            user_id=str(current_user.id)
+        )
+            
+        if not agent:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Agent not found"
             )
-            result = await db.execute(query)
-            agent = result.scalar_one_or_none()
-            
-            if not agent:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Agent not found"
-                )
-            
-            # Update fields
-            if request.name is not None:
-                agent.name = request.name
-            if request.description is not None:
-                agent.description = request.description
-            if request.status is not None:
-                agent.status = request.status
-            if request.priority is not None:
-                agent.priority = request.priority
-            if request.capabilities is not None:
-                agent.capabilities = request.capabilities
-            if request.config is not None:
-                agent.config = request.config
-            if request.is_public is not None:
-                agent.is_public = request.is_public
-            
-            agent.updated_at = datetime.utcnow()
-            
-            await db.commit()
-            await db.refresh(agent)
-            
-            logger.info(f"Updated optimized AI agent: {agent.id}")
-            return agent
+        
+        # Prepare update data
+        updates = {}
+        if request.name is not None:
+            updates["name"] = request.name
+        if request.description is not None:
+            updates["description"] = request.description
+        if request.status is not None:
+            updates["status"] = request.status.value if hasattr(request.status, 'value') else str(request.status)
+        if request.priority is not None:
+            updates["priority"] = request.priority.value if hasattr(request.priority, 'value') else str(request.priority)
+        if request.capabilities is not None:
+            updates["capabilities"] = [cap.value if hasattr(cap, 'value') else str(cap) for cap in request.capabilities]
+        if request.config is not None:
+            updates["config"] = request.config.dict() if hasattr(request.config, 'dict') else request.config
+        if request.is_public is not None:
+            updates["is_public"] = request.is_public
+        
+        # Update agent in database
+        updated_agent = await database_service.update_agent(
+            agent_id=str(agent_id),
+            user_id=str(current_user.id),
+            updates=updates
+        )
+        
+        if updated_agent:
+            logger.info(f"Updated optimized AI agent: {updated_agent.id}")
+            return updated_agent
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update agent"
+            )
             
     except HTTPException:
         raise
@@ -430,25 +430,20 @@ async def delete_ai_agent(
 ):
     """Delete an AI agent"""
     try:
-        async with get_database() as db:
-            query = select(AgentDefinition).where(
-                AgentDefinition.id == agent_id,
-                AgentDefinition.user_id == current_user.id
+        # Delete agent from database
+        success = await database_service.delete_agent(
+            agent_id=str(agent_id),
+            user_id=str(current_user.id)
+        )
+        
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Agent not found"
             )
-            result = await db.execute(query)
-            agent = result.scalar_one_or_none()
-            
-            if not agent:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="Agent not found"
-                )
-            
-            await db.delete(agent)
-            await db.commit()
-            
-            logger.info(f"Deleted optimized AI agent: {agent.id}")
-            return {"success": True, "message": "Agent deleted successfully"}
+        
+        logger.info(f"Deleted optimized AI agent: {agent_id}")
+        return {"success": True, "message": "Agent deleted successfully"}
             
     except HTTPException:
         raise
@@ -2598,4 +2593,169 @@ async def get_performance_architecture_dna_status():
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get performance architecture DNA status: {e}"
+        )
+
+
+# ============================================================================
+# GOVERNANCE INTEGRATION ENDPOINTS FOR SMART CODING AI
+# ============================================================================
+
+@router.post("/governance/code-compliance-check")
+async def check_code_governance_compliance(
+    request: CodeCompletionRequest,
+    background_tasks: BackgroundTasks
+):
+    """Check governance compliance for Smart Coding AI operations"""
+    try:
+        # Get governance status
+        governance_status = await enhanced_governance_service.get_overall_governance_status()
+        
+        # Check if Smart Coding AI meets governance requirements
+        compliance_score = governance_status.get("overall_score", 0)
+        is_compliant = compliance_score >= 95.0  # 95%+ compliance required for Smart Coding AI
+        
+        compliance_result = {
+            "compliance_score": compliance_score,
+            "is_compliant": is_compliant,
+            "governance_status": governance_status.get("overall_status", "unknown"),
+            "active_violations": governance_status.get("active_violations_count", 0),
+            "recommendations": governance_status.get("recommendations", []),
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        if not is_compliant:
+            logger.warning("Smart Coding AI governance compliance below threshold", 
+                          compliance_score=compliance_score)
+            # Trigger governance enforcement
+            background_tasks.add_task(
+                enhanced_governance_service.enforce_policy_check,
+                "smart_coding_ai_compliance",
+                {"request_id": str(uuid4()), "compliance_score": compliance_score}
+            )
+        
+        return compliance_result
+        
+    except Exception as e:
+        logger.error("Failed to check code governance compliance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to check code governance compliance: {e}"
+        )
+
+
+@router.post("/governance/code-quality-enforcement")
+async def enforce_code_quality_governance(
+    request: CodeCompletionRequest,
+    quality_threshold: float = Query(default=95.0, description="Minimum quality threshold")
+):
+    """Enforce code quality governance for Smart Coding AI"""
+    try:
+        # Get current governance metrics
+        governance_metrics = enhanced_governance_service.get_governance_metrics()
+        
+        # Check if quality meets governance standards
+        current_quality = governance_metrics.overall_score
+        meets_standards = current_quality >= quality_threshold
+        
+        enforcement_result = {
+            "current_quality": current_quality,
+            "required_quality": quality_threshold,
+            "meets_standards": meets_standards,
+            "enforcement_actions": [],
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        if not meets_standards:
+            # Trigger quality improvement actions
+            enforcement_result["enforcement_actions"] = [
+                "Triggering Smart Coding AI optimization",
+                "Enforcing 100% accuracy mode",
+                "Activating quality enhancement protocols"
+            ]
+            
+            logger.warning("Code quality below governance threshold", 
+                          current_quality=current_quality, required_quality=quality_threshold)
+        
+        return enforcement_result
+        
+    except Exception as e:
+        logger.error("Failed to enforce code quality governance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enforce code quality governance: {e}"
+        )
+
+
+@router.get("/governance/smart-coding-metrics")
+async def get_smart_coding_governance_metrics():
+    """Get governance metrics specific to Smart Coding AI"""
+    try:
+        # Get overall governance metrics
+        governance_metrics = enhanced_governance_service.get_governance_metrics()
+        
+        # Get Smart Coding AI specific metrics
+        smart_coding_status = await smart_coding_ai_optimized.get_status()
+        
+        # Combine metrics
+        combined_metrics = {
+            "governance_metrics": governance_metrics,
+            "smart_coding_status": smart_coding_status,
+            "compliance_rate": governance_metrics.compliance_rate,
+            "overall_score": governance_metrics.overall_score,
+            "active_violations": governance_metrics.active_violations,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        return combined_metrics
+        
+    except Exception as e:
+        logger.error("Failed to get Smart Coding governance metrics", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get Smart Coding governance metrics: {e}"
+        )
+
+
+@router.post("/governance/accuracy-enforcement")
+async def enforce_accuracy_governance(
+    accuracy_level: AccuracyLevel = Query(default=AccuracyLevel.PERFECT, description="Required accuracy level")
+):
+    """Enforce accuracy governance for Smart Coding AI"""
+    try:
+        # Get current accuracy metrics
+        accuracy_report = await smart_coding_ai_optimized.get_accuracy_report()
+        
+        # Check if accuracy meets governance requirements
+        current_accuracy = accuracy_report.overall_accuracy
+        required_accuracy = accuracy_level.value
+        
+        meets_requirements = current_accuracy >= required_accuracy
+        
+        enforcement_result = {
+            "current_accuracy": current_accuracy,
+            "required_accuracy": required_accuracy,
+            "meets_requirements": meets_requirements,
+            "accuracy_level": accuracy_level.value,
+            "enforcement_actions": [],
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        if not meets_requirements:
+            # Trigger accuracy improvement
+            enforcement_result["enforcement_actions"] = [
+                f"Activating {accuracy_level.value}% accuracy mode",
+                "Enforcing maximum accuracy protocols",
+                "Triggering accuracy optimization"
+            ]
+            
+            logger.warning("Smart Coding AI accuracy below governance requirements", 
+                          current_accuracy=current_accuracy, required_accuracy=required_accuracy)
+        
+        return enforcement_result
+        
+    except Exception as e:
+        logger.error("Failed to enforce accuracy governance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enforce accuracy governance: {e}"
         )

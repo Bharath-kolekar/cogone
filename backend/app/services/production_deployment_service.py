@@ -70,12 +70,21 @@ class ProductionDeploymentService:
     """Production deployment and monitoring service"""
     
     def __init__(self):
-        self.supabase = get_supabase_client()
+        try:
+            self.supabase = get_supabase_client()
+        except RuntimeError:
+            # Database not initialized yet, will be set later
+            self.supabase = None
         # Async redis client obtained at call sites
         self.redis = None
         
         # Deployment state
         self.active_deployments: Dict[str, Dict[str, Any]] = {}
+    
+    def _ensure_supabase_connected(self):
+        """Ensure Supabase connection is established"""
+        if self.supabase is None:
+            self.supabase = get_supabase_client()
         self.deployment_history: List[DeploymentMetrics] = []
         self.health_checks: Dict[str, HealthCheckResult] = {}
         

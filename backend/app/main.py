@@ -11,19 +11,26 @@ from fastapi.staticfiles import StaticFiles
 import structlog
 import time
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
-import sentry_sdk
-
-sentry_sdk.init(
-    dsn="https://375a87b3ebca79238dd7395edd6abd6a@o4510140654092288.ingest.de.sentry.io/4510140671524944",
-    integrations=[FastApiIntegration()],
-    traces_sample_rate=1.0,  # 100% of transactions
-    environment="development"  # or "production"
-)
 
 from app.core.config import settings
+
+# Initialize Sentry for error tracking (optional)
+try:
+    import sentry_sdk
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+    
+    if settings.SENTRY_DSN:
+        sentry_sdk.init(
+            dsn=settings.SENTRY_DSN,
+            integrations=[FastApiIntegration()],
+            traces_sample_rate=1.0,
+            environment=settings.ENVIRONMENT
+        )
+except ImportError:
+    pass  # Sentry not installed
 from app.core.database import init_db
 from app.core.redis import init_redis
+from app.core.async_task_manager import async_task_manager
 from app.routers import (
     auth,
     voice,
@@ -63,11 +70,13 @@ from app.routers import (
     zero_cost_infrastructure_router,
     advanced_features_router,
     production_deployment_router,
+    code_processing,
 )
 from app.trpc.app_router import get_trpc_router
 from app.middleware.rate_limiter import RateLimitMiddleware
 from app.middleware.auth import AuthMiddleware
 from app.middleware.logging import LoggingMiddleware
+from app.routers.smart_coding_ai_status import router as smart_coding_ai_status_router
 
 # Configure structured logging
 structlog.configure(
@@ -105,10 +114,18 @@ async def lifespan(app: FastAPI):
     await init_redis()
     logger.info("Redis initialized")
     
+    # Start all async tasks
+    await async_task_manager.start_all_tasks()
+    logger.info("All async tasks started")
+    
     yield
     
     # Shutdown
     logger.info("Shutting down Voice-to-App SaaS Platform")
+    
+    # Stop all async tasks
+    await async_task_manager.stop_all_tasks()
+    logger.info("All async tasks stopped")
 
 
 # Create FastAPI application
@@ -139,7 +156,7 @@ app.add_middleware(
 )
 
 # Custom middleware
-app.add_middleware(LoggingMiddleware)
+# app.add_middleware(LoggingMiddleware)  # Temporarily disabled for debugging
 app.add_middleware(RateLimitMiddleware)
 # Enable AuthMiddleware only when configured (prefer dependency-based auth)
 if settings.ENABLE_AUTH_MIDDLEWARE:
@@ -181,6 +198,7 @@ app.include_router(smarty_ai_orchestrator_router.router, prefix="/api/v0/smarty-
 app.include_router(smarty_agent_integration_router.router, prefix="/api/v0/smarty-agents", tags=["Smarty Agent Integration"])
 app.include_router(enhanced_voice_to_app_router.router, prefix="/api/v0/voice-to-app", tags=["Enhanced Voice-to-App"])
 app.include_router(enhanced_payment_router.router, prefix="/api/v0/payments", tags=["Enhanced Payments"])
+app.include_router(smart_coding_ai_status_router)
 
 # tRPC Router
 app.include_router(get_trpc_router(), prefix="/api", tags=["tRPC"])
@@ -197,6 +215,9 @@ app.include_router(production_deployment_router.router, prefix="/api/v0/deployme
 # System Optimization Router - Current System Optimization
 from app.routers.system_optimization_router import router as system_optimization_router
 app.include_router(system_optimization_router, prefix="/api/v0/optimization", tags=["System Optimization"])
+
+# Code Processing Router - Seamless Edit & Fix Workflow
+app.include_router(code_processing.router, prefix="/api/v0/code", tags=["Code Processing"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")

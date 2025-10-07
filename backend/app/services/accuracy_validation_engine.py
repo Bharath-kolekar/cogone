@@ -23,7 +23,7 @@ import networkx as nx
 from dataclasses import dataclass
 from enum import Enum
 
-from app.core.database import get_database
+from app.core.database import get_supabase_client
 from app.core.redis import get_redis_client
 from app.core.config import get_settings
 
@@ -745,9 +745,9 @@ class RealAccuracyValidator:
         """Store accuracy metrics for monitoring"""
         try:
             # Store in database
-            async with get_database() as db:
-                # Store metrics (implementation depends on your database schema)
-                pass
+            db = get_supabase_client()
+            # Store metrics (implementation depends on your database schema)
+            pass
             
             # Store in Redis for real-time monitoring
             redis_client = await get_redis_client()

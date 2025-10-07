@@ -15,6 +15,7 @@ from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 import json
+from app.core.async_task_manager import register_async_initializer
 
 from app.core.cpu_optimizer import cpu_optimizer
 from app.core.performance_monitor import performance_monitor
@@ -106,7 +107,7 @@ class PredictiveScalingEngine:
         self._initialize_with_synthetic_data()
         
         # Start background tasks
-        self._start_background_tasks()
+        self._background_tasks_started = False
     
     def _initialize_with_synthetic_data(self):
         """Initialize with synthetic load data"""
@@ -143,8 +144,8 @@ class PredictiveScalingEngine:
                 
                 self.load_history.append(data_point)
             
-            # Train initial models
-            asyncio.create_task(self._train_predictive_models())
+            # Train initial models (deferred until event loop is running)
+            # asyncio.create_task(self._train_predictive_models())
             
             logger.info("Predictive scaling engine initialized with synthetic data")
             
@@ -153,9 +154,25 @@ class PredictiveScalingEngine:
     
     def _start_background_tasks(self):
         """Start background tasks for predictive scaling"""
-        asyncio.create_task(self._load_monitoring_loop())
-        asyncio.create_task(self._predictive_scaling_loop())
-        asyncio.create_task(self._model_retraining_loop())
+        if not self._background_tasks_started:
+            try:
+                asyncio.create_task(self._load_monitoring_loop())
+                asyncio.create_task(self._predictive_scaling_loop())
+                asyncio.create_task(self._model_retraining_loop())
+                self._background_tasks_started = True
+            except RuntimeError as e:
+                logger.error("Failed to start background tasks", error=str(e))
+    
+    async def _ensure_background_tasks_started(self):
+        """Ensure background tasks are started when an event loop is running"""
+        if not self._background_tasks_started:
+            try:
+                asyncio.create_task(self._load_monitoring_loop())
+                asyncio.create_task(self._predictive_scaling_loop())
+                asyncio.create_task(self._model_retraining_loop())
+                self._background_tasks_started = True
+            except RuntimeError as e:
+                logger.error("Failed to start background tasks", error=str(e))
     
     async def _load_monitoring_loop(self):
         """Monitor system load continuously"""
@@ -570,6 +587,7 @@ class PredictiveScalingEngine:
     
     async def get_scaling_recommendations(self) -> Dict[str, Any]:
         """Get predictive scaling recommendations"""
+        await self._ensure_background_tasks_started()
         try:
             predictions = await self._predict_scaling_needs()
             
@@ -619,3 +637,14 @@ async def trigger_predictive_scaling():
     for prediction in predictions:
         if prediction.confidence >= 0.8:
             await predictive_scaling_engine._execute_scaling_action(prediction)
+
+
+# Global instance
+predictive_scaling_engine = PredictiveScalingEngine()
+
+# Register async initializer
+async def _start_predictive_scaling_tasks():
+    """Start predictive scaling engine background tasks"""
+    await predictive_scaling_engine._ensure_background_tasks_started()
+
+register_async_initializer("predictive_scaling_engine", _start_predictive_scaling_tasks)

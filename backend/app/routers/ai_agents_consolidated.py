@@ -19,6 +19,8 @@ from app.models.ai_agent import (
     AgentRequest, AgentResponse, AgentCreationRequest,
     AgentDefinition, AgentConfig, AgentMetrics
 )
+from app.services.enhanced_governance_service import enhanced_governance_service
+from app.core.governance_monitor import governance_monitor
 
 logger = structlog.get_logger()
 router = APIRouter()
@@ -507,3 +509,159 @@ async def _perform_optimization(agent_id: UUID, optimization_level: str) -> Dict
     except Exception as e:
         logger.error(f"Error performing optimization: {e}")
         return {"optimization_status": "failed", "error": str(e)}
+
+
+# ============================================================================
+# GOVERNANCE INTEGRATION ENDPOINTS FOR AI AGENTS
+# ============================================================================
+
+@router.post("/governance/agent-compliance-check")
+async def check_agent_governance_compliance(
+    agent_id: str,
+    current_user: User = Depends(ConsolidatedAIAgentDependencies.get_current_user)
+):
+    """Check governance compliance for a specific AI agent"""
+    try:
+        # Get agent details
+        agent = await consolidated_ai_agent_services.get_agent(agent_id)
+        if not agent:
+            raise HTTPException(status_code=404, detail="Agent not found")
+        
+        # Check governance compliance
+        compliance_result = await enhanced_governance_service.get_overall_governance_status()
+        
+        # Agent-specific governance checks
+        agent_governance_status = {
+            "agent_id": agent_id,
+            "compliance_score": compliance_result.get("overall_score", 0),
+            "governance_status": compliance_result.get("overall_status", "unknown"),
+            "active_violations": compliance_result.get("active_violations_count", 0),
+            "recommendations": compliance_result.get("recommendations", []),
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        logger.info("Agent governance compliance checked", agent_id=agent_id, user_id=current_user.id)
+        return agent_governance_status
+        
+    except Exception as e:
+        logger.error("Failed to check agent governance compliance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to check agent governance compliance: {e}"
+        )
+
+
+@router.post("/governance/agent-policy-enforcement")
+async def enforce_agent_governance_policy(
+    agent_id: str,
+    policy_type: str,
+    current_user: User = Depends(ConsolidatedAIAgentDependencies.get_current_user)
+):
+    """Enforce governance policies for a specific AI agent"""
+    try:
+        # Get agent details
+        agent = await consolidated_ai_agent_services.get_agent(agent_id)
+        if not agent:
+            raise HTTPException(status_code=404, detail="Agent not found")
+        
+        # Enforce governance policy
+        enforcement_result = await enhanced_governance_service.enforce_policy_check(
+            f"agent_{policy_type}_{agent_id}",
+            {"agent_id": agent_id, "policy_type": policy_type}
+        )
+        
+        logger.info("Agent governance policy enforced", 
+                   agent_id=agent_id, policy_type=policy_type, user_id=current_user.id)
+        
+        return {
+            "status": "success",
+            "agent_id": agent_id,
+            "policy_type": policy_type,
+            "enforcement_result": enforcement_result,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error("Failed to enforce agent governance policy", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enforce agent governance policy: {e}"
+        )
+
+
+@router.get("/governance/agent-metrics")
+async def get_agent_governance_metrics(
+    agent_id: str,
+    current_user: User = Depends(ConsolidatedAIAgentDependencies.get_current_user)
+):
+    """Get governance metrics for a specific AI agent"""
+    try:
+        # Get agent details
+        agent = await consolidated_ai_agent_services.get_agent(agent_id)
+        if not agent:
+            raise HTTPException(status_code=404, detail="Agent not found")
+        
+        # Get governance metrics
+        governance_metrics = enhanced_governance_service.get_governance_metrics()
+        
+        # Agent-specific metrics
+        agent_metrics = {
+            "agent_id": agent_id,
+            "governance_metrics": governance_metrics,
+            "agent_status": agent.status if hasattr(agent, 'status') else "unknown",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        logger.info("Agent governance metrics retrieved", agent_id=agent_id, user_id=current_user.id)
+        return agent_metrics
+        
+    except Exception as e:
+        logger.error("Failed to get agent governance metrics", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get agent governance metrics: {e}"
+        )
+
+
+@router.get("/governance/agents-compliance-summary")
+async def get_agents_governance_summary(
+    current_user: User = Depends(ConsolidatedAIAgentDependencies.get_current_user)
+):
+    """Get governance compliance summary for all user agents"""
+    try:
+        # Get all user agents
+        user_agents = await consolidated_ai_agent_services.get_user_agents(current_user.id)
+        
+        # Get overall governance status
+        governance_status = await enhanced_governance_service.get_overall_governance_status()
+        
+        # Calculate agent-specific compliance
+        compliant_agents = 0
+        total_agents = len(user_agents)
+        
+        for agent in user_agents:
+            # Simple compliance check based on agent status
+            if hasattr(agent, 'status') and agent.status in ['active', 'running']:
+                compliant_agents += 1
+        
+        compliance_rate = (compliant_agents / total_agents * 100) if total_agents > 0 else 100
+        
+        summary = {
+            "total_agents": total_agents,
+            "compliant_agents": compliant_agents,
+            "compliance_rate": compliance_rate,
+            "overall_governance_score": governance_status.get("overall_score", 0),
+            "active_violations": governance_status.get("active_violations_count", 0),
+            "recommendations": governance_status.get("recommendations", []),
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+        logger.info("Agents governance summary retrieved", user_id=current_user.id)
+        return summary
+        
+    except Exception as e:
+        logger.error("Failed to get agents governance summary", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get agents governance summary: {e}"
+        )

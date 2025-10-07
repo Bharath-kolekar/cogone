@@ -100,7 +100,7 @@ class PerformanceMonitor:
         
         # Start monitoring
         self._monitoring_task = None
-        self._start_monitoring()
+        self._monitoring_started = False
     
     def _initialize_default_thresholds(self):
         """Initialize default performance thresholds"""
@@ -141,7 +141,21 @@ class PerformanceMonitor:
     
     def _start_monitoring(self):
         """Start performance monitoring"""
-        self._monitoring_task = asyncio.create_task(self._monitor_performance())
+        if not self._monitoring_started:
+            try:
+                self._monitoring_task = asyncio.create_task(self._monitor_performance())
+                self._monitoring_started = True
+            except RuntimeError as e:
+                logger.error("Failed to start monitoring", error=str(e))
+    
+    async def _ensure_monitoring_started(self):
+        """Ensure monitoring is started when an event loop is running"""
+        if not self._monitoring_started:
+            try:
+                self._monitoring_task = asyncio.create_task(self._monitor_performance())
+                self._monitoring_started = True
+            except RuntimeError as e:
+                logger.error("Failed to start monitoring", error=str(e))
     
     async def _monitor_performance(self):
         """Main performance monitoring loop"""
@@ -385,6 +399,7 @@ class PerformanceMonitor:
     
     async def get_performance_summary(self) -> Dict[str, Any]:
         """Get comprehensive performance summary"""
+        await self._ensure_monitoring_started()
         try:
             recent_metrics = self._get_recent_metrics(300)  # Last 5 minutes
             
@@ -449,6 +464,7 @@ class PerformanceMonitor:
     
     async def get_active_alerts(self) -> List[Dict[str, Any]]:
         """Get active performance alerts"""
+        await self._ensure_monitoring_started()
         return [
             {
                 "alert_id": alert.alert_id,

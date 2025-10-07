@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Mic, Zap, Globe, Shield, Smartphone, Users, Gift, Code } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { SeamlessEditDemo } from '@/components/seamless-edit-demo'
 
 const features = [
   {
@@ -52,6 +53,12 @@ const features = [
     title: "Export & Deploy",
     description: "Download your app code or deploy directly to Vercel, Netlify, or your preferred platform.",
     highlight: "One-click deploy"
+  },
+  {
+    icon: Code,
+    title: "Seamless Edit & Fix",
+    description: "Select code + Ctrl+L to describe changes. AI will optimize, fix, and improve your code instantly.",
+    highlight: "Ctrl+L magic"
   }
 ]
 
@@ -146,6 +153,11 @@ export function Features() {
             </div>
           </div>
         </motion.div>
+      </div>
+
+      {/* Seamless Edit Demo */}
+      <div className="mt-20">
+        <SeamlessEditDemo />
       </div>
     </section>
   )

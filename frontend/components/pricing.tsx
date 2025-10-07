@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Check, Star, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { PaymentIntegration } from '@/components/payment-integration'
 
 const plans = [
   {

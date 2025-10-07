@@ -23,6 +23,7 @@ class LoggingMiddleware:
     
     def __init__(
         self,
+        app,
         log_level: str = "INFO",
         log_requests: bool = True,
         log_responses: bool = True,
@@ -31,6 +32,7 @@ class LoggingMiddleware:
         max_body_size: int = 1024,
         exclude_paths: list = None
     ):
+        self.app = app
         self.log_level = getattr(logging, log_level.upper())
         self.log_requests = log_requests
         self.log_responses = log_responses
@@ -287,3 +289,12 @@ class LoggingMiddleware:
             "total_paths_monitored": len(self.request_stats),
             "total_requests_logged": sum(s["total_requests"] for s in self.request_stats.values())
         }
+    
+    async def __call__(self, scope, receive, send):
+        """ASGI interface for middleware"""
+        if scope["type"] == "http":
+            # Handle HTTP requests
+            await self.app(scope, receive, send)
+        else:
+            # Pass through other types
+            await self.app(scope, receive, send)

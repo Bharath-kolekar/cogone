@@ -5,7 +5,7 @@ AI Agent Models - Advanced AI Agent System with Zero-Cost Infrastructure
 from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional, Any, Union
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, ConfigDict
 from uuid import UUID, uuid4
 
 
@@ -80,6 +80,8 @@ class TaskType(str, Enum):
 
 class AgentConfig(BaseModel):
     """Configuration for AI Agents"""
+    model_config = ConfigDict(protected_namespaces=())  # Allow model_ prefix fields
+    
     model_provider: str = Field(default="local", description="AI model provider (local, openai, anthropic, etc.)")
     model_name: str = Field(default="llama-2-7b", description="Specific model to use")
     max_tokens: int = Field(default=2048, description="Maximum tokens for responses")
@@ -370,6 +372,8 @@ class AgentAnalytics(BaseModel):
 
 class ZeroCostConfig(BaseModel):
     """Configuration for zero-cost infrastructure"""
+    model_config = ConfigDict(protected_namespaces=())  # Allow model_ prefix fields
+    
     # Local Model Settings
     use_local_llm: bool = Field(default=True)
     local_model_path: str = Field(default="./models/")

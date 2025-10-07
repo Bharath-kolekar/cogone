@@ -14,6 +14,7 @@ import uuid
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 import threading
+from app.core.async_task_manager import register_async_initializer
 
 logger = structlog.get_logger()
 
@@ -180,7 +181,7 @@ class AIComponentOrchestrator:
             "avg_task_duration": 0.0
         }
     
-    def _start_background_tasks(self):
+    async def _start_background_tasks(self):
         """Start background monitoring tasks"""
         try:
             # Health check task
@@ -202,6 +203,11 @@ class AIComponentOrchestrator:
             except Exception as e:
                 logger.error("Health check loop error", error=str(e))
                 await asyncio.sleep(self.health_check_interval)
+    
+    async def _context_cleanup_loop(self):
+        """Background context cleanup loop"""
+        while True:
+            try:
                 await self._cleanup_expired_contexts()
                 await asyncio.sleep(self.context_cleanup_interval)
             except Exception as e:
@@ -866,3 +872,10 @@ class AIComponentOrchestrator:
 
 # Global instance
 ai_component_orchestrator = AIComponentOrchestrator()
+
+# Register async initializer
+async def _start_ai_orchestrator_tasks():
+    """Start AI orchestrator background tasks"""
+    await ai_component_orchestrator._start_background_tasks()
+
+register_async_initializer("ai_component_orchestrator", _start_ai_orchestrator_tasks)

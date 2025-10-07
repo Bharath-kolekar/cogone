@@ -18,6 +18,7 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
 import json
 import math
+from app.core.async_task_manager import register_async_initializer
 
 from app.core.cpu_optimizer import cpu_optimizer
 from app.core.performance_monitor import performance_monitor
@@ -131,10 +132,9 @@ class AdvancedAnalyticsEngine:
             "throughput": {"warning": 100, "critical": 50}
         }
         
-        # Start background tasks
-        self._start_background_tasks()
+        # Background tasks will be started by async task manager
     
-    def _start_background_tasks(self):
+    async def _start_background_tasks(self):
         """Start background analytics tasks"""
         asyncio.create_task(self._data_collection_loop())
         asyncio.create_task(self._analytics_processing_loop())
@@ -847,6 +847,13 @@ class AdvancedAnalyticsEngine:
 # Global advanced analytics engine instance
 advanced_analytics_engine = AdvancedAnalyticsEngine()
 
+# Register async initializer
+async def _start_advanced_analytics_tasks():
+    """Start advanced analytics engine background tasks"""
+    await advanced_analytics_engine._start_background_tasks()
+
+register_async_initializer("advanced_analytics_engine", _start_advanced_analytics_tasks)
+
 
 # Convenience functions
 async def get_comprehensive_analytics() -> Dict[str, Any]:
@@ -874,3 +881,13 @@ async def get_performance_insights() -> List[Dict[str, Any]]:
         }
         for insight in recent_insights
     ]
+
+
+async def get_analytics_dashboard() -> Dict[str, Any]:
+    """Get analytics dashboard data"""
+    return await advanced_analytics_engine.get_comprehensive_analytics()
+
+
+async def get_trend_analysis() -> Dict[str, Any]:
+    """Get trend analysis data"""
+    return await advanced_analytics_engine.get_comprehensive_analytics()

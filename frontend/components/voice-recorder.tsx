@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mic, MicOff, Square, Play, Pause } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useVoiceProcessing } from '@/hooks/useVoiceProcessing'
 
 interface VoiceRecorderProps {
   onTranscript: (transcript: string) => void
@@ -20,16 +21,31 @@ export function VoiceRecorder({
   disabled = false 
 }: VoiceRecorderProps) {
   const [isPaused, setIsPaused] = useState(false)
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
-  const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [recordingTime, setRecordingTime] = useState(0)
-  const [transcript, setTranscript] = useState('')
-  const [isProcessing, setIsProcessing] = useState(false)
   
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Use the voice processing hook
+  const {
+    isRecording: hookIsRecording,
+    isProcessing,
+    isGenerating,
+    transcript,
+    intent,
+    appId,
+    appStatus,
+    error,
+    audioBlob,
+    audioUrl,
+    startRecording: hookStartRecording,
+    stopRecording: hookStopRecording,
+    processAudio,
+    extractIntent,
+    generateApp,
+    clearError,
+  } = useVoiceProcessing()
 
   // Check for browser support
   const [browserSupport, setBrowserSupport] = useState({
@@ -51,70 +67,49 @@ export function VoiceRecorder({
     }))
   }, [])
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus'
-      })
-      
-      mediaRecorderRef.current = mediaRecorder
-      
-      const audioChunks: BlobPart[] = []
-      
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunks.push(event.data)
-      }
-      
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' })
-        setAudioBlob(audioBlob)
-        setAudioUrl(URL.createObjectURL(audioBlob))
-        
-        // Stop all tracks
-        stream.getTracks().forEach(track => track.stop())
-      }
-      
-      mediaRecorder.start()
-      onRecordingChange(true)
+  // Sync with parent component state
+  useEffect(() => {
+    onRecordingChange(hookIsRecording)
+  }, [hookIsRecording, onRecordingChange])
+
+  // Handle transcript updates
+  useEffect(() => {
+    if (transcript) {
+      onTranscript(transcript)
+    }
+  }, [transcript, onTranscript])
+
+  // Handle recording timer
+  useEffect(() => {
+    if (hookIsRecording) {
       setRecordingTime(0)
-      
-      // Start timer
       intervalRef.current = setInterval(() => {
         setRecordingTime(prev => prev + 1)
       }, 1000)
-      
-    } catch (error) {
-      console.error('Error starting recording:', error)
-      alert('Unable to access microphone. Please check permissions.')
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
     }
+  }, [hookIsRecording])
+
+  const startRecording = async () => {
+    await hookStartRecording()
   }
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.stop()
-      onRecordingChange(false)
-      setIsPaused(false)
-      
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
-    }
+    hookStopRecording()
   }
 
   const pauseRecording = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.pause()
-      setIsPaused(true)
-    }
+    // Pause functionality can be added later if needed
+    setIsPaused(true)
   }
 
   const resumeRecording = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'paused') {
-      mediaRecorderRef.current.resume()
-      setIsPaused(false)
-    }
+    // Resume functionality can be added later if needed
+    setIsPaused(false)
   }
 
   const playRecording = () => {
@@ -131,72 +126,26 @@ export function VoiceRecorder({
     }
   }
 
-  const processAudio = async () => {
-    if (!audioBlob) return
-    
-    setIsProcessing(true)
-    
-    try {
-      // Try local speech recognition first
-      if (browserSupport.webSpeech) {
-        const recognition = new ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)()
-        recognition.continuous = false
-        recognition.interimResults = false
-        recognition.lang = 'en-IN' // Indian English
-        
-        recognition.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript
-          setTranscript(transcript)
-          onTranscript(transcript)
-          setIsProcessing(false)
-        }
-        
-        recognition.onerror = () => {
-          // Fallback to server processing
-          processAudioServer()
-        }
-        
-        recognition.start()
-      } else {
-        // Fallback to server processing
-        processAudioServer()
-      }
-    } catch (error) {
-      console.error('Error processing audio:', error)
-      processAudioServer()
+  const handleProcessAudio = async () => {
+    await processAudio()
+  }
+
+  const handleGenerateApp = async () => {
+    if (transcript && intent) {
+      await generateApp(transcript, intent)
+    } else if (transcript) {
+      // Extract intent first, then generate app
+      await extractIntent(transcript)
+      // The generateApp will be called automatically when intent is available
     }
   }
 
-  const processAudioServer = async () => {
-    if (!audioBlob) return
-    
-    try {
-      const formData = new FormData()
-      formData.append('audio_file', audioBlob, 'recording.webm')
-      formData.append('language', 'en')
-      
-      const response = await fetch('/api/v0/voice/transcribe', {
-        method: 'POST',
-        body: formData,
-      })
-      
-      if (response.ok) {
-        const result = await response.json()
-        setTranscript(result.transcript)
-        onTranscript(result.transcript)
-      } else {
-        throw new Error('Transcription failed')
-      }
-    } catch (error) {
-      console.error('Server transcription failed:', error)
-      // Fallback to mock transcript
-      const mockTranscript = "Create a todo app with add, edit, and delete functionality"
-      setTranscript(mockTranscript)
-      onTranscript(mockTranscript)
-    } finally {
-      setIsProcessing(false)
+  // Auto-generate app when intent is available
+  useEffect(() => {
+    if (intent && transcript && !appId) {
+      generateApp(transcript, intent)
     }
-  }
+  }, [intent, transcript, appId, generateApp])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -218,12 +167,33 @@ export function VoiceRecorder({
 
   return (
     <div className="space-y-4">
+      {/* Error Display */}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-red-600 dark:text-red-400">{error}</p>
+            <Button
+              onClick={clearError}
+              variant="ghost"
+              size="sm"
+              className="text-red-600 hover:text-red-700"
+            >
+              ×
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
       {/* Recording Controls */}
       <div className="flex justify-center space-x-4">
-        {!isRecording ? (
+        {!hookIsRecording ? (
           <Button
             onClick={startRecording}
-            disabled={disabled}
+            disabled={disabled || isProcessing || isGenerating}
             size="lg"
             className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full shadow-lg"
           >
@@ -268,7 +238,7 @@ export function VoiceRecorder({
 
       {/* Recording Status */}
       <AnimatePresence>
-        {isRecording && (
+        {hookIsRecording && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -288,9 +258,53 @@ export function VoiceRecorder({
         )}
       </AnimatePresence>
 
+      {/* Processing Status */}
+      <AnimatePresence>
+        {isProcessing && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="text-center"
+          >
+            <div className="flex items-center justify-center space-x-3 mb-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+              <span className="text-lg font-medium text-blue-600 dark:text-blue-400">
+                Processing audio...
+              </span>
+            </div>
+            <p className="text-sm text-gray-500">
+              Converting your voice to text
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Generation Status */}
+      <AnimatePresence>
+        {isGenerating && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="text-center"
+          >
+            <div className="flex items-center justify-center space-x-3 mb-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-500"></div>
+              <span className="text-lg font-medium text-green-600 dark:text-green-400">
+                Generating app...
+              </span>
+            </div>
+            <p className="text-sm text-gray-500">
+              Creating your application
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Audio Playback */}
       <AnimatePresence>
-        {audioUrl && !isRecording && (
+        {audioUrl && !hookIsRecording && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -312,8 +326,8 @@ export function VoiceRecorder({
               </Button>
               
               <Button
-                onClick={processAudio}
-                disabled={isProcessing}
+                onClick={handleProcessAudio}
+                disabled={isProcessing || isGenerating}
                 size="sm"
                 className="bg-blue-500 hover:bg-blue-600 text-white"
               >
@@ -325,10 +339,31 @@ export function VoiceRecorder({
                 ) : (
                   <>
                     <Mic className="h-4 w-4 mr-2" />
-                    Generate App
+                    Process Audio
                   </>
                 )}
               </Button>
+
+              {transcript && (
+                <Button
+                  onClick={handleGenerateApp}
+                  disabled={isGenerating}
+                  size="sm"
+                  className="bg-green-500 hover:bg-green-600 text-white"
+                >
+                  {isGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="h-4 w-4 mr-2" />
+                      Generate App
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
             
             <audio
@@ -356,6 +391,71 @@ export function VoiceRecorder({
             <p className="text-gray-600 dark:text-gray-400 italic">
               "{transcript}"
             </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Intent Display */}
+      <AnimatePresence>
+        {intent && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4"
+          >
+            <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+              Detected Intent:
+            </h3>
+            <p className="text-blue-600 dark:text-blue-400">
+              {intent}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* App Status Display */}
+      <AnimatePresence>
+        {appStatus && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4"
+          >
+            <h3 className="font-semibold text-green-800 dark:text-green-200 mb-2">
+              App Generation Status:
+            </h3>
+            <div className="space-y-2">
+              <p className="text-green-600 dark:text-green-400">
+                Status: {appStatus.status}
+              </p>
+              {appStatus.progress && (
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${appStatus.progress}%` }}
+                  ></div>
+                </div>
+              )}
+              {appStatus.current_step && (
+                <p className="text-sm text-green-600 dark:text-green-400">
+                  Current step: {appStatus.current_step}
+                </p>
+              )}
+              {appStatus.preview_url && (
+                <div className="mt-2">
+                  <a
+                    href={appStatus.preview_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    View App Preview
+                  </a>
+                </div>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

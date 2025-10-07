@@ -68,9 +68,14 @@ class AdvancedFeaturesService:
     """Advanced features and optimizations service"""
     
     def __init__(self):
-        self.supabase = get_supabase_client()
+        self.supabase = None
         # Async redis client is obtained per call when needed
         self.redis = None
+    
+    def _ensure_supabase_connected(self):
+        """Ensure Supabase connection is established"""
+        if self.supabase is None:
+            self.supabase = get_supabase_client()
         
         # Feature state
         self.active_features: Dict[str, Dict[str, Any]] = {}

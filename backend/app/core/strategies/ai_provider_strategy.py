@@ -22,6 +22,46 @@ class AIProviderType(str, Enum):
     LOCAL_LLM = "local_llm"
     GROQ = "groq"
     TOGETHER = "together"
+    HUGGINGFACE = "huggingface"
+
+
+class IAiProviderStrategy(ABC):
+    """
+    AI Provider Strategy Interface
+    Follows Strategy Pattern and Open/Closed Principle
+    """
+    
+    @abstractmethod
+    def get_provider_type(self) -> AIProviderType:
+        """Get provider type"""
+        pass
+    
+    @abstractmethod
+    async def generate_completion(
+        self, 
+        prompt: str, 
+        max_tokens: int = 1000,
+        temperature: float = 0.7,
+        **kwargs
+    ) -> str:
+        """Generate completion using AI provider"""
+        pass
+    
+    @abstractmethod
+    async def generate_embedding(self, text: str) -> List[float]:
+        """Generate embedding for text"""
+        pass
+    
+    @abstractmethod
+    async def chat_completion(
+        self, 
+        messages: List[Dict[str, str]], 
+        max_tokens: int = 1000,
+        temperature: float = 0.7,
+        **kwargs
+    ) -> str:
+        """Generate chat completion"""
+        pass
 
 
 class AIProviderStrategy(ABC):
@@ -428,6 +468,142 @@ class LocalLLMStrategy(AIProviderStrategy):
         return 0.0
 
 
+class HuggingFaceStrategy(AIProviderStrategy):
+    """Hugging Face provider strategy"""
+    
+    def get_provider_type(self) -> AIProviderType:
+        return AIProviderType.HUGGINGFACE
+    
+    def __init__(self, api_key: str, base_url: Optional[str] = None):
+        super().__init__(api_key, base_url)
+        # Reuse a session per strategy
+        self._session: Optional["aiohttp.ClientSession"] = None
+    
+    async def _get_session(self):
+        import aiohttp
+        if self._session is None or self._session.closed:
+            timeout = aiohttp.ClientTimeout(total=60)
+            self._session = aiohttp.ClientSession(timeout=timeout)
+        return self._session
+    
+    async def generate_completion(
+        self, 
+        prompt: str, 
+        max_tokens: int = 1000,
+        temperature: float = 0.7,
+        **kwargs
+    ) -> str:
+        """Generate completion using Hugging Face API"""
+        try:
+            import aiohttp
+            
+            model = kwargs.get('model', 'microsoft/DialoGPT-medium')
+            url = f"{self.base_url or 'https://api-inference.huggingface.co'}/models/{model}"
+            
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            payload = {
+                "inputs": prompt,
+                "parameters": {
+                    "max_new_tokens": max_tokens,
+                    "temperature": temperature,
+                    "return_full_text": False
+                }
+            }
+            
+            session = await self._get_session()
+            async with session.post(url, json=payload, headers=headers) as resp:
+                resp.raise_for_status()
+                result = await resp.json()
+            
+            if isinstance(result, list) and len(result) > 0:
+                return result[0].get("generated_text", "")
+            elif isinstance(result, dict) and "generated_text" in result:
+                return result["generated_text"]
+            else:
+                return str(result)
+            
+        except Exception as e:
+            logger.error("Hugging Face completion generation error", error=str(e))
+            raise
+    
+    async def generate_chat_completion(
+        self, 
+        messages: List[Dict[str, str]],  # type: ignore
+        max_tokens: int = 1000,
+        temperature: float = 0.7,
+        **kwargs
+    ) -> str:
+        """Generate chat completion using Hugging Face API"""
+        try:
+            # Convert messages to prompt
+            prompt = ""
+            for msg in messages:
+                role = msg["role"]
+                content = msg["content"]
+                if role == "system":
+                    prompt += f"System: {content}\n"
+                elif role == "user":
+                    prompt += f"User: {content}\n"
+                elif role == "assistant":
+                    prompt += f"Assistant: {content}\n"
+            
+            prompt += "Assistant: "
+            
+            return await self.generate_completion(prompt, max_tokens, temperature, **kwargs)
+            
+        except Exception as e:
+            logger.error("Hugging Face chat completion generation error", error=str(e))
+            raise
+    
+    async def get_model_info(self, model_name: str) -> Dict[str, Any]:
+        """Get Hugging Face model information"""
+        try:
+            import aiohttp
+            
+            url = f"https://huggingface.co/api/models/{model_name}"
+            session = await self._get_session()
+            async with session.get(url) as resp:
+                resp.raise_for_status()
+                data = await resp.json()
+            
+            return {
+                "id": data.get("id", model_name),
+                "pipeline_tag": data.get("pipeline_tag"),
+                "tags": data.get("tags", []),
+                "downloads": data.get("downloads", 0),
+                "likes": data.get("likes", 0),
+                "provider": "huggingface"
+            }
+                
+        except Exception as e:
+            logger.error("Hugging Face model info error", model_name=model_name, error=str(e))
+            return {"error": str(e)}
+    
+    async def validate_connection(self) -> bool:
+        """Validate Hugging Face connection"""
+        try:
+            import aiohttp
+            
+            url = "https://huggingface.co/api/whoami-v2"
+            headers = {"Authorization": f"Bearer {self.api_key}"}
+            session = await self._get_session()
+            async with session.get(url, headers=headers) as resp:
+                resp.raise_for_status()
+                return True
+            
+        except Exception as e:
+            logger.error("Hugging Face connection validation error", error=str(e))
+            return False
+    
+    def get_cost_estimate(self, prompt_tokens: int, completion_tokens: int) -> float:
+        """Hugging Face has no cost for inference API"""
+        return 0.0
+
+
 class AIProviderFactory:
     """
     AI Provider Factory following Factory Pattern
@@ -438,6 +614,7 @@ class AIProviderFactory:
         AIProviderType.OPENAI: OpenAIStrategy,
         AIProviderType.ANTHROPIC: AnthropicStrategy,
         AIProviderType.LOCAL_LLM: LocalLLMStrategy,
+        AIProviderType.HUGGINGFACE: HuggingFaceStrategy,
     }
     
     @classmethod

@@ -291,6 +291,311 @@ class UpdateUserCommand(Command):
                 self.status == CommandStatus.COMPLETED)
 
 
+class CreateAgentCommand(Command):
+    """Create AI agent command"""
+    
+    def __init__(
+        self, 
+        command_id: str, 
+        agent_data: Dict[str, Any],
+        agent_service: Any
+    ):
+        super().__init__(command_id, CommandType.CREATE_AI_AGENT)
+        self.agent_data = agent_data
+        self.agent_service = agent_service
+        self.created_agent_id: Optional[str] = None
+    
+    async def execute(self) -> CommandResult:
+        """Execute create agent command"""
+        start_time = datetime.utcnow()
+        
+        try:
+            self.status = CommandStatus.EXECUTING
+            
+            # Execute agent creation
+            agent = await self.agent_service.create_agent(self.agent_data)
+            self.created_agent_id = str(agent.id)
+            
+            self.status = CommandStatus.COMPLETED
+            self.executed_at = datetime.utcnow()
+            
+            execution_time = (self.executed_at - start_time).total_seconds()
+            
+            logger.info("Create agent command executed", 
+                       command_id=self.command_id, 
+                       agent_id=self.created_agent_id,
+                       execution_time=execution_time)
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=self.status,
+                result={"agent_id": self.created_agent_id, "agent": agent},
+                execution_time=execution_time
+            )
+            
+        except Exception as e:
+            self.status = CommandStatus.FAILED
+            self.executed_at = datetime.utcnow()
+            
+            logger.error("Create agent command failed", 
+                        command_id=self.command_id, 
+                        error=str(e))
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=self.status,
+                error=str(e),
+                execution_time=(self.executed_at - start_time).total_seconds()
+            )
+    
+    async def undo(self) -> CommandResult:
+        """Undo create agent command"""
+        if not self.can_undo():
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.FAILED,
+                error="Cannot undo create agent command - agent may have dependencies"
+            )
+        
+        try:
+            if self.created_agent_id:
+                await self.agent_service.delete_agent(self.created_agent_id)
+                
+            logger.info("Create agent command undone", 
+                       command_id=self.command_id, 
+                       agent_id=self.created_agent_id)
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.COMPLETED,
+                result={"undone": True}
+            )
+            
+        except Exception as e:
+            logger.error("Failed to undo create agent command", 
+                        command_id=self.command_id, 
+                        error=str(e))
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.FAILED,
+                error=str(e)
+            )
+    
+    async def can_undo(self) -> bool:
+        """Check if create agent command can be undone"""
+        return (self.created_agent_id is not None and 
+                self.status == CommandStatus.COMPLETED)
+
+
+class UpdateAgentCommand(Command):
+    """Update AI agent command"""
+    
+    def __init__(
+        self, 
+        command_id: str, 
+        agent_id: str,
+        update_data: Dict[str, Any],
+        agent_service: Any
+    ):
+        super().__init__(command_id, CommandType.UPDATE_AI_AGENT)
+        self.agent_id = agent_id
+        self.update_data = update_data
+        self.agent_service = agent_service
+        self.original_data: Optional[Dict[str, Any]] = None
+    
+    async def execute(self) -> CommandResult:
+        """Execute update agent command"""
+        start_time = datetime.utcnow()
+        
+        try:
+            self.status = CommandStatus.EXECUTING
+            
+            # Get original data for undo
+            original_agent = await self.agent_service.get_agent(self.agent_id)
+            if original_agent:
+                self.original_data = original_agent.dict() if hasattr(original_agent, 'dict') else original_agent.__dict__
+            
+            # Execute agent update
+            updated_agent = await self.agent_service.update_agent(self.agent_id, self.update_data)
+            
+            self.status = CommandStatus.COMPLETED
+            self.executed_at = datetime.utcnow()
+            
+            execution_time = (self.executed_at - start_time).total_seconds()
+            
+            logger.info("Update agent command executed", 
+                       command_id=self.command_id, 
+                       agent_id=self.agent_id,
+                       execution_time=execution_time)
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=self.status,
+                result={"agent_id": self.agent_id, "agent": updated_agent},
+                execution_time=execution_time
+            )
+            
+        except Exception as e:
+            self.status = CommandStatus.FAILED
+            self.executed_at = datetime.utcnow()
+            
+            logger.error("Update agent command failed", 
+                        command_id=self.command_id, 
+                        agent_id=self.agent_id,
+                        error=str(e))
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=self.status,
+                error=str(e),
+                execution_time=(self.executed_at - start_time).total_seconds()
+            )
+    
+    async def undo(self) -> CommandResult:
+        """Undo update agent command"""
+        if not self.can_undo():
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.FAILED,
+                error="Cannot undo update agent command - no original data available"
+            )
+        
+        try:
+            if self.original_data:
+                await self.agent_service.update_agent(self.agent_id, self.original_data)
+                
+            logger.info("Update agent command undone", 
+                       command_id=self.command_id, 
+                       agent_id=self.agent_id)
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.COMPLETED,
+                result={"undone": True}
+            )
+            
+        except Exception as e:
+            logger.error("Failed to undo update agent command", 
+                        command_id=self.command_id, 
+                        agent_id=self.agent_id,
+                        error=str(e))
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.FAILED,
+                error=str(e)
+            )
+    
+    async def can_undo(self) -> bool:
+        """Check if update agent command can be undone"""
+        return (self.original_data is not None and 
+                self.status == CommandStatus.COMPLETED)
+
+
+class DeleteAgentCommand(Command):
+    """Delete AI agent command"""
+    
+    def __init__(
+        self, 
+        command_id: str, 
+        agent_id: str,
+        agent_service: Any
+    ):
+        super().__init__(command_id, CommandType.DELETE_AI_AGENT)
+        self.agent_id = agent_id
+        self.agent_service = agent_service
+        self.original_data: Optional[Dict[str, Any]] = None
+    
+    async def execute(self) -> CommandResult:
+        """Execute delete agent command"""
+        start_time = datetime.utcnow()
+        
+        try:
+            self.status = CommandStatus.EXECUTING
+            
+            # Get original data for undo
+            original_agent = await self.agent_service.get_agent(self.agent_id)
+            if original_agent:
+                self.original_data = original_agent.dict() if hasattr(original_agent, 'dict') else original_agent.__dict__
+            
+            # Execute agent deletion
+            await self.agent_service.delete_agent(self.agent_id)
+            
+            self.status = CommandStatus.COMPLETED
+            self.executed_at = datetime.utcnow()
+            
+            execution_time = (self.executed_at - start_time).total_seconds()
+            
+            logger.info("Delete agent command executed", 
+                       command_id=self.command_id, 
+                       agent_id=self.agent_id,
+                       execution_time=execution_time)
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=self.status,
+                result={"agent_id": self.agent_id, "deleted": True},
+                execution_time=execution_time
+            )
+            
+        except Exception as e:
+            self.status = CommandStatus.FAILED
+            self.executed_at = datetime.utcnow()
+            
+            logger.error("Delete agent command failed", 
+                        command_id=self.command_id, 
+                        agent_id=self.agent_id,
+                        error=str(e))
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=self.status,
+                error=str(e),
+                execution_time=(self.executed_at - start_time).total_seconds()
+            )
+    
+    async def undo(self) -> CommandResult:
+        """Undo delete agent command"""
+        if not self.can_undo():
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.FAILED,
+                error="Cannot undo delete agent command - no original data available"
+            )
+        
+        try:
+            if self.original_data:
+                await self.agent_service.create_agent(self.original_data)
+                
+            logger.info("Delete agent command undone", 
+                       command_id=self.command_id, 
+                       agent_id=self.agent_id)
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.COMPLETED,
+                result={"undone": True}
+            )
+            
+        except Exception as e:
+            logger.error("Failed to undo delete agent command", 
+                        command_id=self.command_id, 
+                        agent_id=self.agent_id,
+                        error=str(e))
+            
+            return CommandResult(
+                command_id=self.command_id,
+                status=CommandStatus.FAILED,
+                error=str(e)
+            )
+    
+    async def can_undo(self) -> bool:
+        """Check if delete agent command can be undone"""
+        return (self.original_data is not None and 
+                self.status == CommandStatus.COMPLETED)
+
+
 class GenerateAppCommand(Command):
     """Generate app command"""
     
@@ -518,6 +823,9 @@ class CommandFactory:
     _command_classes: Dict[CommandType, type] = {
         CommandType.CREATE_USER: CreateUserCommand,
         CommandType.UPDATE_USER: UpdateUserCommand,
+        CommandType.CREATE_AI_AGENT: CreateAgentCommand,
+        CommandType.UPDATE_AI_AGENT: UpdateAgentCommand,
+        CommandType.DELETE_AI_AGENT: DeleteAgentCommand,
         CommandType.GENERATE_APP: GenerateAppCommand,
     }
     

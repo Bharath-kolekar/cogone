@@ -24,6 +24,7 @@ from .zero_cost_super_intelligence import router as zero_cost_super_intelligent_
 from .hardware_optimization import router as hardware_optimization_router
 from .smart_coding_ai import router as smart_coding_ai_router
 from .smart_coding_ai_optimized import router as smart_coding_ai_optimized_router
+from .governance_router import router as governance_router
 
 # Create main router
 router = APIRouter()
@@ -51,6 +52,7 @@ router.include_router(zero_cost_super_intelligent_router, prefix="/api", tags=["
 router.include_router(hardware_optimization_router, prefix="/hardware-optimization", tags=["hardware-optimization"])
 router.include_router(smart_coding_ai_router, prefix="/smart-coding-ai", tags=["smart-coding-ai"])
 router.include_router(smart_coding_ai_optimized_router, prefix="/smart-coding-ai-optimized", tags=["smart-coding-ai-optimized"])
+router.include_router(governance_router, tags=["governance"])
 
 # Export AppRouter type for tRPC
 from typing import Any

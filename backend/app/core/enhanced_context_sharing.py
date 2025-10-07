@@ -91,7 +91,8 @@ class EnhancedContextSharing:
     """Enhanced Redis-based cross-component context sharing system"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.context_cache: Dict[str, ContextData] = {}
         self.subscriptions: Dict[str, ContextSubscription] = {}
         self.event_listeners: Dict[str, List[callable]] = defaultdict(list)
@@ -127,15 +128,35 @@ class EnhancedContextSharing:
             "component_events": "events:component_events"
         }
         
-        # Start event listener
-        asyncio.create_task(self._start_event_listener())
+        # Event listener will be started when needed
+        self._event_listener_started = False
         
         logger.info("Event system initialized")
+    
+    async def _ensure_event_listener_started(self):
+        """Ensure the event listener is started"""
+        if not self._event_listener_started:
+            try:
+                asyncio.create_task(self._start_event_listener())
+                self._event_listener_started = True
+            except RuntimeError:
+                # No event loop running, will start later
+                pass
     
     async def store_context(self, context_data: ContextData, 
                           component_id: str = "system") -> bool:
         """Store context data with enhanced features"""
         try:
+            # Ensure Redis client is initialized
+            if self.redis_client is None:
+                from app.core.redis import get_redis_client
+                self.redis_client = await get_redis_client()
+                if self.redis_client is None:
+                    logger.warning("Redis client not available, skipping context storage")
+                    return False
+            
+            # Ensure event listener is started
+            await self._ensure_event_listener_started()
             # Generate context ID if not provided
             if not context_data.context_id:
                 context_data.context_id = f"{context_data.context_type.value}_{uuid.uuid4().hex[:8]}"

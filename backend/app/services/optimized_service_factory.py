@@ -77,10 +77,23 @@ class OptimizedServiceFactory:
         
     def _setup_observers(self):
         """Setup observers for service monitoring"""
+        # Create placeholder services for observers
+        class PlaceholderLoggingService:
+            async def log_audit(self, **kwargs):
+                pass
+        
+        class PlaceholderAnalyticsService:
+            async def track_event(self, **kwargs):
+                return True
+        
+        class PlaceholderNotificationService:
+            async def send_notification(self, **kwargs):
+                return True
+        
         self.observers = [
-            LoggerObserver(),
-            AnalyticsObserver(),
-            NotificationObserver()
+            LoggerObserver(PlaceholderLoggingService()),
+            AnalyticsObserver(PlaceholderAnalyticsService()),
+            NotificationObserver(PlaceholderNotificationService())
         ]
     
     def create_optimized_smart_coding_ai(self, config: ServiceOptimizationConfig) -> 'OptimizedSmartCodingAI':

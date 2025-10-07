@@ -23,7 +23,8 @@ export function Hero() {
     setTranscript(command)
     setIsGenerating(true)
     
-    // Simulate app generation
+    // The actual app generation will be handled by the voice recorder component
+    // This is just for UI feedback
     setTimeout(() => {
       setIsGenerating(false)
       setGeneratedApp({

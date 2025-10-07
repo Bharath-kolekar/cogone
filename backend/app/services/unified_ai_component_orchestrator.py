@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 from enum import Enum
 import uuid
+from app.core.async_task_manager import register_async_initializer
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 import threading
@@ -922,7 +923,7 @@ class UnifiedAIComponentOrchestrator:
             "performance_score": 0.0
         }
     
-    def _start_background_tasks(self):
+    async def _start_background_tasks(self):
         """Start background monitoring tasks"""
         try:
             self._health_check_task = asyncio.create_task(self._health_check_loop())
@@ -1524,3 +1525,10 @@ class UnifiedAIComponentOrchestrator:
 
 # Global instance
 unified_ai_component_orchestrator = UnifiedAIComponentOrchestrator()
+
+# Register async initializer
+async def _start_unified_ai_orchestrator_tasks():
+    """Start unified AI orchestrator background tasks"""
+    await unified_ai_component_orchestrator._start_background_tasks()
+
+register_async_initializer("unified_ai_component_orchestrator", _start_unified_ai_orchestrator_tasks)

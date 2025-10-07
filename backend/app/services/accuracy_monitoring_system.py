@@ -18,7 +18,7 @@ from collections import defaultdict, Counter
 from dataclasses import dataclass
 from enum import Enum
 
-from app.core.database import get_database
+from app.core.database import get_supabase_client
 from app.core.redis import get_redis_client
 from app.core.config import get_settings
 from app.services.accuracy_validation_engine import RealAccuracyValidator, AccuracyLevel, AccuracyMetrics

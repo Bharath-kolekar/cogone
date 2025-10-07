@@ -41,12 +41,24 @@ class GoalIntegrityService:
     """Service for maintaining goal integrity throughout the system"""
     
     def __init__(self):
-        self.supabase = get_supabase_client()
+        try:
+            self.supabase = get_supabase_client()
+        except RuntimeError:
+            # Database not initialized yet, will be set later
+            self.supabase = None
         self.config = GoalIntegrityConfig()
         self._active_goals: Dict[str, GoalDefinition] = {}
         self._goal_states: Dict[str, GoalState] = {}
         self._integrity_checkpoints: List[GoalCheckpoint] = []
         self._recovery_queue: List[GoalRecoveryAction] = []
+    
+    def _ensure_supabase_connected(self):
+        """Ensure Supabase connection is available"""
+        if self.supabase is None:
+            try:
+                self.supabase = get_supabase_client()
+            except RuntimeError:
+                raise RuntimeError("Database not initialized. Call init_db() first.")
         
     async def initialize(self):
         """Initialize the goal integrity system"""
@@ -62,6 +74,7 @@ class GoalIntegrityService:
     async def _load_active_goals(self):
         """Load active goals from database"""
         try:
+            self._ensure_supabase_connected()
             result = self.supabase.table("goal_definitions").select("*").eq("is_active", True).execute()
             
             for goal_data in result.data:
@@ -75,6 +88,7 @@ class GoalIntegrityService:
     async def _load_goal_states(self):
         """Load current goal states from database"""
         try:
+            self._ensure_supabase_connected()
             result = self.supabase.table("goal_states").select("*").execute()
             
             for state_data in result.data:
@@ -88,6 +102,7 @@ class GoalIntegrityService:
     async def register_goal(self, goal_definition: GoalDefinition, context: GoalIntegrityContext = None) -> str:
         """Register a new goal for integrity monitoring"""
         try:
+            self._ensure_supabase_connected()
             goal_definition.id = str(uuid.uuid4())
             goal_definition.created_at = datetime.utcnow()
             goal_definition.updated_at = datetime.utcnow()
@@ -730,3 +745,14 @@ class GoalIntegrityService:
         except Exception:
             return 0.0
 
+
+# Create service instance (will be initialized when database is ready)
+goal_integrity_service = None
+
+def get_goal_integrity_service():
+    """Get the goal integrity service instance, creating it if needed"""
+    global goal_integrity_service
+    if goal_integrity_service is None:
+        # Create a lazy-loaded service that won't fail during import
+        goal_integrity_service = GoalIntegrityService()
+    return goal_integrity_service

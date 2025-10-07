@@ -18,8 +18,12 @@ import weakref
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import threading
 from queue import Queue, Empty
-import resource
 import sys
+try:
+    import resource
+    RESOURCE_AVAILABLE = True
+except ImportError:
+    RESOURCE_AVAILABLE = False
 
 logger = structlog.get_logger(__name__)
 
@@ -266,10 +270,13 @@ class MemoryOptimizer:
         
         # Set memory limits
         try:
-            # Set memory limit to 80% of available memory
-            available_memory = psutil.virtual_memory().available
-            memory_limit = int(available_memory * 0.8)
-            resource.setrlimit(resource.RLIMIT_AS, (memory_limit, memory_limit))
+            if RESOURCE_AVAILABLE:
+                # Set memory limit to 80% of available memory
+                available_memory = psutil.virtual_memory().available
+                memory_limit = int(available_memory * 0.8)
+                resource.setrlimit(resource.RLIMIT_AS, (memory_limit, memory_limit))
+            else:
+                logger.info("Resource module not available on this platform, skipping memory limit setting")
         except Exception as e:
             logger.error("Failed to set memory limit", error=str(e))
         

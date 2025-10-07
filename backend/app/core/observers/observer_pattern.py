@@ -276,6 +276,225 @@ class AnalyticsObserver(Observer):
                 event.event_type in self.subscribed_events)
 
 
+class LoggerObserver(Observer):
+    """Logger observer for structured logging"""
+    
+    def __init__(self, logging_service: Any):
+        super().__init__("logger", "Logger Observer")
+        self.logging_service = logging_service
+        # Subscribe to all events for comprehensive logging
+        self.subscribed_events = set(EventType)
+    
+    async def update(self, event: Event) -> ObserverResult:
+        """Log event using structured logging"""
+        start_time = datetime.utcnow()
+        
+        try:
+            if not self.can_handle(event):
+                return ObserverResult(
+                    observer_id=self.observer_id,
+                    success=False,
+                    execution_time=0.0,
+                    error="Cannot handle this event type"
+                )
+            
+            # Log the event with structured data
+            log_data = {
+                "event_id": event.event_id,
+                "event_type": event.event_type.value,
+                "priority": event.priority.value,
+                "user_id": event.user_id,
+                "source": event.source,
+                "timestamp": event.timestamp.isoformat(),
+                "data": event.data,
+                "metadata": event.metadata
+            }
+            
+            # Use appropriate log level based on priority
+            if event.priority == EventPriority.CRITICAL:
+                logger.critical("Critical event occurred", **log_data)
+            elif event.priority == EventPriority.HIGH:
+                logger.error("High priority event", **log_data)
+            elif event.priority == EventPriority.MEDIUM:
+                logger.warning("Medium priority event", **log_data)
+            else:
+                logger.info("Low priority event", **log_data)
+            
+            execution_time = (datetime.utcnow() - start_time).total_seconds()
+            
+            return ObserverResult(
+                observer_id=self.observer_id,
+                success=True,
+                execution_time=execution_time,
+                result={"event_logged": True}
+            )
+            
+        except Exception as e:
+            execution_time = (datetime.utcnow() - start_time).total_seconds()
+            
+            logger.error("Logger observer error", 
+                        event_type=event.event_type.value,
+                        error=str(e))
+            
+            return ObserverResult(
+                observer_id=self.observer_id,
+                success=False,
+                execution_time=execution_time,
+                error=str(e)
+            )
+    
+    def can_handle(self, event: Event) -> bool:
+        """Check if can handle event"""
+        return self.is_active
+
+
+class NotificationObserver(Observer):
+    """Notification observer for user notifications"""
+    
+    def __init__(self, notification_service: Any):
+        super().__init__("notification", "Notification Observer")
+        self.notification_service = notification_service
+        self.subscribed_events = {
+            EventType.USER_CREATED,
+            EventType.USER_UPDATED,
+            EventType.AI_AGENT_CREATED,
+            EventType.AI_AGENT_UPDATED,
+            EventType.APP_GENERATED,
+            EventType.APP_DEPLOYED,
+            EventType.PAYMENT_COMPLETED,
+            EventType.ERROR_OCCURRED,
+            EventType.SYSTEM_ALERT
+        }
+    
+    async def update(self, event: Event) -> ObserverResult:
+        """Send notification for event"""
+        start_time = datetime.utcnow()
+        
+        try:
+            if not self.can_handle(event):
+                return ObserverResult(
+                    observer_id=self.observer_id,
+                    success=False,
+                    execution_time=0.0,
+                    error="Cannot handle this event type"
+                )
+            
+            # Prepare notification data
+            notification_data = await self._prepare_notification(event)
+            
+            # Send notification
+            success = await self.notification_service.send_notification(
+                user_id=event.user_id,
+                title=notification_data["title"],
+                message=notification_data["message"],
+                notification_type=notification_data["type"],
+                metadata=notification_data["metadata"]
+            )
+            
+            execution_time = (datetime.utcnow() - start_time).total_seconds()
+            
+            logger.info("Notification sent", 
+                       event_type=event.event_type.value,
+                       user_id=event.user_id,
+                       success=success)
+            
+            return ObserverResult(
+                observer_id=self.observer_id,
+                success=success,
+                execution_time=execution_time,
+                result={"notification_sent": success}
+            )
+            
+        except Exception as e:
+            execution_time = (datetime.utcnow() - start_time).total_seconds()
+            
+            logger.error("Notification error", 
+                        event_type=event.event_type.value,
+                        error=str(e))
+            
+            return ObserverResult(
+                observer_id=self.observer_id,
+                success=False,
+                execution_time=execution_time,
+                error=str(e)
+            )
+    
+    def can_handle(self, event: Event) -> bool:
+        """Check if can handle event"""
+        return (self.is_active and 
+                event.event_type in self.subscribed_events and
+                event.user_id is not None)
+    
+    async def _prepare_notification(self, event: Event) -> Dict[str, Any]:
+        """Prepare notification content based on event"""
+        templates = {
+            EventType.USER_CREATED: {
+                "title": "Welcome!",
+                "message": "Your account has been created successfully.",
+                "type": "success"
+            },
+            EventType.USER_UPDATED: {
+                "title": "Profile Updated",
+                "message": "Your profile has been updated successfully.",
+                "type": "info"
+            },
+            EventType.AI_AGENT_CREATED: {
+                "title": "AI Agent Created",
+                "message": "Your AI agent has been created and is ready to use.",
+                "type": "success"
+            },
+            EventType.AI_AGENT_UPDATED: {
+                "title": "AI Agent Updated",
+                "message": "Your AI agent has been updated successfully.",
+                "type": "info"
+            },
+            EventType.APP_GENERATED: {
+                "title": "App Generated",
+                "message": "Your app has been generated successfully.",
+                "type": "success"
+            },
+            EventType.APP_DEPLOYED: {
+                "title": "App Deployed",
+                "message": "Your app has been deployed successfully.",
+                "type": "success"
+            },
+            EventType.PAYMENT_COMPLETED: {
+                "title": "Payment Successful",
+                "message": "Your payment has been processed successfully.",
+                "type": "success"
+            },
+            EventType.ERROR_OCCURRED: {
+                "title": "System Error",
+                "message": f"A system error occurred: {event.data.get('error_message', 'Unknown error')}",
+                "type": "error"
+            },
+            EventType.SYSTEM_ALERT: {
+                "title": "System Alert",
+                "message": event.data.get('message', 'System alert notification'),
+                "type": "warning"
+            }
+        }
+        
+        template = templates.get(event.event_type, {
+            "title": "System Notification",
+            "message": f"Event: {event.event_type.value}",
+            "type": "info"
+        })
+        
+        return {
+            "title": template["title"],
+            "message": template["message"],
+            "type": template["type"],
+            "metadata": {
+                "event_id": event.event_id,
+                "event_type": event.event_type.value,
+                "priority": event.priority.value,
+                "source": event.source,
+                "timestamp": event.timestamp.isoformat()
+            }
+        }
+
+
 class AuditLogObserver(Observer):
     """Audit logging observer"""
     

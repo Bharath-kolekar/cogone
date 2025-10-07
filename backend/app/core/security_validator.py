@@ -77,7 +77,8 @@ class SecurityValidator:
     """Comprehensive security validation system"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.threat_patterns = self._initialize_threat_patterns()
         self.secret_patterns = self._initialize_secret_patterns()
         self.validation_cache: Dict[str, SecurityValidationReport] = {}

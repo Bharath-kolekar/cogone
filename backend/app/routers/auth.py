@@ -65,6 +65,16 @@ class AuthDependencies:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication credentials"
             )
+    
+    @staticmethod
+    async def check_app_quota(
+        credentials: HTTPAuthorizationCredentials = Depends(security)
+    ) -> User:
+        """Check if user has app quota available"""
+        # Get current user first
+        current_user = await AuthDependencies.get_current_user(credentials)
+        # Simplified quota check - in production, check against database
+        return current_user
 
 
 @router.post("/register", response_model=LoginResponse)

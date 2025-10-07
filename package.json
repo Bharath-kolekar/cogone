@@ -1,1 +1,1 @@
-{ "name":"voice-to-app-saas","private":true }
+{"name":"voice-to-app-saas","private":true,"dependencies":{"node-fetch":"^3.3.2","ws":"^8.18.3"}}

@@ -93,7 +93,8 @@ class CodeQualityAnalyzer:
     """Comprehensive code quality analysis system"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.quality_thresholds = self._initialize_quality_thresholds()
         self.complexity_thresholds = self._initialize_complexity_thresholds()
         self.analysis_cache: Dict[str, QualityReport] = {}

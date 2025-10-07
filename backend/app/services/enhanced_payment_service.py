@@ -103,7 +103,11 @@ class EnhancedPaymentService:
     """Enhanced payment service with multi-provider support"""
     
     def __init__(self):
-        self.supabase = get_supabase_client()
+        try:
+            self.supabase = get_supabase_client()
+        except RuntimeError:
+            # Database not initialized yet, will be set later
+            self.supabase = None
         
         # Payment providers configuration
         self.providers_config = {
@@ -151,6 +155,11 @@ class EnhancedPaymentService:
         }
         
         logger.info("Enhanced Payment Service initialized with multi-provider support")
+    
+    def _ensure_supabase_connected(self):
+        """Ensure Supabase connection is established"""
+        if self.supabase is None:
+            self.supabase = get_supabase_client()
 
     async def create_payment_order(self, 
                                  user_id: str,
@@ -705,6 +714,7 @@ class EnhancedPaymentService:
 
     async def _store_payment_order(self, order: PaymentOrder):
         """Store payment order in database"""
+        self._ensure_supabase_connected()
         try:
             order_data = {
                 "order_id": order.order_id,

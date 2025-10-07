@@ -24,7 +24,7 @@ from contextlib import asynccontextmanager
 from collections import defaultdict, Counter
 import networkx as nx
 
-from app.core.database import get_database
+from app.core.database import get_supabase_client
 from app.core.redis import get_redis_client
 from app.models.ai_agent import (
     AgentDefinition, AgentConfig, AgentMemory, AgentMetrics,
@@ -302,23 +302,23 @@ class ConsolidatedResourceOptimizer:
             
             if memory_percent > self.memory_threshold:
                 # Clean up old conversation histories
-                async with get_database() as db:
-                    cutoff_date = datetime.utcnow() - timedelta(days=7)
+                db = get_supabase_client()
+                cutoff_date = datetime.utcnow() - timedelta(days=7)
+                
+                query = select(AgentInteraction).where(
+                    AgentInteraction.created_at < cutoff_date
+                )
+                result = await db.execute(query)
+                old_interactions = result.scalars().all()
+                
+                if old_interactions:
+                    # Archive instead of delete
+                    for interaction in old_interactions:
+                        interaction.archived = True
+                        interaction.archived_at = datetime.utcnow()
                     
-                    query = select(AgentInteraction).where(
-                        AgentInteraction.created_at < cutoff_date
-                    )
-                    result = await db.execute(query)
-                    old_interactions = result.scalars().all()
-                    
-                    if old_interactions:
-                        # Archive instead of delete
-                        for interaction in old_interactions:
-                            interaction.archived = True
-                            interaction.archived_at = datetime.utcnow()
-                        
-                        await db.commit()
-                        optimizations["conversations_archived"] = len(old_interactions)
+                    await db.commit()
+                    optimizations["conversations_archived"] = len(old_interactions)
                 
                 # Optimize cache based on optimization level
                 if self.optimization_level in ["ultra_optimized", "resource_optimized"]:
@@ -494,17 +494,10 @@ class ConsolidatedAIAgentService:
         
     def _initialize_optimization_level(self):
         """Initialize service based on optimization level"""
-        if self.optimization_level in ["ultra_optimized", "maximum_accuracy_98", "maximum_accuracy_99", "maximum_accuracy_100", "maximum_consistency", "maximum_threshold"]:
-            # Preload models for maximum performance
-            asyncio.create_task(self._preload_models())
+        # Background tasks will be started when needed
+        self._background_tasks_started = False
         
-        if self.optimization_level in ["resource_optimized", "cost_optimized"]:
-            # Start background optimization
-            asyncio.create_task(self._background_optimization())
-        
-        # Start accuracy monitoring for high accuracy levels
-        if self.optimization_level in ["maximum_accuracy_98", "maximum_accuracy_99", "maximum_accuracy_100"]:
-            asyncio.create_task(self.accuracy_monitor.start_monitoring())
+        # Accuracy monitoring will be started when needed
     
     async def _preload_models(self):
         """Preload models for faster response times"""
@@ -539,13 +532,13 @@ class ConsolidatedAIAgentService:
             start_time = time.time()
             
             # Get agent
-            async with get_database() as db:
-                query = select(AgentDefinition).where(AgentDefinition.id == request.agent_id)
-                result = await db.execute(query)
-                agent = result.scalar_one_or_none()
-                
-                if not agent:
-                    raise ValueError(f"Agent {request.agent_id} not found")
+            db = get_supabase_client()
+            query = select(AgentDefinition).where(AgentDefinition.id == request.agent_id)
+            result = await db.execute(query)
+            agent = result.scalar_one_or_none()
+            
+            if not agent:
+                raise ValueError(f"Agent {request.agent_id} not found")
             
             # Check cache first for optimized levels
             cache_key = None
@@ -647,10 +640,10 @@ class ConsolidatedAIAgentService:
             )
             
             # Save interaction
-            async with get_database() as db:
-                db.add(interaction)
-                await db.commit()
-                await db.refresh(interaction)
+            db = get_supabase_client()
+            db.add(interaction)
+            await db.commit()
+            await db.refresh(interaction)
             
             # Cache response for optimized levels
             if cache_key and self.optimization_level in ["optimized", "ultra_optimized", "resource_optimized", "maximum_accuracy_98", "maximum_accuracy_99", "maximum_accuracy_100"]:
@@ -815,14 +808,14 @@ class ConsolidatedAIAgentService:
     async def _update_agent_metrics(self, agent: AgentDefinition, response_time: float, cost: float, confidence: float):
         """Update agent metrics"""
         try:
-            async with get_database() as db:
-                # Update agent metrics
-                agent.total_interactions += 1
-                agent.total_response_time += response_time
-                agent.total_cost += cost
-                agent.average_confidence = (agent.average_confidence + confidence) / 2
-                
-                await db.commit()
+            db = get_supabase_client()
+            # Update agent metrics
+            agent.total_interactions += 1
+            agent.total_response_time += response_time
+            agent.total_cost += cost
+            agent.average_confidence = (agent.average_confidence + confidence) / 2
+            
+            await db.commit()
         except Exception as e:
             logger.error(f"Error updating agent metrics: {e}")
 

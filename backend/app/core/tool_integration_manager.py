@@ -99,7 +99,8 @@ class ToolIntegrationManager:
     """Manages tool integration and orchestration"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.registered_tools: Dict[str, ITool] = {}
         self.tool_definitions: Dict[str, ToolDefinition] = {}
         self.execution_history: List[ToolExecution] = []

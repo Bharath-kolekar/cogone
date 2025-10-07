@@ -105,7 +105,8 @@ class FactualAccuracyValidator:
     """Comprehensive factual accuracy validation system"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.known_facts_db: Dict[str, Dict[str, Any]] = {}
         self.source_reliability_db: Dict[str, SourceReliability] = {}
         self.contradiction_patterns = self._initialize_contradiction_patterns()

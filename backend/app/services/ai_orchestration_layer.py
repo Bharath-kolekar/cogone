@@ -28,7 +28,7 @@ import gc
 import networkx as nx
 from collections import defaultdict, Counter
 
-from app.core.database import get_database
+from app.core.database import get_supabase_client
 from app.core.redis import get_redis_client
 from app.models.ai_agent import (
     AgentDefinition, AgentConfig, AgentMemory, AgentMetrics,
@@ -1886,8 +1886,14 @@ class AutonomousAIOrchestrationLayer(AIOrchestrationLayer):
         self.healing_engine = AutonomousHealingEngine()
         self.monitoring_engine = AutonomousMonitoringEngine()
         
-        # Start autonomous processes
-        asyncio.create_task(self._start_autonomous_processes())
+        # Start autonomous processes (deferred until event loop is running)
+        self._autonomous_processes_started = False
+    
+    async def _ensure_autonomous_processes_started(self):
+        """Ensure autonomous processes are started when event loop is running"""
+        if not self._autonomous_processes_started:
+            asyncio.create_task(self._start_autonomous_processes())
+            self._autonomous_processes_started = True
     
     async def _start_autonomous_processes(self):
         """Start autonomous background processes"""

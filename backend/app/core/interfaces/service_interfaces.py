@@ -40,6 +40,38 @@ class IUserService(ABC):
         pass
 
 
+class IAuthService(ABC):
+    """
+    Auth service interface - focused on authentication operations
+    Follows Interface Segregation Principle
+    """
+    
+    @abstractmethod
+    async def authenticate_user(self, email: str, password: str) -> Optional[Dict[str, Any]]:
+        """Authenticate user with email and password"""
+        pass
+    
+    @abstractmethod
+    async def create_access_token(self, user_id: Any) -> str:
+        """Create access token for user"""
+        pass
+    
+    @abstractmethod
+    async def verify_token(self, token: str) -> Optional[Dict[str, Any]]:
+        """Verify and decode token"""
+        pass
+    
+    @abstractmethod
+    async def refresh_token(self, refresh_token: str) -> Optional[Dict[str, Any]]:
+        """Refresh access token"""
+        pass
+    
+    @abstractmethod
+    async def revoke_token(self, token: str) -> bool:
+        """Revoke token"""
+        pass
+
+
 class IAuthenticationService(ABC):
     """
     Authentication service interface - focused on authentication operations
@@ -336,4 +368,36 @@ class IValidationService(ABC):
     @abstractmethod
     async def validate_input(self, data: Dict[str, Any], schema: Dict[str, Any]) -> Dict[str, Any]:
         """Validate input data against schema"""
+        pass
+
+
+class IMonitoringService(ABC):
+    """
+    Monitoring service interface - focused on monitoring operations
+    Follows Interface Segregation Principle
+    """
+    
+    @abstractmethod
+    async def start_monitoring(self, service_name: str) -> bool:
+        """Start monitoring a service"""
+        pass
+    
+    @abstractmethod
+    async def stop_monitoring(self, service_name: str) -> bool:
+        """Stop monitoring a service"""
+        pass
+    
+    @abstractmethod
+    async def get_metrics(self, service_name: str) -> Dict[str, Any]:
+        """Get metrics for a service"""
+        pass
+    
+    @abstractmethod
+    async def get_health_status(self, service_name: str) -> Dict[str, Any]:
+        """Get health status for a service"""
+        pass
+    
+    @abstractmethod
+    async def set_alert_threshold(self, service_name: str, metric: str, threshold: float) -> bool:
+        """Set alert threshold for a metric"""
         pass

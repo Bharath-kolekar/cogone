@@ -117,7 +117,8 @@ class EnhancedAIAssistantCore:
     """Enhanced AI Assistant Core with comprehensive capabilities"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.plugins: Dict[str, IAssistantPlugin] = {}
         self.active_sessions: Dict[str, AssistantContext] = {}
         self.conversation_history: Dict[str, List[Dict[str, Any]]] = {}

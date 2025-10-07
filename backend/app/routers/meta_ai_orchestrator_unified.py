@@ -12,6 +12,9 @@ from app.services.meta_ai_orchestrator_unified import (
     UnifiedMetaAIOrchestrator, GovernanceLevel, ComponentStatus, EscalationLevel,
     OptimizationLevel, SuccessMetricType, ComponentHealthStatus, PermanentSolutionType
 )
+from app.services.enhanced_governance_service import enhanced_governance_service
+from app.core.governance_monitor import governance_monitor
+from app.core.compliance_engine import compliance_engine
 from app.models.meta_orchestrator_unified import (
     # Core Orchestration Models
     MetaOrchestrationRequest, MetaOrchestrationResponse, MetaOrchestrationResult,
@@ -30,6 +33,15 @@ router = APIRouter()
 
 # Initialize Unified Meta AI Orchestrator
 unified_orchestrator = UnifiedMetaAIOrchestrator()
+
+# Initialize Enhanced Governance Service
+async def initialize_governance():
+    """Initialize governance service"""
+    try:
+        await enhanced_governance_service.initialize()
+        logger.info("Enhanced governance service initialized")
+    except Exception as e:
+        logger.error("Failed to initialize governance service", error=str(e))
 
 
 # ============================================================================
@@ -878,4 +890,99 @@ async def get_harmony_score():
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get harmony score: {e}"
+        )
+
+
+# ============================================================================
+# GOVERNANCE INTEGRATION ENDPOINTS
+# ============================================================================
+
+@router.post("/governance/initialize")
+async def initialize_governance_system():
+    """Initialize the enhanced governance system"""
+    try:
+        await initialize_governance()
+        return {
+            "status": "success",
+            "message": "Enhanced governance system initialized",
+            "timestamp": datetime.now()
+        }
+    except Exception as e:
+        logger.error("Failed to initialize governance system", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to initialize governance system: {e}"
+        )
+
+
+@router.get("/governance/status")
+async def get_governance_status():
+    """Get comprehensive governance status"""
+    try:
+        status = await enhanced_governance_service.get_overall_governance_status()
+        return {
+            "governance_status": status,
+            "timestamp": datetime.now()
+        }
+    except Exception as e:
+        logger.error("Failed to get governance status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get governance status: {e}"
+        )
+
+
+@router.post("/governance/enforce")
+async def enforce_governance_policy(
+    rule_id: str,
+    context: Optional[Dict[str, Any]] = None
+):
+    """Enforce a specific governance policy"""
+    try:
+        result = await enhanced_governance_service.enforce_policy_check(rule_id, context)
+        return {
+            "status": "success",
+            "rule_id": rule_id,
+            "result": result,
+            "timestamp": datetime.now()
+        }
+    except Exception as e:
+        logger.error("Failed to enforce governance policy", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to enforce governance policy: {e}"
+        )
+
+
+@router.get("/governance/metrics")
+async def get_governance_metrics():
+    """Get current governance metrics"""
+    try:
+        metrics = enhanced_governance_service.get_governance_metrics()
+        return {
+            "metrics": metrics,
+            "timestamp": datetime.now()
+        }
+    except Exception as e:
+        logger.error("Failed to get governance metrics", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get governance metrics: {e}"
+        )
+
+
+@router.get("/governance/compliance")
+async def get_governance_compliance():
+    """Get governance compliance status"""
+    try:
+        compliance = await compliance_engine.check_overall_compliance()
+        return {
+            "compliance": compliance,
+            "timestamp": datetime.now()
+        }
+    except Exception as e:
+        logger.error("Failed to get governance compliance", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get governance compliance: {e}"
         )

@@ -1,0 +1,75 @@
+Category,Feature/Endpoint/UI,Path/Component,Description
+Voice-to-App,Transcribe Audio,/api/v0/voice/transcribe,Transcribe audio to text
+Voice-to-App,Extract Intent,/api/v0/voice/intent,Extract intent and generate app plan
+Voice-to-App,Generate App,/api/v0/voice/generate,Generate app from voice command and plan
+Voice-to-App,App Generation Status,/api/v0/voice/generate/{app_id}/status,Get app generation status
+Smart Coding AI,Create Integration Session,/api/v1/smart-coding-ai/integration/session/create,Create integration session
+Smart Coding AI,Voice to Code,/api/v1/smart-coding-ai/integration/voice-to-code,Convert voice to code
+Smart Coding AI,Text to Code,/api/v1/smart-coding-ai/integration/voice-to-code/text,Convert text to code
+Smart Coding AI,AI Assistant Chat,/api/v1/smart-coding-ai/integration/chat/assistant,Chat with AI assistant
+Smart Coding AI,Task Orchestration,/api/v1/smart-coding-ai/integration/orchestrate/task,Orchestrate smart coding task
+Smart Coding AI,Integration Status,/api/v1/smart-coding-ai/integration/status,Integration system status
+Smart Coding AI,Integration Capabilities,/api/v1/smart-coding-ai/integration/capabilities,Integration capabilities
+Smart Coding AI,WhatsApp Message Processing,/api/v1/smart-coding-ai/integration/whatsapp/process-message,Process WhatsApp message
+Smart Coding AI,Send Code via WhatsApp,/api/v1/smart-coding-ai/integration/whatsapp/send-code,Send code via WhatsApp
+Smart Coding AI,Send Chat via WhatsApp,/api/v1/smart-coding-ai/integration/whatsapp/send-chat,Send chat via WhatsApp
+Architecture Generator,Create Architecture,/architectures (POST),Create a new architecture
+Architecture Generator,Get Architecture,/architectures/{architecture_id} (GET),Get architecture details
+Architecture Generator,List Architectures,/architectures (GET),List all architectures
+Architecture Generator,Delete Architecture,/architectures/{architecture_id} (DELETE),Delete an architecture
+Architecture Generator,Generate Diagram,/architectures/{architecture_id}/diagrams (POST),Generate diagram for architecture
+Architecture Generator,List Diagrams,/architectures/{architecture_id}/diagrams (GET),List diagrams for an architecture
+Architecture Generator,Get Diagram,/diagrams/{diagram_id} (GET),Get diagram details
+Architecture Generator,Analyze Architecture,/architectures/{architecture_id}/analyze (POST),Analyze architecture
+Architecture Generator,Get Analysis,/analyses/{analysis_id} (GET),Get analysis details
+Architecture Generator,Add Component,/architectures/{architecture_id}/components (POST),Add component to architecture
+Architecture Generator,List Components,/architectures/{architecture_id}/components (GET),List components in architecture
+Architecture Generator,Add Relationship,/architectures/{architecture_id}/relationships (POST),Add relationship to architecture
+Architecture Generator,List Relationships,/architectures/{architecture_id}/relationships (GET),List relationships in architecture
+Architecture Generator,Generate All Diagrams,/architectures/{architecture_id}/generate-all-diagrams (POST),Generate all diagram types for architecture
+Architecture Generator,Repair Diagram,/repair (POST),Repair diagram using AI
+Architecture Generator,Analyze Diagram,/analyze-diagram (POST),Analyze diagram for issues and quality
+Architecture Generator,Optimize Diagram,/optimize-diagram (POST),Optimize diagram structure and performance
+Architecture Generator,Health Check,/health (GET),Health check for Architecture Generator
+AI Agent System,Interact with Agent,/interact (POST),Interact with AI agent (various optimization levels)
+AI Agent System,Optimization Levels,/optimization-levels (GET),List optimization levels
+AI Agent System,Agent Metrics,/metrics/{agent_id} (GET),Get agent metrics
+AI Agent System,Performance Comparison,/performance-comparison (GET),Compare performance
+AI Agent System,Optimize Agent,/optimize/{agent_id} (POST),Optimize agent
+AI Agent System,Agent Governance Compliance,/governance/agent-compliance-check (POST),Check agent governance compliance
+AI Agent System,Enforce Agent Governance Policy,/governance/agent-policy-enforcement (POST),Enforce agent governance policy
+AI Agent System,Agent Governance Metrics,/governance/agent-metrics (GET),Get agent governance metrics
+AI Agent System,Agents Governance Summary,/governance/agents-compliance-summary (GET),Governance summary for all agents
+Authentication,Login,/auth/login,User login
+Authentication,Register,/auth/register,User registration
+Authentication,Profile,/auth/profile,User profile
+Authentication,2FA Setup,/auth/2fa/setup,Two-factor authentication setup
+Authentication,2FA Verify,/auth/2fa/verify,Two-factor authentication verification
+Payments,Create Payment Order,/payments/create-order,Create payment order
+Payments,Verify Payment,/payments/verify,Verify payment
+Payments,Create Subscription,/payments/subscription/create,Create subscription
+Gamification,Award Points,/points/award,Award points to user
+Gamification,Unlock Achievement,/achievements/unlock,Unlock achievement
+Gamification,Create Referral,/referrals/create,Create referral
+Gamification,Leaderboard,/leaderboard,Leaderboard
+App Management,Create App,/apps/create,Create a new app
+App Management,Update App,/apps/update,Update app
+App Management,List Apps,/apps/list,List all apps
+App Management,Create Template,/templates/create,Create app template
+App Management,List Templates,/templates/list,List app templates
+App Management,Invite Collaboration,/collaboration/invite,Invite user to collaborate
+Admin,Admin Dashboard,/admin/dashboard,Admin dashboard
+Analytics,Advanced Analytics,/advanced-analytics,Advanced analytics
+System Health,Health Check,/health,Health check for all major services
+System Health,System Status,/status,System status for all major modules
+System Health,System Metrics,/metrics,System metrics for all major modules
+System Health,System Capabilities,/capabilities,System capabilities for all major modules
+Frontend,Home Page,/,Main landing page with hero, features, pricing, testimonials, CTA
+Frontend,Voice-to-App UI,VoiceRecorder/Hero/features.tsx,Voice recording, status/progress, app preview
+Frontend,Smart Coding AI UI,Smart Coding Dashboard/AI Assistant Chat,Smart coding, chat, orchestration, WhatsApp integration
+Frontend,Architecture Generator UI,Architecture creation/diagram/analysis,Architecture generation, diagram, analysis, optimization
+Frontend,Authentication UI,/auth,Login, register, 2FA, profile
+Frontend,Payments UI,Pricing/payment integration,Subscription management
+Frontend,Gamification UI,Points/achievements/leaderboards,User rewards and gamification
+Frontend,Collaboration UI,Templates/collaborative editing,App templates, sharing, collaboration
+Frontend,Admin UI,Admin dashboard,Admin and analytics

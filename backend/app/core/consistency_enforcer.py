@@ -109,7 +109,8 @@ class ConsistencyEnforcer:
     """Comprehensive consistency enforcement system"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.consistency_rules: Dict[str, ConsistencyRule] = {}
         self.consistency_checks: Dict[str, ConsistencyCheck] = {}
         self.violations_history: List[ConsistencyViolation] = []

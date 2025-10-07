@@ -519,3 +519,27 @@ class CPUOptimizer:
 
 # Global CPU optimizer instance
 cpu_optimizer = CPUOptimizer()
+
+async def get_cpu_performance() -> Dict[str, Any]:
+    """Get current CPU performance metrics"""
+    try:
+        cpu_usage = await cpu_optimizer.monitor_cpu_usage()
+        optimization_metrics = await cpu_optimizer.get_cpu_optimization_metrics()
+        
+        return {
+            "cpu_usage": {
+                "total_usage": cpu_usage.total_usage,
+                "per_core_usage": cpu_usage.per_core_usage,
+                "load_average": cpu_usage.load_average,
+                "temperature": cpu_usage.temperature,
+                "frequency": cpu_usage.frequency
+            },
+            "optimization_metrics": optimization_metrics,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Failed to get CPU performance metrics", error=str(e))
+        return {
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }

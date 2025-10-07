@@ -126,7 +126,7 @@ class EnhancedMonitoringAnalytics:
         # Initialize monitoring system
         self._initialize_monitoring_system()
         self._initialize_alert_system()
-        self._start_background_tasks()
+        self._background_tasks_started = False
     
     def _initialize_monitoring_system(self):
         """Initialize the monitoring system"""
@@ -215,9 +215,21 @@ class EnhancedMonitoringAnalytics:
         
         logger.info("Background monitoring tasks started")
     
+    async def _ensure_background_tasks_started(self):
+        """Ensure background tasks are started"""
+        if not self._background_tasks_started:
+            try:
+                self._start_background_tasks()
+                self._background_tasks_started = True
+            except RuntimeError:
+                # No event loop running, will start later
+                pass
+    
     async def record_metric(self, metric_data: MetricData) -> bool:
         """Record a metric with buffering and aggregation"""
         try:
+            # Ensure background tasks are started
+            await self._ensure_background_tasks_started()
             # Add to buffer
             self.metrics_buffer.append(metric_data)
             

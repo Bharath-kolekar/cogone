@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
 import structlog
+from app.core.async_task_manager import register_async_initializer
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
@@ -113,7 +114,7 @@ class AIOptimizationEngine:
         self._initialize_models()
         
         # Start background tasks
-        self._start_background_tasks()
+        self._background_tasks_started = False
     
     def _initialize_models(self):
         """Initialize ML models with default configurations"""
@@ -122,8 +123,8 @@ class AIOptimizationEngine:
             synthetic_data = self._generate_synthetic_training_data()
             self.training_data.extend(synthetic_data)
             
-            # Train initial models
-            asyncio.create_task(self._train_models())
+            # Train initial models (deferred until event loop is running)
+            # asyncio.create_task(self._train_models())
             
             logger.info("AI optimization engine initialized with synthetic data")
             
@@ -182,9 +183,25 @@ class AIOptimizationEngine:
     
     def _start_background_tasks(self):
         """Start background tasks for continuous learning"""
-        asyncio.create_task(self._continuous_learning_loop())
-        asyncio.create_task(self._performance_data_collection_loop())
-        asyncio.create_task(self._optimization_execution_loop())
+        if not self._background_tasks_started:
+            try:
+                asyncio.create_task(self._continuous_learning_loop())
+                asyncio.create_task(self._performance_data_collection_loop())
+                asyncio.create_task(self._optimization_execution_loop())
+                self._background_tasks_started = True
+            except RuntimeError as e:
+                logger.error("Failed to start background tasks", error=str(e))
+    
+    async def _ensure_background_tasks_started(self):
+        """Ensure background tasks are started when an event loop is running"""
+        if not self._background_tasks_started:
+            try:
+                asyncio.create_task(self._continuous_learning_loop())
+                asyncio.create_task(self._performance_data_collection_loop())
+                asyncio.create_task(self._optimization_execution_loop())
+                self._background_tasks_started = True
+            except RuntimeError as e:
+                logger.error("Failed to start background tasks", error=str(e))
     
     async def _continuous_learning_loop(self):
         """Continuous learning loop for model improvement"""
@@ -568,6 +585,7 @@ class AIOptimizationEngine:
     
     async def get_optimization_recommendations(self) -> Dict[str, Any]:
         """Get AI-driven optimization recommendations"""
+        await self._ensure_background_tasks_started()
         try:
             predictions = await self._predict_optimizations()
             
@@ -599,6 +617,7 @@ class AIOptimizationEngine:
     
     async def get_performance_predictions(self) -> Dict[str, Any]:
         """Get AI predictions for future performance"""
+        await self._ensure_background_tasks_started()
         try:
             if not self.training_data:
                 return {}
@@ -669,3 +688,14 @@ async def trigger_ai_optimization():
     for prediction in predictions:
         if prediction.confidence >= 0.8:
             await ai_optimization_engine._execute_optimization(prediction)
+
+
+# Global instance
+ai_optimization_engine = AIOptimizationEngine()
+
+# Register async initializer
+async def _start_ai_optimization_tasks():
+    """Start AI optimization engine background tasks"""
+    await ai_optimization_engine._ensure_background_tasks_started()
+
+register_async_initializer("ai_optimization_engine", _start_ai_optimization_tasks)

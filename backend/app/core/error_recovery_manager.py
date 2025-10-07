@@ -110,7 +110,8 @@ class ErrorRecoveryManager:
     """Comprehensive error recovery management system"""
     
     def __init__(self):
-        self.redis_client = get_redis_client()
+        from app.core.redis import get_redis_client_sync
+        self.redis_client = get_redis_client_sync()  # Returns None if not initialized yet
         self.recovery_strategies: Dict[ErrorCategory, List[RecoveryStrategy]] = self._initialize_recovery_strategies()
         self.circuit_breakers: Dict[str, Dict[str, Any]] = {}
         self.error_history: List[ErrorContext] = []
