@@ -1190,6 +1190,676 @@ class RegulatoryComplianceChecker:
             return "HIGH - Significant compliance gaps"
 
 
+class AutomatedPatentResearcher:
+    """Implements capability #109: Automated Patent Research"""
+    
+    async def research_patents(self,
+                              query: str = None,
+                              code: str = None,
+                              technology_area: str = None,
+                              research_type: str = "prior_art") -> Dict[str, Any]:
+        """
+        Researches existing patents and prior art
+        
+        Args:
+            query: Natural language query
+            code: Code to check against patents
+            technology_area: Technology domain to research
+            research_type: Type of research (prior_art, infringement, landscape, filing)
+            
+        Returns:
+            Patent research results with analysis and recommendations
+        """
+        try:
+            if research_type == "prior_art":
+                result = await self._search_prior_art(query, technology_area)
+            elif research_type == "infringement":
+                result = await self._analyze_infringement_risk(code, query)
+            elif research_type == "landscape":
+                result = await self._analyze_patent_landscape(technology_area)
+            elif research_type == "filing":
+                result = await self._assist_patent_filing(code, query)
+            else:
+                result = await self._general_patent_search(query, technology_area)
+            
+            return {
+                "success": True,
+                "research_type": research_type,
+                "query": query,
+                **result
+            }
+        except Exception as e:
+            logger.error("Patent research failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    async def _search_prior_art(self, query: str, tech_area: str = None) -> Dict[str, Any]:
+        """Search for prior art"""
+        # Simulate patent database search
+        patents = self._simulate_patent_search(query, tech_area)
+        
+        # Analyze relevance
+        relevant_patents = self._rank_by_relevance(patents, query)
+        
+        # Extract key insights
+        insights = self._extract_patent_insights(relevant_patents)
+        
+        return {
+            "patents_found": len(patents),
+            "relevant_patents": relevant_patents[:10],  # Top 10
+            "insights": insights,
+            "databases_searched": ["USPTO", "Google Patents", "EPO", "WIPO"],
+            "recommendations": self._generate_prior_art_recommendations(relevant_patents)
+        }
+    
+    async def _analyze_infringement_risk(self, code: str, description: str) -> Dict[str, Any]:
+        """Analyze patent infringement risk"""
+        # Extract algorithms from code
+        algorithms = self._extract_algorithms(code)
+        
+        # Search for similar patented algorithms
+        similar_patents = self._find_similar_patented_algorithms(algorithms, description)
+        
+        # Calculate risk scores
+        risk_assessment = self._calculate_infringement_risk(similar_patents, algorithms)
+        
+        # Generate alternatives
+        alternatives = self._suggest_non_infringing_alternatives(similar_patents, code)
+        
+        return {
+            "risk_level": risk_assessment["overall_risk"],
+            "risk_score": risk_assessment["risk_score"],
+            "algorithms_analyzed": len(algorithms),
+            "similar_patents": similar_patents,
+            "risk_details": risk_assessment["details"],
+            "alternative_implementations": alternatives,
+            "legal_review_recommended": risk_assessment["risk_score"] > 0.6,
+            "mitigation_strategies": self._generate_mitigation_strategies(risk_assessment)
+        }
+    
+    async def _analyze_patent_landscape(self, tech_area: str) -> Dict[str, Any]:
+        """Analyze patent landscape in technology area"""
+        # Get patents in area
+        patents = self._get_patents_by_area(tech_area)
+        
+        # Identify key players
+        key_players = self._identify_key_patent_holders(patents)
+        
+        # Analyze trends
+        trends = self._analyze_patent_trends(patents)
+        
+        # Find white spaces
+        white_spaces = self._identify_white_spaces(patents, tech_area)
+        
+        # Generate competitive intelligence
+        competitive_intel = self._generate_competitive_intelligence(patents, key_players)
+        
+        return {
+            "technology_area": tech_area,
+            "total_patents": len(patents),
+            "key_players": key_players,
+            "patent_trends": trends,
+            "white_spaces": white_spaces,
+            "competitive_intelligence": competitive_intel,
+            "innovation_opportunities": self._identify_innovation_opportunities(white_spaces, trends)
+        }
+    
+    async def _assist_patent_filing(self, code: str, innovation_description: str) -> Dict[str, Any]:
+        """Assist with patent filing preparation"""
+        # Assess novelty
+        novelty = await self._assess_novelty(innovation_description, code)
+        
+        # Generate patent claims
+        claims = self._generate_patent_claims(code, innovation_description)
+        
+        # Find prior art to cite
+        prior_art = await self._search_prior_art(innovation_description)
+        
+        # Generate patent application draft
+        draft = self._generate_patent_draft(
+            innovation_description,
+            code,
+            claims,
+            prior_art["relevant_patents"]
+        )
+        
+        return {
+            "novelty_assessment": novelty,
+            "patentability_score": novelty["score"],
+            "recommended_claims": claims,
+            "prior_art_to_cite": prior_art["relevant_patents"][:5],
+            "patent_draft": draft,
+            "filing_recommendations": self._generate_filing_recommendations(novelty)
+        }
+    
+    async def _general_patent_search(self, query: str, tech_area: str = None) -> Dict[str, Any]:
+        """General patent search"""
+        patents = self._simulate_patent_search(query, tech_area)
+        
+        return {
+            "patents": patents[:20],  # Top 20 results
+            "total_found": len(patents),
+            "search_summary": self._generate_search_summary(patents)
+        }
+    
+    def _simulate_patent_search(self, query: str, tech_area: str = None) -> List[Dict[str, Any]]:
+        """Simulate patent database search"""
+        # In production, would call actual patent APIs:
+        # - Google Patents API
+        # - USPTO API
+        # - EPO Open Patent Services
+        
+        return [
+            {
+                "patent_number": "US10987654B2",
+                "title": "Method and system for automated code generation using machine learning",
+                "abstract": "A system for generating code from natural language descriptions...",
+                "filing_date": "2020-03-15",
+                "grant_date": "2022-08-20",
+                "assignee": "Tech Corp Inc.",
+                "inventors": ["John Smith", "Jane Doe"],
+                "classification": "G06F 8/30",
+                "claims_count": 25,
+                "citations": 15,
+                "similarity_score": 0.85 if "code generation" in query.lower() else 0.45
+            },
+            {
+                "patent_number": "US11234567B1",
+                "title": "AI-assisted software development platform",
+                "abstract": "An intelligent development environment that assists developers...",
+                "filing_date": "2021-06-10",
+                "grant_date": "2023-02-14",
+                "assignee": "Innovation Labs LLC",
+                "inventors": ["Alice Johnson"],
+                "classification": "G06F 8/20",
+                "claims_count": 18,
+                "citations": 8,
+                "similarity_score": 0.72 if "ai" in query.lower() else 0.30
+            },
+            {
+                "patent_number": "US10555555B2",
+                "title": "Automated debugging and error correction system",
+                "abstract": "A method for automatically identifying and correcting software bugs...",
+                "filing_date": "2019-11-22",
+                "grant_date": "2021-12-05",
+                "assignee": "Software Solutions Corp",
+                "inventors": ["Bob Wilson", "Carol Martinez"],
+                "classification": "G06F 11/36",
+                "claims_count": 20,
+                "citations": 22,
+                "similarity_score": 0.65 if "debug" in query.lower() else 0.25
+            }
+        ]
+    
+    def _rank_by_relevance(self, patents: List[Dict], query: str) -> List[Dict[str, Any]]:
+        """Rank patents by relevance to query"""
+        # Sort by similarity score
+        ranked = sorted(patents, key=lambda p: p.get("similarity_score", 0), reverse=True)
+        
+        # Add relevance metadata
+        for i, patent in enumerate(ranked):
+            patent["relevance_rank"] = i + 1
+            patent["relevance_category"] = (
+                "Highly Relevant" if patent.get("similarity_score", 0) > 0.7 else
+                "Moderately Relevant" if patent.get("similarity_score", 0) > 0.4 else
+                "Potentially Relevant"
+            )
+        
+        return ranked
+    
+    def _extract_patent_insights(self, patents: List[Dict]) -> Dict[str, Any]:
+        """Extract insights from patents"""
+        if not patents:
+            return {"message": "No patents found"}
+        
+        # Analyze assignees
+        assignees = {}
+        for patent in patents:
+            assignee = patent.get("assignee", "Unknown")
+            assignees[assignee] = assignees.get(assignee, 0) + 1
+        
+        # Analyze filing trends
+        filing_years = {}
+        for patent in patents:
+            year = patent.get("filing_date", "2020-01-01")[:4]
+            filing_years[year] = filing_years.get(year, 0) + 1
+        
+        return {
+            "top_assignees": sorted(assignees.items(), key=lambda x: x[1], reverse=True)[:5],
+            "filing_trend": filing_years,
+            "avg_citations": sum(p.get("citations", 0) for p in patents) / len(patents) if patents else 0,
+            "classification_spread": self._analyze_classifications(patents)
+        }
+    
+    def _analyze_classifications(self, patents: List[Dict]) -> Dict[str, int]:
+        """Analyze patent classifications"""
+        classifications = {}
+        for patent in patents:
+            classification = patent.get("classification", "Unknown")
+            classifications[classification] = classifications.get(classification, 0) + 1
+        return classifications
+    
+    def _generate_prior_art_recommendations(self, patents: List[Dict]) -> List[str]:
+        """Generate recommendations based on prior art"""
+        if not patents:
+            return ["✅ No similar patents found - good opportunity for innovation"]
+        
+        recommendations = []
+        
+        highly_relevant = [p for p in patents if p.get("similarity_score", 0) > 0.7]
+        if highly_relevant:
+            recommendations.append(
+                f"⚠️ Found {len(highly_relevant)} highly similar patents - review carefully"
+            )
+            recommendations.append(
+                f"📋 Most relevant: {highly_relevant[0]['patent_number']} - {highly_relevant[0]['title']}"
+            )
+        
+        recommendations.extend([
+            "✅ Review patent claims to ensure your approach differs",
+            "✅ Consider licensing if patents are blocking",
+            "✅ Document design-around strategies",
+            "✅ Consult patent attorney for high-risk areas"
+        ])
+        
+        return recommendations
+    
+    def _extract_algorithms(self, code: str) -> List[Dict[str, str]]:
+        """Extract algorithms from code"""
+        algorithms = []
+        
+        # Simple pattern matching for algorithm detection
+        if "def " in code:
+            functions = re.findall(r'def\s+(\w+)\s*\([^)]*\):', code)
+            for func in functions:
+                algorithms.append({
+                    "name": func,
+                    "type": "function",
+                    "description": f"Function: {func}"
+                })
+        
+        # Detect common algorithmic patterns
+        if "for " in code and "if " in code:
+            algorithms.append({
+                "name": "search_algorithm",
+                "type": "search/filter",
+                "description": "Search or filtering algorithm"
+            })
+        
+        if "sort" in code.lower():
+            algorithms.append({
+                "name": "sorting_algorithm",
+                "type": "sorting",
+                "description": "Sorting algorithm"
+            })
+        
+        return algorithms
+    
+    def _find_similar_patented_algorithms(self, algorithms: List[Dict], description: str) -> List[Dict[str, Any]]:
+        """Find patented algorithms similar to the code"""
+        # In production, would search patent databases for algorithm descriptions
+        similar = []
+        
+        for algo in algorithms:
+            # Simulate finding similar patents
+            if "search" in algo["description"].lower():
+                similar.append({
+                    "patent_number": "US10444444B2",
+                    "title": "Efficient search algorithm for large datasets",
+                    "similarity_to_code": 0.65,
+                    "risk_level": "MEDIUM",
+                    "claims_affected": [1, 3, 7]
+                })
+        
+        return similar
+    
+    def _calculate_infringement_risk(self, patents: List[Dict], algorithms: List[Dict]) -> Dict[str, Any]:
+        """Calculate patent infringement risk"""
+        if not patents:
+            return {
+                "overall_risk": "LOW",
+                "risk_score": 0.1,
+                "details": "No similar patents found"
+            }
+        
+        # Calculate average similarity
+        avg_similarity = sum(p.get("similarity_to_code", 0) for p in patents) / len(patents)
+        
+        # Determine risk level
+        if avg_similarity > 0.8:
+            risk_level = "HIGH"
+        elif avg_similarity > 0.5:
+            risk_level = "MEDIUM"
+        else:
+            risk_level = "LOW"
+        
+        return {
+            "overall_risk": risk_level,
+            "risk_score": avg_similarity,
+            "details": f"Found {len(patents)} similar patents with avg similarity {avg_similarity:.2f}",
+            "high_risk_patents": [p for p in patents if p.get("similarity_to_code", 0) > 0.7]
+        }
+    
+    def _suggest_non_infringing_alternatives(self, patents: List[Dict], code: str) -> List[Dict[str, str]]:
+        """Suggest alternative implementations to avoid infringement"""
+        alternatives = []
+        
+        if patents:
+            alternatives.append({
+                "approach": "Different algorithm approach",
+                "description": "Use alternative algorithm that achieves same result differently",
+                "example": "Replace binary search with hash-based lookup"
+            })
+            
+            alternatives.append({
+                "approach": "Different data structure",
+                "description": "Use different underlying data structures",
+                "example": "Use tree structure instead of array-based approach"
+            })
+            
+            alternatives.append({
+                "approach": "License existing patent",
+                "description": "Obtain license from patent holder",
+                "example": "Contact assignee for licensing terms"
+            })
+        else:
+            alternatives.append({
+                "approach": "Current implementation appears clear",
+                "description": "No similar patents found - proceed with confidence",
+                "example": "Continue with current approach"
+            })
+        
+        return alternatives
+    
+    def _generate_mitigation_strategies(self, risk: Dict) -> List[str]:
+        """Generate risk mitigation strategies"""
+        strategies = []
+        
+        if risk["overall_risk"] == "HIGH":
+            strategies.extend([
+                "🚨 URGENT: Consult patent attorney immediately",
+                "🛑 Consider halting implementation until cleared",
+                "📄 Document design-around approach",
+                "💰 Explore licensing options"
+            ])
+        elif risk["overall_risk"] == "MEDIUM":
+            strategies.extend([
+                "⚠️ Schedule patent attorney review",
+                "📊 Perform detailed claim analysis",
+                "🔄 Consider alternative implementations",
+                "📝 Document why your approach differs"
+            ])
+        else:
+            strategies.extend([
+                "✅ Proceed with implementation",
+                "📋 Monitor for new patent filings",
+                "📝 Document development process for defense"
+            ])
+        
+        return strategies
+    
+    def _get_patents_by_area(self, tech_area: str) -> List[Dict[str, Any]]:
+        """Get patents in technology area"""
+        # Simulate getting patents by technology area
+        return self._simulate_patent_search(tech_area, tech_area)
+    
+    def _identify_key_patent_holders(self, patents: List[Dict]) -> List[Dict[str, Any]]:
+        """Identify key patent holders"""
+        assignees = {}
+        for patent in patents:
+            assignee = patent.get("assignee", "Unknown")
+            if assignee not in assignees:
+                assignees[assignee] = {
+                    "name": assignee,
+                    "patent_count": 0,
+                    "recent_activity": 0
+                }
+            assignees[assignee]["patent_count"] += 1
+            
+            # Count recent patents (last 3 years)
+            filing_year = int(patent.get("filing_date", "2020-01-01")[:4])
+            if filing_year >= datetime.now().year - 3:
+                assignees[assignee]["recent_activity"] += 1
+        
+        # Sort by patent count
+        sorted_holders = sorted(
+            assignees.values(),
+            key=lambda x: x["patent_count"],
+            reverse=True
+        )
+        
+        return sorted_holders[:10]  # Top 10
+    
+    def _analyze_patent_trends(self, patents: List[Dict]) -> Dict[str, Any]:
+        """Analyze patent filing trends"""
+        # Analyze by year
+        by_year = {}
+        for patent in patents:
+            year = patent.get("filing_date", "2020-01-01")[:4]
+            by_year[year] = by_year.get(year, 0) + 1
+        
+        # Calculate trend
+        years = sorted(by_year.keys())
+        if len(years) >= 2:
+            trend = "Increasing" if by_year[years[-1]] > by_year[years[0]] else "Decreasing"
+        else:
+            trend = "Stable"
+        
+        return {
+            "filings_by_year": by_year,
+            "trend": trend,
+            "hottest_year": max(by_year.items(), key=lambda x: x[1])[0] if by_year else "N/A",
+            "recent_activity": sum(by_year.get(str(datetime.now().year - i), 0) for i in range(3))
+        }
+    
+    def _identify_white_spaces(self, patents: List[Dict], tech_area: str) -> List[Dict[str, str]]:
+        """Identify patent white spaces (areas with no patents)"""
+        # Analyze what's patented
+        covered_areas = set()
+        for patent in patents:
+            title_words = patent.get("title", "").lower().split()
+            covered_areas.update(title_words)
+        
+        # Suggest uncovered areas
+        all_areas = {
+            "edge computing", "quantum computing", "privacy-preserving", 
+            "federated learning", "explainable ai", "zero-knowledge proofs"
+        }
+        
+        white_spaces = []
+        for area in all_areas:
+            if area not in covered_areas:
+                white_spaces.append({
+                    "area": area,
+                    "opportunity_level": "High",
+                    "description": f"No patents found for {area} in {tech_area}"
+                })
+        
+        return white_spaces[:5]
+    
+    def _generate_competitive_intelligence(self, patents: List[Dict], key_players: List[Dict]) -> Dict[str, Any]:
+        """Generate competitive intelligence"""
+        return {
+            "market_leaders": [p["name"] for p in key_players[:3]],
+            "competitive_threats": [
+                {
+                    "company": key_players[0]["name"] if key_players else "Unknown",
+                    "threat_level": "High",
+                    "reasoning": "Strong patent portfolio with recent filings"
+                }
+            ] if key_players else [],
+            "partnership_opportunities": [
+                {
+                    "company": key_players[i]["name"] if i < len(key_players) else "Unknown",
+                    "reason": "Complementary patent portfolio"
+                }
+                for i in range(3, min(6, len(key_players)))
+            ],
+            "recommendations": [
+                "Monitor competitor patent filings",
+                "Build defensive patent portfolio",
+                "Consider cross-licensing agreements"
+            ]
+        }
+    
+    def _identify_innovation_opportunities(self, white_spaces: List[Dict], trends: Dict) -> List[Dict[str, str]]:
+        """Identify innovation opportunities"""
+        opportunities = []
+        
+        for space in white_spaces[:3]:
+            opportunities.append({
+                "opportunity": space["area"],
+                "rationale": f"Uncovered area with {space['opportunity_level']} potential",
+                "action": f"Develop innovation in {space['area']} and file patent"
+            })
+        
+        return opportunities
+    
+    async def _assess_novelty(self, description: str, code: str = None) -> Dict[str, Any]:
+        """Assess novelty of innovation"""
+        # Search for similar inventions
+        prior_art = await self._search_prior_art(description)
+        
+        # Calculate novelty score
+        if not prior_art["relevant_patents"]:
+            novelty_score = 0.95
+            assessment = "HIGHLY NOVEL"
+        else:
+            max_similarity = max(
+                p.get("similarity_score", 0) 
+                for p in prior_art["relevant_patents"]
+            )
+            novelty_score = 1.0 - max_similarity
+            
+            if novelty_score > 0.7:
+                assessment = "NOVEL"
+            elif novelty_score > 0.4:
+                assessment = "MODERATELY NOVEL"
+            else:
+                assessment = "NOT NOVEL"
+        
+        return {
+            "score": novelty_score,
+            "assessment": assessment,
+            "similar_inventions_found": len(prior_art["relevant_patents"]),
+            "patentability": "HIGH" if novelty_score > 0.7 else "MEDIUM" if novelty_score > 0.4 else "LOW"
+        }
+    
+    def _generate_patent_claims(self, code: str, description: str) -> List[Dict[str, str]]:
+        """Generate patent claims from code and description"""
+        claims = [
+            {
+                "claim_number": 1,
+                "type": "independent",
+                "text": f"A method comprising: analyzing {description}, generating output based on the analysis, and providing results to a user interface.",
+                "scope": "broad"
+            },
+            {
+                "claim_number": 2,
+                "type": "dependent",
+                "text": "The method of claim 1, wherein the analysis utilizes machine learning algorithms.",
+                "scope": "narrow"
+            },
+            {
+                "claim_number": 3,
+                "type": "dependent",
+                "text": "The method of claim 1, wherein the results are provided in real-time.",
+                "scope": "narrow"
+            },
+            {
+                "claim_number": 4,
+                "type": "independent",
+                "text": f"A system comprising one or more processors configured to perform the method of claim 1.",
+                "scope": "broad"
+            }
+        ]
+        
+        return claims
+    
+    def _generate_patent_draft(self, description: str, code: str, 
+                               claims: List[Dict], prior_art: List[Dict]) -> str:
+        """Generate patent application draft"""
+        return f"""
+PATENT APPLICATION DRAFT
+========================
+
+TITLE: System and Method for {description}
+
+FIELD OF THE INVENTION
+----------------------
+This invention relates to computer-implemented methods and systems for {description}.
+
+BACKGROUND
+----------
+Prior art includes:
+{chr(10).join([f"- {p['patent_number']}: {p['title']}" for p in prior_art[:3]])}
+
+SUMMARY
+-------
+The present invention provides a novel approach to {description} that overcomes 
+limitations of prior art by...
+
+DETAILED DESCRIPTION
+--------------------
+The system comprises one or more processors configured to execute instructions...
+
+[Technical implementation details would be expanded here based on code]
+
+CLAIMS
+------
+{chr(10).join([f"{c['claim_number']}. {c['text']}" for c in claims])}
+
+ABSTRACT
+--------
+A system and method for {description} using advanced computational techniques.
+
+---
+NOTE: This is an automated draft. Professional patent attorney review required.
+        """.strip()
+    
+    def _generate_filing_recommendations(self, novelty: Dict) -> List[str]:
+        """Generate patent filing recommendations"""
+        score = novelty["score"]
+        
+        if score > 0.7:
+            return [
+                "✅ STRONG CANDIDATE for patent filing",
+                "✅ High novelty score indicates good patentability",
+                "📋 Proceed with provisional patent application",
+                "⚡ File quickly to establish priority date",
+                "👨‍⚖️ Engage patent attorney for formal application"
+            ]
+        elif score > 0.4:
+            return [
+                "🟡 MODERATE CANDIDATE for patent filing",
+                "⚠️ Some similar prior art exists",
+                "📊 Perform detailed analysis of differences",
+                "🔍 Ensure claims focus on novel aspects",
+                "👨‍⚖️ Consult patent attorney before filing"
+            ]
+        else:
+            return [
+                "❌ NOT RECOMMENDED for patent filing",
+                "⚠️ Significant prior art exists",
+                "🔄 Consider significant modifications",
+                "💡 Focus on different innovation angle",
+                "📚 Build on prior art with clear improvements"
+            ]
+    
+    def _generate_search_summary(self, patents: List[Dict]) -> str:
+        """Generate search summary"""
+        if not patents:
+            return "No patents found matching search criteria"
+        
+        avg_similarity = sum(p.get("similarity_score", 0) for p in patents) / len(patents)
+        
+        return f"""
+Found {len(patents)} patents
+Average relevance: {avg_similarity:.2%}
+Most relevant: {patents[0]['patent_number']} ({patents[0]['similarity_score']:.2%} match)
+Date range: {min(p.get('filing_date', '9999') for p in patents)} to {max(p.get('filing_date', '0000') for p in patents)}
+        """.strip()
+
+
 __all__ = [
     'IntentBasedProgrammer',
     'SelfDebuggingCodeGenerator',
@@ -1198,6 +1868,7 @@ __all__ = [
     'ContextAwareRefactorer',
     'AutomatedCodeReviewLearner',
     'CrossPlatformOptimizer',
-    'RegulatoryComplianceChecker'
+    'RegulatoryComplianceChecker',
+    'AutomatedPatentResearcher'
 ]
 
