@@ -126,6 +126,7 @@ from .smart_coding_ai_oauth import OAuthService
 # Import management services from extracted module (Step 8 of refactoring)
 from .smart_coding_ai_session import SessionMemoryManager
 from .smart_coding_ai_rbac import RBACManager
+from .smart_coding_ai_state import StateManager
 
 logger = structlog.get_logger()
 

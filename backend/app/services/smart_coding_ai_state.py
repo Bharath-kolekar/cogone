@@ -1,5 +1,6 @@
 """
 Smart Coding AI Management - State Manager
+State management for Auth & RBAC system
 Extracted from smart_coding_ai_optimized.py
 """
 
@@ -195,6 +196,8 @@ class StateManager:
         except Exception as e:
             logger.error(f"Failed to create state event: {e}")
 
+
+# RBACManager extracted to smart_coding_ai_rbacmanager.py
 
 
 
