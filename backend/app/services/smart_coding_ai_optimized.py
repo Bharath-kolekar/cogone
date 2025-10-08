@@ -104,7 +104,8 @@ from .smart_coding_ai_models import (
 from .smart_coding_ai_helpers import (
     PatternMatcher,
     MLPredictor,
-    EnsembleOptimizer
+    EnsembleOptimizer,
+    EnsemblePredictor
 )
 
 # Import analyzers from extracted module (Step 4 of refactoring)
@@ -6344,24 +6345,7 @@ async def get_item(item_id: int):
 # Analyzer classes extracted to smart_coding_ai_analyzers.py
 
 
-class EnsemblePredictor:
-    """Ensemble predictor"""
-    
-    async def predict(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Predict using ensemble methods"""
-        try:
-            return {
-                "predictions": [
-                    {
-                        "text": "ensemble_prediction",
-                        "type": "class",
-                        "description": "Ensemble-based prediction"
-                    }
-                ]
-            }
-        except Exception as e:
-            logger.error("Ensemble prediction failed", error=str(e))
-            return {"predictions": []}
+# EnsemblePredictor extracted to smart_coding_ai_helpers.py
     
     # ============================================================================
     # IN-LINE COMPLETION METHODS (Advanced code assistant features)
