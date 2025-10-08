@@ -255,6 +255,18 @@ from .smart_coding_ai_legacy_modernization import (
     ContinuousModernizationPlanner
 )
 
+# Import AI-Native implementations (Capabilities 101-110)
+from .smart_coding_ai_native import (
+    IntentBasedProgrammer,
+    SelfDebuggingCodeGenerator,
+    AdaptivePerformanceOptimizer,
+    PredictiveCodeGenerator,
+    ContextAwareRefactorer,
+    AutomatedCodeReviewLearner,
+    CrossPlatformOptimizer,
+    RegulatoryComplianceChecker
+)
+
 logger = structlog.get_logger()
 
 
@@ -1587,11 +1599,22 @@ class SmartCodingAIOptimized:
         self.testing_framework_modernizer = TestingFrameworkModernizer()
         self.continuous_modernization_planner = ContinuousModernizationPlanner()
         
-        # Mark capabilities as implemented (now 82 total)
+        # AI-Native capabilities (101-110)
+        self.intent_based_programmer = IntentBasedProgrammer()
+        self.self_debugging_code_generator = SelfDebuggingCodeGenerator()
+        self.adaptive_performance_optimizer = AdaptivePerformanceOptimizer()
+        self.predictive_code_generator = PredictiveCodeGenerator()
+        self.context_aware_refactorer = ContextAwareRefactorer()
+        self.automated_code_review_learner = AutomatedCodeReviewLearner()
+        self.cross_platform_optimizer = CrossPlatformOptimizer()
+        self.regulatory_compliance_checker = RegulatoryComplianceChecker()
+        
+        # Mark capabilities as implemented (now 90 total)
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
                            31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
-                           71, 72, 73, 74, 75, 77, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
+                           71, 72, 73, 74, 75, 77, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
+                           101, 102, 103, 104, 105, 106, 107, 110]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
@@ -5992,6 +6015,42 @@ async def get_item(item_id: int):
     async def plan_continuous_modernization(self, codebase_analysis: Dict[str, Any]) -> Dict[str, Any]:
         """Capability #100: Create continuous modernization strategy"""
         return await self.continuous_modernization_planner.create_strategy(codebase_analysis)
+    
+    # ============================================================================
+    # AI-NATIVE CAPABILITIES (101-110)
+    # ============================================================================
+    
+    async def generate_from_intent(self, intent: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #101: Intent-based programming"""
+        return await self.intent_based_programmer.generate_from_intent(intent, context)
+    
+    async def generate_self_debugging_code(self, code: str, debug_level: str = "medium") -> Dict[str, Any]:
+        """Capability #102: Self-debugging code generation"""
+        return await self.self_debugging_code_generator.generate_self_debugging_code(code, debug_level)
+    
+    async def create_adaptive_code(self, code: str, optimization_goals: List[str] = None) -> Dict[str, Any]:
+        """Capability #103: Adaptive performance optimization"""
+        return await self.adaptive_performance_optimizer.create_adaptive_code(code, optimization_goals)
+    
+    async def predict_needed_code(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #104: Predictive code generation"""
+        return await self.predictive_code_generator.predict_needed_code(context)
+    
+    async def refactor_with_context(self, code: str, business_context: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #105: Context-aware refactoring"""
+        return await self.context_aware_refactorer.refactor_with_context(code, business_context)
+    
+    async def learn_from_reviews(self, review_history: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Capability #106: Automated code review learning"""
+        return await self.automated_code_review_learner.learn_from_reviews(review_history)
+    
+    async def optimize_for_platforms(self, code: str, target_platforms: List[str]) -> Dict[str, Any]:
+        """Capability #107: Cross-platform optimization"""
+        return await self.cross_platform_optimizer.optimize_for_platforms(code, target_platforms)
+    
+    async def check_regulatory_compliance(self, code: str, regulations: List[str]) -> Dict[str, Any]:
+        """Capability #110: Regulatory compliance checking"""
+        return await self.regulatory_compliance_checker.check_compliance(code, regulations)
 
 
 # Global optimized service instance
