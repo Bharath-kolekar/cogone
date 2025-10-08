@@ -40,6 +40,7 @@ from app.routers import (
     admin,
     webhooks,
     smart_coding_ai_optimized,
+    capabilities_router,
     ai_agents_consolidated,
     meta_ai_orchestrator_unified,
     swarm_ai_router,
@@ -171,6 +172,7 @@ app.include_router(apps.router, prefix="/api/v0/apps", tags=["App Generation"])
 app.include_router(admin.router, prefix="/api/v0/admin", tags=["Admin"])
 app.include_router(webhooks.router, prefix="/api/v0/webhooks", tags=["Webhooks"])
 app.include_router(smart_coding_ai_optimized.router, prefix="/api/v0/smart-coding-ai", tags=["Smart Coding AI"])
+app.include_router(capabilities_router.router, prefix="/api/v0/ai-capabilities", tags=["AI Capabilities"])
 app.include_router(smart_coding_ai_integration_router.router, tags=["Smart Coding AI Integration"])
 app.include_router(auto_save_router.router, tags=["Auto-Save & Keep All Changes"])
 app.include_router(ai_component_orchestrator_router.router, tags=["AI Component Orchestrator"])
