@@ -213,15 +213,18 @@ from .smart_coding_ai_security import (
     IncidentResponsePlanner
 )
 
-# Import documentation implementations (Capabilities 61-63, 65-66, 68-69)
+# Import documentation implementations (Capabilities 61-63, 64, 65-66, 67, 68-69, 70)
 from .smart_coding_ai_documentation import (
     APIDocumentationGenerator,
     ArchitectureDiagramGenerator,
     CodeDocumentationGenerator,
+    UserManualCreator,
     DeploymentDocumentationGenerator,
     TroubleshootingGuideGenerator,
     ChangeLogGenerator,
-    CodeCommentGenerator
+    KnowledgeBasePopulator,
+    CodeCommentGenerator,
+    TrainingMaterialCreator
 )
 
 # Import DevOps implementations (Capabilities 71-80) - COMPLETE!
@@ -300,7 +303,7 @@ from .smart_coding_ai_quickwins import (
     CrossTeamCoordinator
 )
 
-# Import Quality Assurance implementations (Capabilities 121-126, 129-130)
+# Import Quality Assurance implementations (Capabilities 121-130) - COMPLETE!
 from .smart_coding_ai_quality import (
     QualityMetricTracker,
     AccessibilityComplianceChecker,
@@ -309,7 +312,9 @@ from .smart_coding_ai_quality import (
     MobileResponsivenessTester,
     PerformanceBenchmarker,
     QualityGatesEnforcer,
-    ContinuousQualityMonitor
+    ContinuousQualityMonitor,
+    UsabilityTestingGenerator,
+    ABTestImplementer
 )
 
 # Import Backend & API implementations (Capabilities 151-160) - COMPLETE!
@@ -1656,10 +1661,13 @@ class SmartCodingAIOptimized:
         self.api_documentation_generator = APIDocumentationGenerator()
         self.architecture_diagram_generator = ArchitectureDiagramGenerator()
         self.code_documentation_generator = CodeDocumentationGenerator()
+        self.user_manual_creator = UserManualCreator()
         self.deployment_documentation_generator = DeploymentDocumentationGenerator()
         self.troubleshooting_guide_generator = TroubleshootingGuideGenerator()
         self.changelog_generator = ChangeLogGenerator()
+        self.knowledge_base_populator = KnowledgeBasePopulator()
         self.code_comment_generator = CodeCommentGenerator()
+        self.training_material_creator = TrainingMaterialCreator()
         
         # DevOps implementations (Capabilities 10, 71-80) - COMPLETE!
         self.infrastructure_as_code_generator = InfrastructureAsCodeGenerator()
@@ -1734,6 +1742,8 @@ class SmartCodingAIOptimized:
         self.performance_benchmarker = PerformanceBenchmarker()
         self.quality_gates_enforcer = QualityGatesEnforcer()
         self.continuous_quality_monitor = ContinuousQualityMonitor()
+        self.usability_testing_generator = UsabilityTestingGenerator()
+        self.ab_test_implementer = ABTestImplementer()
         
         # Backend & API Revolution capabilities (151-160) - COMPLETE!
         self.api_versioning_manager = APIVersioningManager()
@@ -1771,13 +1781,13 @@ class SmartCodingAIOptimized:
         self.design_system_integrator = DesignSystemIntegrator()
         self.user_interaction_optimizer = UserInteractionOptimizer()
         
-        # Mark capabilities as implemented - 🎉🎉🎉 156/200 = 78% ACTUAL! 🎉🎉🎉
+        # Mark capabilities as implemented - 🎉🎉🎉 160/200 = 80% MILESTONE ACHIEVED! 🎉🎉🎉
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                            31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-                           51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
+                           51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
                            71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
                            91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
-                           111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 129, 130,
+                           111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
                            131, 132, 133, 134, 135, 136, 137, 138, 139, 140,
                            141, 142, 143, 144, 145, 146, 147, 148, 149, 150,
                            151, 152, 153, 154, 155, 156, 157, 158, 159, 160]
@@ -6401,6 +6411,30 @@ async def get_item(item_id: int):
     async def setup_continuous_quality_monitoring(self, project_config: Dict[str, Any]) -> Dict[str, Any]:
         """Capability #130: Continuous quality monitoring"""
         return await self.continuous_quality_monitor.setup_continuous_monitoring(project_config)
+    
+    async def generate_usability_tests(self, application_type: str, target_audience: str = "general", test_goals: List[str] = None) -> Dict[str, Any]:
+        """Capability #127: Usability testing generation"""
+        return await self.usability_testing_generator.generate_usability_tests(application_type, target_audience, test_goals)
+    
+    async def implement_ab_test(self, feature_name: str, variations: List[Dict[str, Any]], success_metrics: List[str] = None) -> Dict[str, Any]:
+        """Capability #128: A/B test implementation"""
+        return await self.ab_test_implementer.implement_ab_test(feature_name, variations, success_metrics)
+    
+    # ============================================================================
+    # DOCUMENTATION GENERATION (61-70)
+    # ============================================================================
+    
+    async def create_user_manual(self, product_name: str, features: List[Dict[str, Any]], target_audience: str = "end_user") -> Dict[str, Any]:
+        """Capability #64: User manual creation"""
+        return await self.user_manual_creator.create_user_manual(product_name, features, target_audience)
+    
+    async def populate_knowledge_base(self, topics: List[str], existing_content: List[Dict] = None) -> Dict[str, Any]:
+        """Capability #67: Knowledge base population"""
+        return await self.knowledge_base_populator.populate_knowledge_base(topics, existing_content)
+    
+    async def create_training_materials(self, course_topic: str, skill_level: str = "beginner", duration_hours: int = 4) -> Dict[str, Any]:
+        """Capability #70: Training material creation"""
+        return await self.training_material_creator.create_training_materials(course_topic, skill_level, duration_hours)
     
     # ============================================================================
     # DATA & ANALYTICS INTEGRATION (131-140)

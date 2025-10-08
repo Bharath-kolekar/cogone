@@ -1325,6 +1325,574 @@ def monitor_performance(func):
         ]
 
 
+class UsabilityTestingGenerator:
+    """Implements capability #127: Usability Testing Generation"""
+    
+    async def generate_usability_tests(self,
+                                      application_type: str,
+                                      target_audience: str = "general",
+                                      test_goals: List[str] = None) -> Dict[str, Any]:
+        """
+        Generates usability test scenarios and plans
+        
+        Args:
+            application_type: Type of application (web, mobile, desktop)
+            target_audience: Target user demographic
+            test_goals: Specific usability goals to test
+            
+        Returns:
+            Complete usability testing plan with scenarios
+        """
+        try:
+            # Define test objectives
+            objectives = self._define_test_objectives(test_goals or [])
+            
+            # Create user personas
+            personas = self._create_user_personas(target_audience)
+            
+            # Generate test scenarios
+            scenarios = self._generate_test_scenarios(application_type, objectives, personas)
+            
+            # Create task lists
+            tasks = self._create_task_lists(scenarios)
+            
+            # Design metrics to measure
+            metrics = self._define_usability_metrics()
+            
+            # Create test protocol
+            protocol = self._create_test_protocol(application_type)
+            
+            # Generate facilitator script
+            script = self._generate_facilitator_script(scenarios, tasks)
+            
+            return {
+                "success": True,
+                "application_type": application_type,
+                "target_audience": target_audience,
+                "test_objectives": objectives,
+                "user_personas": personas,
+                "test_scenarios": scenarios,
+                "task_lists": tasks,
+                "usability_metrics": metrics,
+                "test_protocol": protocol,
+                "facilitator_script": script,
+                "best_practices": self._generate_usability_testing_best_practices()
+            }
+        except Exception as e:
+            logger.error("Usability testing generation failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _define_test_objectives(self, goals: List[str]) -> List[Dict[str, str]]:
+        """Define test objectives"""
+        default_objectives = [
+            {
+                "objective": "Task Completion Rate",
+                "description": "Measure how many users successfully complete core tasks",
+                "metric": "Percentage of successful completions"
+            },
+            {
+                "objective": "Time on Task",
+                "description": "Measure how long it takes users to complete tasks",
+                "metric": "Average time in seconds"
+            },
+            {
+                "objective": "Error Rate",
+                "description": "Track how many errors users encounter",
+                "metric": "Number of errors per task"
+            },
+            {
+                "objective": "Subjective Satisfaction",
+                "description": "Measure user satisfaction with the experience",
+                "metric": "SUS (System Usability Scale) score"
+            }
+        ]
+        
+        # Add custom objectives from goals
+        for goal in goals:
+            default_objectives.append({
+                "objective": goal,
+                "description": f"Evaluate {goal.lower()}",
+                "metric": "User feedback and observations"
+            })
+        
+        return default_objectives
+    
+    def _create_user_personas(self, audience: str) -> List[Dict[str, Any]]:
+        """Create user personas for testing"""
+        personas = [
+            {
+                "name": "Novice User",
+                "description": "First-time user with minimal technical knowledge",
+                "tech_proficiency": "Low",
+                "goals": "Complete basic tasks with guidance",
+                "frustrations": "Complex interfaces, unclear navigation"
+            },
+            {
+                "name": "Intermediate User",
+                "description": "Regular user with moderate experience",
+                "tech_proficiency": "Medium",
+                "goals": "Complete tasks efficiently",
+                "frustrations": "Slow workflows, lack of shortcuts"
+            },
+            {
+                "name": "Power User",
+                "description": "Expert user who uses advanced features",
+                "tech_proficiency": "High",
+                "goals": "Maximize productivity, customize experience",
+                "frustrations": "Limited customization, lack of advanced features"
+            }
+        ]
+        
+        if audience != "general":
+            personas[0]["description"] = f"{audience} first-time user"
+        
+        return personas
+    
+    def _generate_test_scenarios(self, app_type: str, objectives: List[Dict], personas: List[Dict]) -> List[Dict[str, Any]]:
+        """Generate test scenarios"""
+        scenarios = []
+        
+        if app_type == "web" or app_type == "mobile":
+            scenarios.extend([
+                {
+                    "scenario": "First-time User Registration",
+                    "context": "User needs to create an account to access the service",
+                    "task": "Sign up for a new account",
+                    "success_criteria": "Account created within 3 minutes",
+                    "persona": "Novice User"
+                },
+                {
+                    "scenario": "Product Search",
+                    "context": "User wants to find a specific product/feature",
+                    "task": "Search for and locate item X",
+                    "success_criteria": "Item found within 5 clicks",
+                    "persona": "Intermediate User"
+                },
+                {
+                    "scenario": "Checkout/Purchase Flow",
+                    "context": "User wants to complete a transaction",
+                    "task": "Complete purchase from cart to confirmation",
+                    "success_criteria": "Checkout completed without errors",
+                    "persona": "All"
+                }
+            ])
+        
+        if app_type == "desktop":
+            scenarios.extend([
+                {
+                    "scenario": "First Launch Setup",
+                    "context": "User opens application for the first time",
+                    "task": "Complete initial setup and configuration",
+                    "success_criteria": "Setup completed successfully",
+                    "persona": "Novice User"
+                }
+            ])
+        
+        return scenarios
+    
+    def _create_task_lists(self, scenarios: List[Dict]) -> Dict[str, List[str]]:
+        """Create detailed task lists for each scenario"""
+        task_lists = {}
+        
+        for scenario in scenarios:
+            task_lists[scenario["scenario"]] = [
+                f"Navigate to starting point",
+                f"Locate {scenario['task']} option",
+                f"Complete required fields/steps",
+                f"Submit/confirm action",
+                f"Verify successful completion"
+            ]
+        
+        return task_lists
+    
+    def _define_usability_metrics(self) -> Dict[str, Any]:
+        """Define metrics to measure during testing"""
+        return {
+            "quantitative_metrics": [
+                "Task completion rate (%)",
+                "Time on task (seconds)",
+                "Number of errors",
+                "Number of clicks/taps",
+                "Time to first click"
+            ],
+            "qualitative_metrics": [
+                "User satisfaction (1-5 scale)",
+                "Ease of use (1-5 scale)",
+                "Likelihood to recommend (NPS)",
+                "User comments and feedback"
+            ],
+            "behavioral_observations": [
+                "Hesitation points",
+                "Navigation patterns",
+                "Points of confusion",
+                "Unexpected behaviors"
+            ]
+        }
+    
+    def _create_test_protocol(self, app_type: str) -> Dict[str, Any]:
+        """Create testing protocol"""
+        return {
+            "preparation": [
+                "Recruit 5-8 participants per persona",
+                "Prepare test environment",
+                "Set up recording equipment",
+                "Prepare consent forms"
+            ],
+            "session_structure": {
+                "introduction": "5 minutes - Explain process, get consent",
+                "background_questions": "5 minutes - Understand user's context",
+                "task_scenarios": "30 minutes - Complete test tasks",
+                "debrief": "10 minutes - Ask follow-up questions",
+                "total_time": "50 minutes per session"
+            },
+            "recording": {
+                "screen_recording": "Required",
+                "audio_recording": "Required",
+                "video_of_participant": "Optional",
+                "note_taking": "Required"
+            }
+        }
+    
+    def _generate_facilitator_script(self, scenarios: List[Dict], tasks: Dict) -> str:
+        """Generate script for test facilitator"""
+        return '''
+# Usability Testing Facilitator Script
+
+## Introduction (5 minutes)
+"Thank you for participating today. We're testing [Application Name] to understand how real users interact with it. There are no wrong answers - we're testing the software, not you. Please think aloud as you complete tasks, sharing your thoughts and reactions."
+
+## Background Questions (5 minutes)
+- "How often do you use similar applications?"
+- "What devices do you typically use?"
+- "What are your expectations for this type of application?"
+
+## Test Scenarios (30 minutes)
+
+### Scenario 1: [First Scenario]
+"Imagine you want to [scenario context]. Your task is to [task description]. Please proceed when you're ready, and remember to think aloud."
+
+**Observe:**
+- Does user find the starting point?
+- Any hesitation or confusion?
+- Navigation path taken
+- Errors encountered
+
+**If user is stuck (after 3 minutes):**
+"Where would you expect to find this feature?"
+"What would you try next?"
+
+### Scenario 2: [Next Scenario]
+[Repeat format]
+
+## Debrief (10 minutes)
+- "What was your overall impression?"
+- "What did you find most confusing?"
+- "What did you like best?"
+- "On a scale of 1-10, how likely are you to use this application?"
+
+## Closing
+"Thank you for your time and feedback. Your input is invaluable for improving the experience."
+        '''
+    
+    def _generate_usability_testing_best_practices(self) -> List[str]:
+        """Generate usability testing best practices"""
+        return [
+            "✅ Test with 5-8 users per persona (Nielsen Norman Group)",
+            "✅ Use realistic scenarios, not feature demonstrations",
+            "✅ Encourage think-aloud protocol",
+            "✅ Don't lead or help users unless absolutely stuck",
+            "✅ Record sessions for later analysis",
+            "✅ Take notes on observations, not interpretations",
+            "✅ Test early and iterate often",
+            "✅ Include diverse user groups",
+            "✅ Test on actual devices (for mobile/web)",
+            "✅ Analyze data objectively, look for patterns"
+        ]
+
+
+class ABTestImplementer:
+    """Implements capability #128: A/B Test Implementation"""
+    
+    async def implement_ab_test(self,
+                               feature_name: str,
+                               variations: List[Dict[str, Any]],
+                               success_metrics: List[str] = None) -> Dict[str, Any]:
+        """
+        Sets up and manages A/B testing infrastructure
+        
+        Args:
+            feature_name: Name of feature to test
+            variations: List of variations to test (control + variants)
+            success_metrics: Metrics to measure success
+            
+        Returns:
+            Complete A/B test implementation and configuration
+        """
+        try:
+            # Validate variations
+            self._validate_variations(variations)
+            
+            # Define success metrics
+            metrics = success_metrics or self._define_default_metrics()
+            
+            # Calculate sample size
+            sample_size = self._calculate_sample_size()
+            
+            # Generate test configuration
+            config = self._generate_test_configuration(feature_name, variations, metrics)
+            
+            # Create implementation code
+            code = self._generate_implementation_code(feature_name, variations)
+            
+            # Design analytics tracking
+            analytics = self._design_analytics_tracking(feature_name, variations, metrics)
+            
+            # Create analysis plan
+            analysis_plan = self._create_analysis_plan(metrics, sample_size)
+            
+            return {
+                "success": True,
+                "feature_name": feature_name,
+                "variations": variations,
+                "success_metrics": metrics,
+                "required_sample_size": sample_size,
+                "test_configuration": config,
+                "implementation_code": code,
+                "analytics_tracking": analytics,
+                "analysis_plan": analysis_plan,
+                "best_practices": self._generate_ab_testing_best_practices()
+            }
+        except Exception as e:
+            logger.error("A/B test implementation failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _validate_variations(self, variations: List[Dict]) -> None:
+        """Validate variations"""
+        if len(variations) < 2:
+            raise ValueError("Need at least 2 variations (control + 1 variant)")
+        
+        # Check for control
+        has_control = any(v.get("is_control", False) for v in variations)
+        if not has_control:
+            logger.warning("No control variant specified, marking first as control")
+            variations[0]["is_control"] = True
+    
+    def _define_default_metrics(self) -> List[str]:
+        """Define default success metrics"""
+        return [
+            "Conversion Rate",
+            "Click-through Rate (CTR)",
+            "Time on Page",
+            "Bounce Rate",
+            "Revenue per User"
+        ]
+    
+    def _calculate_sample_size(self, baseline_rate: float = 0.10, mde: float = 0.02, 
+                              power: float = 0.80, alpha: float = 0.05) -> Dict[str, Any]:
+        """Calculate required sample size"""
+        # Simplified calculation (in production, use statistical library)
+        # Formula: n ≈ 16 * variance / (mde^2)
+        variance = baseline_rate * (1 - baseline_rate)
+        n_per_variant = int(16 * variance / (mde ** 2))
+        
+        return {
+            "per_variant": n_per_variant,
+            "total_required": n_per_variant * 2,  # Assuming 2 variants
+            "assumptions": {
+                "baseline_conversion_rate": baseline_rate,
+                "minimum_detectable_effect": mde,
+                "statistical_power": power,
+                "significance_level": alpha
+            },
+            "estimated_duration": f"{n_per_variant // 1000} days (assuming 1000 users/day)"
+        }
+    
+    def _generate_test_configuration(self, name: str, variations: List[Dict], metrics: List[str]) -> Dict[str, Any]:
+        """Generate test configuration"""
+        return {
+            "test_id": f"ab_test_{name.lower().replace(' ', '_')}",
+            "test_name": name,
+            "status": "draft",
+            "start_date": None,
+            "end_date": None,
+            "traffic_allocation": {
+                v.get("name", f"Variant {i}"): v.get("traffic_percentage", 50)
+                for i, v in enumerate(variations)
+            },
+            "targeting": {
+                "audience": "all_users",
+                "device_types": ["desktop", "mobile"],
+                "countries": "all"
+            },
+            "success_metrics": metrics,
+            "guardrail_metrics": [
+                "Error Rate",
+                "Page Load Time",
+                "Server Response Time"
+            ]
+        }
+    
+    def _generate_implementation_code(self, name: str, variations: List[Dict]) -> Dict[str, str]:
+        """Generate A/B test implementation code"""
+        return {
+            "client_side": f'''
+// Client-Side A/B Test Implementation
+import {{ ABTestingService }} from './services/ab-testing';
+
+// Initialize A/B test
+const abTest = new ABTestingService();
+
+// Get variant for user
+const variant = await abTest.getVariant('{name}', {{
+  userId: currentUser.id,
+  defaultVariant: 'control'
+}});
+
+// Render based on variant
+if (variant === 'control') {{
+  return <ControlComponent />;
+}} else if (variant === 'variant_a') {{
+  return <VariantAComponent />;
+}}
+
+// Track exposure
+abTest.trackExposure('{name}', variant);
+            ''',
+            "backend_api": f'''
+# Backend A/B Test API
+from fastapi import APIRouter
+from services.ab_testing import ABTestingService
+
+router = APIRouter()
+ab_service = ABTestingService()
+
+@router.get("/ab-test/{{test_name}}/variant")
+async def get_variant(test_name: str, user_id: str):
+    """Get A/B test variant for user"""
+    variant = await ab_service.assign_variant(
+        test_name=test_name,
+        user_id=user_id,
+        sticky=True  # Same user gets same variant
+    )
+    
+    return {{
+        "variant": variant,
+        "test_name": test_name
+    }}
+
+@router.post("/ab-test/{{test_name}}/event")
+async def track_event(test_name: str, user_id: str, event_name: str, value: float = None):
+    """Track A/B test event"""
+    await ab_service.track_event(
+        test_name=test_name,
+        user_id=user_id,
+        event_name=event_name,
+        value=value
+    )
+    
+    return {{"success": True}}
+            ''',
+            "database_schema": '''
+-- A/B Testing Database Schema
+CREATE TABLE ab_tests (
+    test_id VARCHAR(255) PRIMARY KEY,
+    test_name VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    config JSONB NOT NULL
+);
+
+CREATE TABLE ab_test_assignments (
+    assignment_id SERIAL PRIMARY KEY,
+    test_id VARCHAR(255) REFERENCES ab_tests(test_id),
+    user_id VARCHAR(255) NOT NULL,
+    variant VARCHAR(100) NOT NULL,
+    assigned_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(test_id, user_id)
+);
+
+CREATE TABLE ab_test_events (
+    event_id SERIAL PRIMARY KEY,
+    test_id VARCHAR(255) REFERENCES ab_tests(test_id),
+    user_id VARCHAR(255) NOT NULL,
+    variant VARCHAR(100) NOT NULL,
+    event_name VARCHAR(255) NOT NULL,
+    event_value DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_events_test_variant ON ab_test_events(test_id, variant);
+            '''
+        }
+    
+    def _design_analytics_tracking(self, name: str, variations: List[Dict], metrics: List[str]) -> Dict[str, Any]:
+        """Design analytics tracking"""
+        return {
+            "events_to_track": [
+                {"event": "ab_test_exposure", "properties": ["test_name", "variant"]},
+                {"event": "conversion", "properties": ["test_name", "variant", "value"]},
+                {"event": "click", "properties": ["test_name", "variant", "element"]},
+                {"event": "page_view", "properties": ["test_name", "variant", "page"]}
+            ],
+            "analysis_queries": {
+                "conversion_rate": '''
+SELECT 
+    variant,
+    COUNT(DISTINCT CASE WHEN event_name = 'conversion' THEN user_id END) * 100.0 / 
+    COUNT(DISTINCT user_id) as conversion_rate,
+    COUNT(DISTINCT user_id) as sample_size
+FROM ab_test_events
+WHERE test_id = '{test_id}'
+GROUP BY variant;
+                ''',
+                "average_value": '''
+SELECT 
+    variant,
+    AVG(event_value) as avg_value,
+    STDDEV(event_value) as std_dev
+FROM ab_test_events
+WHERE test_id = '{test_id}' AND event_name = 'conversion'
+GROUP BY variant;
+                '''
+            }
+        }
+    
+    def _create_analysis_plan(self, metrics: List[str], sample_size: Dict) -> Dict[str, Any]:
+        """Create analysis plan"""
+        return {
+            "statistical_test": "Two-sample t-test or Chi-square test (depending on metric type)",
+            "significance_level": 0.05,
+            "analysis_frequency": "Daily monitoring, final analysis after sample size reached",
+            "stopping_criteria": [
+                f"Reach required sample size ({sample_size['per_variant']} per variant)",
+                "Detect statistically significant difference (p < 0.05)",
+                "Reach maximum test duration (4 weeks)",
+                "Detect negative impact on guardrail metrics"
+            ],
+            "decision_framework": {
+                "ship_variant": "p < 0.05 AND improvement > MDE AND no negative guardrails",
+                "keep_testing": "Inconclusive results AND haven't reached stopping criteria",
+                "abort_test": "Significant negative impact on key metrics"
+            }
+        }
+    
+    def _generate_ab_testing_best_practices(self) -> List[str]:
+        """Generate A/B testing best practices"""
+        return [
+            "✅ Always have a control group",
+            "✅ Run one test at a time per page/feature (avoid interaction effects)",
+            "✅ Calculate required sample size before starting",
+            "✅ Don't stop tests early (unless serious issues)",
+            "✅ Use consistent assignment (same user gets same variant)",
+            "✅ Monitor guardrail metrics (errors, performance)",
+            "✅ Account for novelty effects (run for full business cycle)",
+            "✅ Validate tracking before launching",
+            "✅ Document hypothesis and expected impact",
+            "✅ Share results regardless of outcome"
+        ]
+
+
 __all__ = [
     'QualityMetricTracker',
     'AccessibilityComplianceChecker',
@@ -1333,6 +1901,8 @@ __all__ = [
     'MobileResponsivenessTester',
     'PerformanceBenchmarker',
     'QualityGatesEnforcer',
-    'ContinuousQualityMonitor'
+    'ContinuousQualityMonitor',
+    'UsabilityTestingGenerator',
+    'ABTestImplementer'
 ]
 
