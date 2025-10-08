@@ -276,6 +276,16 @@ from .smart_coding_ai_requirements import (
     RiskAssessor
 )
 
+# Import Quick Wins implementations (Capabilities 38, 39, 57, 82, 86, 90)
+from .smart_coding_ai_quickwins import (
+    TestOracleGenerator,
+    RegressionTestIdentifier,
+    SecurityComplianceDocumenter,
+    KnowledgeSharingAutomator,
+    BestPracticeDisseminator,
+    CrossTeamCoordinator
+)
+
 logger = structlog.get_logger()
 
 
@@ -1625,12 +1635,21 @@ class SmartCodingAIOptimized:
         self.estimation_automator = EstimationAutomator()
         self.risk_assessor = RiskAssessor()
         
-        # Mark capabilities as implemented (now 95 total)
+        # Quick Wins capabilities (38, 39, 57, 82, 86, 90)
+        self.test_oracle_generator = TestOracleGenerator()
+        self.regression_test_identifier = RegressionTestIdentifier()
+        self.security_compliance_documenter = SecurityComplianceDocumenter()
+        self.knowledge_sharing_automator = KnowledgeSharingAutomator()
+        self.best_practice_disseminator = BestPracticeDisseminator()
+        self.cross_team_coordinator = CrossTeamCoordinator()
+        
+        # Mark capabilities as implemented - 🎉 100/200 = 50% MILESTONE! 🎉
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
-                           31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
-                           51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
-                           71, 72, 73, 74, 75, 77, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
-                           101, 102, 103, 104, 105, 106, 107, 110, 111, 112, 113, 114, 115]
+                           31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 48, 49, 50,
+                           51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
+                           71, 72, 73, 74, 75, 77, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+                           91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 110,
+                           111, 112, 113, 114, 115]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
@@ -6091,6 +6110,34 @@ async def get_item(item_id: int):
     async def assess_risks(self, project_data: Dict[str, Any]) -> Dict[str, Any]:
         """Capability #115: Risk assessment"""
         return await self.risk_assessor.assess_risks(project_data)
+    
+    # ============================================================================
+    # QUICK WINS - COMPLETING CATEGORIES (38, 39, 57, 82, 86, 90)
+    # ============================================================================
+    
+    async def generate_test_oracle(self, function_code: str, inputs: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Capability #38: Test oracle generation"""
+        return await self.test_oracle_generator.generate_test_oracle(function_code, inputs)
+    
+    async def identify_regression_tests(self, code_changes: Dict[str, Any], existing_tests: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Capability #39: Regression test identification"""
+        return await self.regression_test_identifier.identify_regression_tests(code_changes, existing_tests)
+    
+    async def generate_compliance_docs(self, codebase_analysis: Dict[str, Any], standards: List[str] = None) -> Dict[str, Any]:
+        """Capability #57: Security compliance documentation"""
+        return await self.security_compliance_documenter.generate_compliance_docs(codebase_analysis, standards)
+    
+    async def automate_knowledge_sharing(self, team_activity: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #82: Knowledge sharing automation"""
+        return await self.knowledge_sharing_automator.automate_knowledge_sharing(team_activity)
+    
+    async def disseminate_best_practices(self, expert_patterns: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #86: Best practice dissemination"""
+        return await self.best_practice_disseminator.disseminate_best_practices(expert_patterns)
+    
+    async def facilitate_team_coordination(self, teams: List[Dict[str, Any]], shared_goals: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #90: Cross-team coordination"""
+        return await self.cross_team_coordinator.facilitate_coordination(teams, shared_goals)
 
 
 # Global optimized service instance
