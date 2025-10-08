@@ -171,6 +171,18 @@ from .smart_coding_ai_debugging import (
     PerformanceProfiler
 )
 
+# Import testing implementations (Capabilities 31-37, 40)
+from .smart_coding_ai_testing import (
+    TestCaseGenerator,
+    EdgeCaseIdentifier,
+    IntegrationTestCreator,
+    LoadTestingScriptGenerator,
+    SecurityTestGenerator,
+    UITestAutomator,
+    TestDataGenerator,
+    TestCoverageOptimizer
+)
+
 logger = structlog.get_logger()
 
 
@@ -1433,8 +1445,20 @@ class SmartCodingAIOptimized:
         self.db_transaction_analyzer = DatabaseTransactionAnalyzer()
         self.performance_profiler = PerformanceProfiler()
         
-        # Mark capabilities as implemented
-        for cap_id in [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 27, 28, 30]:
+        # Testing implementations (Capabilities 31-37, 40)
+        self.test_case_generator = TestCaseGenerator()
+        self.edge_case_identifier = EdgeCaseIdentifier()
+        self.integration_test_creator = IntegrationTestCreator()
+        self.load_test_generator = LoadTestingScriptGenerator()
+        self.security_test_generator = SecurityTestGenerator()
+        self.ui_test_automator = UITestAutomator()
+        self.test_data_generator = TestDataGenerator()
+        self.test_coverage_optimizer = TestCoverageOptimizer()
+        
+        # Mark capabilities as implemented (now 34 total)
+        implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 27, 28, 30,
+                           31, 32, 33, 34, 35, 36, 37, 40]
+        for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
         logger.info("Capability engine integrated", 
@@ -5722,6 +5746,42 @@ async def get_item(item_id: int):
     async def create_performance_profile(self, code: str, function_name: str = None) -> Dict[str, Any]:
         """Capability #30: Create performance profiling script"""
         return await self.performance_profiler.create_profiling_script(code, function_name)
+    
+    # ============================================================================
+    # TESTING TRANSFORMATION CAPABILITIES (31-37, 40)
+    # ============================================================================
+    
+    async def generate_test_cases(self, code: str, function_name: str = None) -> Dict[str, Any]:
+        """Capability #31: Generate comprehensive test suite"""
+        return await self.test_case_generator.generate_test_cases(code, function_name)
+    
+    async def identify_edge_cases(self, code: str, function_name: str = None) -> Dict[str, Any]:
+        """Capability #32: Identify edge cases and boundary conditions"""
+        return await self.edge_case_identifier.identify_edge_cases(code, function_name)
+    
+    async def create_integration_tests(self, components: List[str], interaction_description: str = None) -> Dict[str, Any]:
+        """Capability #33: Create integration tests"""
+        return await self.integration_test_creator.create_integration_tests(components, interaction_description)
+    
+    async def generate_load_tests(self, endpoint: str, expected_rps: int = 100) -> Dict[str, Any]:
+        """Capability #34: Generate load testing scripts"""
+        return await self.load_test_generator.generate_load_tests(endpoint, expected_rps)
+    
+    async def generate_security_tests(self, code: str, api_endpoints: List[str] = None) -> Dict[str, Any]:
+        """Capability #35: Generate security tests"""
+        return await self.security_test_generator.generate_security_tests(code, api_endpoints)
+    
+    async def generate_ui_tests(self, ui_components: List[str]) -> Dict[str, Any]:
+        """Capability #36: Generate UI/UX tests"""
+        return await self.ui_test_automator.generate_ui_tests(ui_components)
+    
+    async def generate_test_data(self, schema: Dict[str, Any], count: int = 100) -> Dict[str, Any]:
+        """Capability #37: Generate realistic test data"""
+        return await self.test_data_generator.generate_test_data(schema, count)
+    
+    async def optimize_test_coverage(self, code: str, existing_tests: str = None) -> Dict[str, Any]:
+        """Capability #40: Optimize test coverage"""
+        return await self.test_coverage_optimizer.optimize_test_coverage(code, existing_tests)
 
 
 # Global optimized service instance
