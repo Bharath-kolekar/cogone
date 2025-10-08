@@ -132,6 +132,14 @@ from .smart_coding_ai_state import StateManager
 from .smart_coding_ai_dependencies import DependencyTracker
 from .smart_coding_ai_patterns import CodingPatternRecognizer
 
+# Import 200 revolutionary capabilities (Step 12 of refactoring)
+from .smart_coding_ai_capabilities import (
+    capability_engine,
+    CapabilityCategory,
+    Capability,
+    CAPABILITIES
+)
+
 logger = structlog.get_logger()
 
 
@@ -1363,6 +1371,14 @@ class SmartCodingAIOptimized:
         self.performance_architecture = performance_architecture
         self.performance_level = PerformanceLevel.ENTERPRISE  # Highest level
         self.performance_dna_active = True  # Core DNA feature
+        
+        # 200 Revolutionary Capabilities Engine
+        self.capability_engine = capability_engine
+        self.total_capabilities = len(CAPABILITIES)
+        self.capabilities_active = True
+        logger.info("Capability engine integrated", 
+                   total_capabilities=self.total_capabilities,
+                   implemented=capability_engine.capability_stats["implemented"])
         
         # Codebase-Aware AI Memory System
         from .codebase_memory_system import CodebaseMemorySystem
@@ -5504,6 +5520,59 @@ async def get_item(item_id: int):
             return psutil.cpu_percent() / 100
         except:
             return 0.0
+    
+    # ============================================================================
+    # 200 REVOLUTIONARY CAPABILITIES API
+    # ============================================================================
+    
+    async def get_capabilities_overview(self) -> Dict[str, Any]:
+        """Get overview of all 200 capabilities"""
+        return self.capability_engine.get_statistics()
+    
+    async def get_capability_details(self, capability_id: int) -> Optional[Dict[str, Any]]:
+        """Get details of a specific capability"""
+        capability = self.capability_engine.get_capability(capability_id)
+        if capability:
+            return {
+                "id": capability.id,
+                "name": capability.name,
+                "description": capability.description,
+                "category": capability.category.value,
+                "implemented": capability.implemented,
+                "priority": capability.priority
+            }
+        return None
+    
+    async def get_capabilities_by_category(self, category: str) -> List[Dict[str, Any]]:
+        """Get all capabilities in a specific category"""
+        try:
+            cat = CapabilityCategory(category)
+            capabilities = self.capability_engine.get_capabilities_by_category(cat)
+            return [
+                {
+                    "id": cap.id,
+                    "name": cap.name,
+                    "description": cap.description,
+                    "implemented": cap.implemented,
+                    "priority": cap.priority
+                }
+                for cap in capabilities
+            ]
+        except ValueError:
+            return []
+    
+    async def get_implemented_capabilities(self) -> List[Dict[str, Any]]:
+        """Get all currently implemented capabilities"""
+        capabilities = self.capability_engine.get_implemented_capabilities()
+        return [
+            {
+                "id": cap.id,
+                "name": cap.name,
+                "description": cap.description,
+                "category": cap.category.value
+            }
+            for cap in capabilities
+        ]
 
 
 # Global optimized service instance
