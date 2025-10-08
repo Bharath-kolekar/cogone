@@ -107,10 +107,19 @@ from .smart_coding_ai_helpers import (
     EnsembleOptimizer
 )
 
+# Import analyzers from extracted module (Step 4 of refactoring)
+from .smart_coding_ai_analyzers import (
+    ContextAnalyzer,
+    SemanticAnalyzer,
+    CompletionPredictor,
+    ContextClassifier,
+    PatternRecognizer
+)
+
 logger = structlog.get_logger()
 
 
-# Enums, models, and helper services are now imported from separate files
+# Enums, models, helpers, and analyzers are now imported from separate files
 
 
 class CompletionGenerator:
@@ -6332,97 +6341,7 @@ async def get_item(item_id: int):
 
 
 # Supporting classes for optimization
-class ContextAnalyzer:
-    """Advanced context analyzer"""
-    
-    async def analyze(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Analyze code context"""
-        try:
-            # Implement advanced context analysis
-            return {
-                "suggestions": [
-                    {
-                        "text": "context_suggestion",
-                        "type": "function",
-                        "description": "Context-based suggestion"
-                    }
-                ]
-            }
-        except Exception as e:
-            logger.error("Context analysis failed", error=str(e))
-            return {"suggestions": []}
-
-
-class SemanticAnalyzer:
-    """Semantic understanding analyzer"""
-    
-    async def analyze(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Analyze semantic meaning"""
-        try:
-            # Implement semantic analysis
-            return {
-                "suggestions": [
-                    {
-                        "text": "semantic_suggestion",
-                        "type": "variable",
-                        "description": "Semantic-based suggestion"
-                    }
-                ]
-            }
-        except Exception as e:
-            logger.error("Semantic analysis failed", error=str(e))
-            return {"suggestions": []}
-
-
-# PatternMatcher, MLPredictor, EnsembleOptimizer extracted to smart_coding_ai_helpers.py
-
-
-class CompletionPredictor:
-    """Completion predictor"""
-    
-    async def predict(self, context: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Predict completions"""
-        try:
-            return []
-        except Exception as e:
-            logger.error("Completion prediction failed", error=str(e))
-            return []
-
-
-class ContextClassifier:
-    """Context classifier"""
-    
-    async def classify(self, context: Dict[str, Any]) -> str:
-        """Classify context"""
-        try:
-            return "code"
-        except Exception as e:
-            logger.error("Context classification failed", error=str(e))
-            return "unknown"
-
-
-class SemanticAnalyzer:
-    """Semantic analyzer"""
-    
-    async def analyze(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Analyze semantics"""
-        try:
-            return {"semantic_score": 0.95}
-        except Exception as e:
-            logger.error("Semantic analysis failed", error=str(e))
-            return {"semantic_score": 0.0}
-
-
-class PatternRecognizer:
-    """Pattern recognizer"""
-    
-    async def recognize(self, text: str) -> List[Dict[str, Any]]:
-        """Recognize patterns"""
-        try:
-            return []
-        except Exception as e:
-            logger.error("Pattern recognition failed", error=str(e))
-            return []
+# Analyzer classes extracted to smart_coding_ai_analyzers.py
 
 
 class EnsemblePredictor:
