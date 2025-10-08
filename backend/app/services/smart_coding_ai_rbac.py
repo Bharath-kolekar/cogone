@@ -1,5 +1,6 @@
 """
 Smart Coding AI Management - RBAC Manager
+Role-Based Access Control for Smart Coding AI
 Extracted from smart_coding_ai_optimized.py
 """
 

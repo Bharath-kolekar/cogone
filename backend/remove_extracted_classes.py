@@ -42,9 +42,9 @@ def remove_classes(source_file, class_names):
     
     print(f"Removed {len(class_names)} classes from {source_file}")
 
-# Remove the infrastructure classes
+# Remove the RBAC manager class
 remove_classes('app/services/smart_coding_ai_optimized.py', 
-               ['QueueService', 'TelemetryService', 'OAuthService'])
+               ['RBACManager'])
 
 print("Done!")
 
