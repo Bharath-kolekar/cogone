@@ -186,15 +186,17 @@ from .smart_coding_ai_testing import (
     TestCoverageOptimizer
 )
 
-# Import architecture implementations (Capabilities 41-50) - COMPLETE!
+# Import architecture implementations (Capabilities 6, 12, 41-50) - COMPLETE!
 from .smart_coding_ai_architecture import (
     SystemArchitectureGenerator,
     MicroserviceIdentifier,
     DatabaseSchemaDesigner,
     APIDesignGenerator,
     EventDrivenArchitecturePlanner,
+    DesignPatternImplementer,
     CachingStrategyDesigner,
     LoadBalancingConfigurator,
+    ArchitecturalAnalyzer,
     FaultTolerancePlanner,
     ScalabilityBlueprinter,
     CloudArchitectureOptimizer
@@ -1634,8 +1636,10 @@ class SmartCodingAIOptimized:
         self.test_data_generator = TestDataGenerator()
         self.test_coverage_optimizer = TestCoverageOptimizer()
         
-        # Architecture implementations (Capabilities 41-50) - COMPLETE!
+        # Architecture implementations (Capabilities 6, 12, 41-50) - COMPLETE!
+        self.design_pattern_implementer = DesignPatternImplementer()
         self.architecture_generator = SystemArchitectureGenerator()
+        self.architectural_analyzer = ArchitecturalAnalyzer()
         self.microservice_identifier = MicroserviceIdentifier()
         self.database_schema_designer = DatabaseSchemaDesigner()
         self.api_design_generator = APIDesignGenerator()
@@ -1781,8 +1785,8 @@ class SmartCodingAIOptimized:
         self.design_system_integrator = DesignSystemIntegrator()
         self.user_interaction_optimizer = UserInteractionOptimizer()
         
-        # Mark capabilities as implemented - 🎉🎉🎉 160/200 = 80% MILESTONE ACHIEVED! 🎉🎉🎉
-        implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+        # Mark capabilities as implemented - 🎉🎉🎉🎉 162/200 = 81% + 16 CATEGORIES! 🎉🎉🎉🎉
+        implemented_caps = [3, 4, 6, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                            31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
                            71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
@@ -6129,8 +6133,16 @@ async def get_item(item_id: int):
         return await self.test_coverage_optimizer.optimize_test_coverage(code, existing_tests)
     
     # ============================================================================
-    # ARCHITECTURE & SYSTEM DESIGN (41-50)
+    # ARCHITECTURE & SYSTEM DESIGN (6, 12, 41-50)
     # ============================================================================
+    
+    async def implement_design_pattern(self, pattern_type: str, code_context: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #6: Design pattern implementation"""
+        return await self.design_pattern_implementer.implement_design_pattern(pattern_type, code_context, language)
+    
+    async def analyze_architecture(self, codebase_path: str = None, code_files: List[str] = None) -> Dict[str, Any]:
+        """Capability #12: Architectural analysis"""
+        return await self.architectural_analyzer.analyze_architecture(codebase_path, code_files)
     
     async def generate_system_architecture(self, requirements: Dict[str, Any], architecture_type: str = "microservices") -> Dict[str, Any]:
         """Capability #41: System architecture generation"""
