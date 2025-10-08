@@ -42,9 +42,9 @@ def remove_classes(source_file, class_names):
     
     print(f"Removed {len(class_names)} classes from {source_file}")
 
-# Remove the RBAC manager class
+# Remove DependencyTracker and CodingPatternRecognizer
 remove_classes('app/services/smart_coding_ai_optimized.py', 
-               ['RBACManager'])
+               ['DependencyTracker', 'CodingPatternRecognizer'])
 
 print("Done!")
 
