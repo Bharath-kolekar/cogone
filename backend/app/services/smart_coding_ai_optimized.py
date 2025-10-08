@@ -150,6 +150,15 @@ from .smart_coding_ai_advanced_intelligence import (
     ConfigurationManager
 )
 
+# Import advanced analysis implementations (Capabilities 14-20)
+from .smart_coding_ai_advanced_analysis import (
+    ComplexityAnalyzer,
+    TechnicalDebtAssessor,
+    CodeSmellDetector,
+    PerformanceBottleneckDetector,
+    ComplianceChecker
+)
+
 logger = structlog.get_logger()
 
 
@@ -1395,8 +1404,15 @@ class SmartCodingAIOptimized:
         self.logging_implementor = LoggingImplementor()
         self.configuration_manager = ConfigurationManager()
         
+        # Advanced Analysis implementations (Capabilities 14-20)
+        self.complexity_analyzer = ComplexityAnalyzer()
+        self.technical_debt_assessor = TechnicalDebtAssessor()
+        self.code_smell_detector = CodeSmellDetector()
+        self.performance_bottleneck_detector = PerformanceBottleneckDetector()
+        self.compliance_checker = ComplianceChecker()
+        
         # Mark capabilities as implemented
-        for cap_id in [3, 4, 7, 8, 9, 10]:
+        for cap_id in [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 20]:
             self.capability_engine.mark_implemented(cap_id)
         
         logger.info("Capability engine integrated", 
@@ -5624,6 +5640,30 @@ async def get_item(item_id: int):
     async def generate_configuration(self, project_type: str, environment: str = "development") -> Dict[str, Any]:
         """Capability #10: Generate configuration files"""
         return await self.configuration_manager.generate_configuration(project_type, environment)
+    
+    # ============================================================================
+    # ADVANCED CODE ANALYSIS CAPABILITIES (14-20)
+    # ============================================================================
+    
+    async def analyze_complexity(self, code: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #14: Analyze code complexity"""
+        return await self.complexity_analyzer.analyze_complexity(code, language)
+    
+    async def assess_technical_debt(self, codebase_path: str = None, code_sample: str = None) -> Dict[str, Any]:
+        """Capability #15: Assess technical debt"""
+        return await self.technical_debt_assessor.assess_technical_debt(codebase_path, code_sample)
+    
+    async def detect_code_smells(self, code: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #16: Detect code smells"""
+        return await self.code_smell_detector.detect_code_smells(code, language)
+    
+    async def detect_performance_bottlenecks(self, code: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #17: Detect performance bottlenecks"""
+        return await self.performance_bottleneck_detector.detect_bottlenecks(code, language)
+    
+    async def check_compliance(self, code: str, standard: str = "pep8", language: str = "python") -> Dict[str, Any]:
+        """Capability #20: Check code compliance"""
+        return await self.compliance_checker.check_compliance(code, standard, language)
 
 
 # Global optimized service instance
