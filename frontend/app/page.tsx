@@ -9,6 +9,7 @@ import { NeuralNLPDashboard } from '@/components/nlp/neural-nlp-dashboard'
 import { SmartCodingDashboard } from '@/components/smart-coding/smart-coding-dashboard'
 import { AdvancedSmartCodingDashboard } from '@/components/smart-coding/advanced-smart-coding-dashboard'
 import { SmartCodingAILiveDemo } from '@/components/SmartCodingAILiveDemo'
+import { UnifiedAdvancedDashboard } from '@/components/smart-coding/unified-advanced-dashboard'
 
 export default function HomePage() {
   return (
@@ -127,6 +128,25 @@ export default function HomePage() {
                 Perfect goal alignment
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Advanced AI Features Section - NEW */}
+      <section className="py-16 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Advanced AI Features
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Multi-agent code review, gap detection & resolution, 11-validator system, 
+              consciousness-level AI, and autonomous learning - all integrated for maximum code quality.
+            </p>
+          </div>
+          
+          <div className="max-w-7xl mx-auto">
+            <UnifiedAdvancedDashboard />
           </div>
         </div>
       </section>
