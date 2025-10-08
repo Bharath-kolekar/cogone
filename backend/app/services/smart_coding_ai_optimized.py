@@ -195,6 +195,19 @@ from .smart_coding_ai_architecture import (
     MigrationPathPlanner
 )
 
+# Import security implementations (Capabilities 51-60)
+from .smart_coding_ai_security import (
+    SecurityHardener,
+    CryptographicImplementer,
+    AuthenticationGenerator,
+    InputValidationGenerator,
+    SecurityHeaderImplementer,
+    DependencyVulnerabilityMonitor,
+    PenetrationTestSimulator,
+    SecurityCodeReviewer,
+    IncidentResponsePlanner
+)
+
 logger = structlog.get_logger()
 
 
@@ -1477,9 +1490,21 @@ class SmartCodingAIOptimized:
         self.scalability_blueprinter = ScalabilityBlueprinter()
         self.migration_path_planner = MigrationPathPlanner()
         
-        # Mark capabilities as implemented (now 42 total)
-        implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 27, 28, 30,
-                           31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50]
+        # Security implementations (Capabilities 51-60, excluding 19 already implemented)
+        self.security_hardener = SecurityHardener()
+        self.cryptographic_implementer = CryptographicImplementer()
+        self.authentication_generator = AuthenticationGenerator()
+        self.input_validation_generator = InputValidationGenerator()
+        self.security_header_implementer = SecurityHeaderImplementer()
+        self.dependency_vulnerability_monitor = DependencyVulnerabilityMonitor()
+        self.penetration_test_simulator = PenetrationTestSimulator()
+        self.security_code_reviewer = SecurityCodeReviewer()
+        self.incident_response_planner = IncidentResponsePlanner()
+        
+        # Mark capabilities as implemented (now 51 total)
+        implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
+                           31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
+                           51, 52, 53, 54, 55, 56, 58, 59, 60]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
