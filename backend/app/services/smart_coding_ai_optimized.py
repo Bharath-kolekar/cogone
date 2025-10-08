@@ -140,6 +140,16 @@ from .smart_coding_ai_capabilities import (
     CAPABILITIES
 )
 
+# Import advanced intelligence implementations (Capabilities 3-10)
+from .smart_coding_ai_advanced_intelligence import (
+    AlgorithmImplementor,
+    APIIntegrator,
+    DataStructureSelector,
+    ErrorHandlingGenerator,
+    LoggingImplementor,
+    ConfigurationManager
+)
+
 logger = structlog.get_logger()
 
 
@@ -1376,6 +1386,19 @@ class SmartCodingAIOptimized:
         self.capability_engine = capability_engine
         self.total_capabilities = len(CAPABILITIES)
         self.capabilities_active = True
+        
+        # Advanced Intelligence implementations (Capabilities 3-10)
+        self.algorithm_implementor = AlgorithmImplementor()
+        self.api_integrator = APIIntegrator()
+        self.data_structure_selector = DataStructureSelector()
+        self.error_handler_generator = ErrorHandlingGenerator()
+        self.logging_implementor = LoggingImplementor()
+        self.configuration_manager = ConfigurationManager()
+        
+        # Mark capabilities as implemented
+        for cap_id in [3, 4, 7, 8, 9, 10]:
+            self.capability_engine.mark_implemented(cap_id)
+        
         logger.info("Capability engine integrated", 
                    total_capabilities=self.total_capabilities,
                    implemented=capability_engine.capability_stats["implemented"])
@@ -5573,6 +5596,34 @@ async def get_item(item_id: int):
             }
             for cap in capabilities
         ]
+    
+    # ============================================================================
+    # ADVANCED CODE INTELLIGENCE CAPABILITIES (3-10)
+    # ============================================================================
+    
+    async def implement_algorithm(self, description: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #3: Generate algorithm from description"""
+        return await self.algorithm_implementor.implement_algorithm(description, language)
+    
+    async def generate_api_integration(self, api_spec: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #4: Generate API integration code"""
+        return await self.api_integrator.generate_api_integration(api_spec)
+    
+    async def recommend_data_structure(self, requirements: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #7: Recommend optimal data structure"""
+        return await self.data_structure_selector.recommend_data_structure(requirements)
+    
+    async def add_error_handling(self, code: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #8: Add comprehensive error handling"""
+        return await self.error_handler_generator.add_error_handling(code, language)
+    
+    async def add_logging(self, code: str, language: str = "python", log_level: str = "info") -> Dict[str, Any]:
+        """Capability #9: Add logging statements"""
+        return await self.logging_implementor.add_logging(code, language, log_level)
+    
+    async def generate_configuration(self, project_type: str, environment: str = "development") -> Dict[str, Any]:
+        """Capability #10: Generate configuration files"""
+        return await self.configuration_manager.generate_configuration(project_type, environment)
 
 
 # Global optimized service instance
