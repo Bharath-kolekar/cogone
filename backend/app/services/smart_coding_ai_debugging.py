@@ -946,6 +946,759 @@ def benchmark(func, iterations=1000):
 '''
 
 
+class HeisenbugReproducer:
+    """Implements capability #25: Heisenbug Reproduction"""
+    
+    async def help_reproduce_heisenbug(self, 
+                                       bug_description: str,
+                                       code: str,
+                                       failure_conditions: Dict[str, Any] = None) -> Dict[str, Any]:
+        """
+        Helps reproduce elusive timing-related bugs (Heisenbugs)
+        
+        Args:
+            bug_description: Description of the intermittent bug
+            code: Code where the bug occurs
+            failure_conditions: Known conditions when bug appears
+            
+        Returns:
+            Reproduction strategy and instrumentation code
+        """
+        try:
+            # Analyze timing dependencies
+            timing_issues = self._analyze_timing_dependencies(code)
+            
+            # Identify race conditions
+            race_conditions = self._identify_potential_races(code)
+            
+            # Generate reproduction environment
+            repro_environment = self._generate_reproduction_environment(
+                bug_description, 
+                failure_conditions or {}
+            )
+            
+            # Create instrumentation
+            instrumentation = self._generate_heisenbug_instrumentation(code, timing_issues)
+            
+            # Develop reproduction strategy
+            strategy = self._develop_reproduction_strategy(
+                timing_issues, 
+                race_conditions,
+                failure_conditions or {}
+            )
+            
+            return {
+                "success": True,
+                "bug_type": "heisenbug" if self._is_heisenbug(bug_description) else "timing-dependent",
+                "timing_issues": timing_issues,
+                "race_conditions": race_conditions,
+                "reproduction_strategy": strategy,
+                "reproduction_environment": repro_environment,
+                "instrumentation_code": instrumentation,
+                "debugging_tips": self._generate_heisenbug_debugging_tips()
+            }
+        except Exception as e:
+            logger.error("Heisenbug reproduction assistance failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _analyze_timing_dependencies(self, code: str) -> List[Dict[str, Any]]:
+        """Analyze timing-dependent code patterns"""
+        issues = []
+        
+        # Check for sleep/wait patterns
+        if "sleep" in code.lower() or "wait" in code.lower():
+            issues.append({
+                "type": "explicit_timing",
+                "severity": "high",
+                "description": "Code contains explicit timing delays",
+                "impact": "May behave differently under different system loads"
+            })
+        
+        # Check for threading
+        if any(keyword in code for keyword in ["Thread", "threading", "async", "await"]):
+            issues.append({
+                "type": "concurrent_execution",
+                "severity": "critical",
+                "description": "Concurrent code execution detected",
+                "impact": "Non-deterministic execution order possible"
+            })
+        
+        # Check for network/IO operations
+        if any(keyword in code for keyword in ["request", "socket", "open(", "read(", "write("]):
+            issues.append({
+                "type": "io_dependency",
+                "severity": "high",
+                "description": "I/O operations that may have variable timing",
+                "impact": "External factors affect timing"
+            })
+        
+        return issues
+    
+    def _identify_potential_races(self, code: str) -> List[Dict[str, str]]:
+        """Identify potential race conditions"""
+        races = []
+        
+        # Check for shared state without locks
+        if "global" in code and "lock" not in code.lower():
+            races.append({
+                "location": "global_variable_access",
+                "type": "data_race",
+                "description": "Global variables accessed without synchronization"
+            })
+        
+        # Check for multiple threads accessing same resource
+        if "threading" in code and "Lock" not in code:
+            races.append({
+                "location": "threading_without_locks",
+                "type": "synchronization_issue",
+                "description": "Threading used without explicit locking"
+            })
+        
+        return races
+    
+    def _generate_reproduction_environment(self, 
+                                          bug_desc: str,
+                                          conditions: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate controlled environment for reproduction"""
+        return {
+            "isolation": "Run in isolated environment (container/VM)",
+            "load_simulation": "Simulate system load to trigger timing issues",
+            "network_conditions": {
+                "latency": "Add artificial network latency (tc, toxiproxy)",
+                "jitter": "Introduce timing variability"
+            },
+            "system_settings": {
+                "cpu_affinity": "Pin to specific CPU cores",
+                "priority": "Adjust process priority",
+                "scheduler": "Test with different schedulers"
+            },
+            "stress_testing": "Run under various load conditions",
+            "repetition": "Repeat test 1000+ times to trigger rare conditions"
+        }
+    
+    def _generate_heisenbug_instrumentation(self, 
+                                           code: str,
+                                           timing_issues: List[Dict]) -> str:
+        """Generate instrumentation to catch heisenbugs"""
+        return '''
+# Heisenbug Instrumentation
+import time
+import threading
+import logging
+from functools import wraps
+
+# Configure detailed logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s.%(msecs)03d [%(threadName)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+
+def trace_execution(func):
+    """Trace function execution with precise timing"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        thread_id = threading.current_thread().ident
+        start = time.perf_counter()
+        
+        logging.debug(f"ENTER {func.__name__} | Thread: {thread_id} | Args: {args}")
+        
+        try:
+            result = func(*args, **kwargs)
+            elapsed = time.perf_counter() - start
+            logging.debug(f"EXIT {func.__name__} | Thread: {thread_id} | Time: {elapsed:.6f}s | Result: {result}")
+            return result
+        except Exception as e:
+            elapsed = time.perf_counter() - start
+            logging.error(f"ERROR {func.__name__} | Thread: {thread_id} | Time: {elapsed:.6f}s | Error: {e}")
+            raise
+    
+    return wrapper
+
+# Add thread safety checker
+class ThreadSafetyChecker:
+    """Detect potential race conditions"""
+    def __init__(self):
+        self.access_log = []
+        self.lock = threading.Lock()
+    
+    def log_access(self, variable_name, operation, value):
+        """Log variable access"""
+        with self.lock:
+            self.access_log.append({
+                "time": time.perf_counter(),
+                "thread": threading.current_thread().ident,
+                "variable": variable_name,
+                "operation": operation,
+                "value": value
+            })
+    
+    def check_races(self):
+        """Check for potential race conditions"""
+        # Analyze access patterns
+        by_variable = {}
+        for access in self.access_log:
+            var = access["variable"]
+            if var not in by_variable:
+                by_variable[var] = []
+            by_variable[var].append(access)
+        
+        races = []
+        for var, accesses in by_variable.items():
+            threads = set(a["thread"] for a in accesses)
+            if len(threads) > 1:
+                races.append(f"Potential race on {var}: accessed by {len(threads)} threads")
+        
+        return races
+
+# Global checker instance
+checker = ThreadSafetyChecker()
+'''
+    
+    def _develop_reproduction_strategy(self,
+                                      timing_issues: List[Dict],
+                                      race_conditions: List[Dict],
+                                      conditions: Dict[str, Any]) -> List[str]:
+        """Develop step-by-step reproduction strategy"""
+        strategy = [
+            "1. Add comprehensive logging with timestamps",
+            "2. Instrument all thread/async operations",
+            "3. Run test in loop (1000+ iterations)",
+            "4. Vary system conditions (load, timing)",
+            "5. Use thread sanitizers (TSan) if available",
+            "6. Add assertions for invariants",
+            "7. Use deterministic scheduling tools (rr, Chaos testing)",
+            "8. Monitor system metrics during failures",
+            "9. Capture full state on failure",
+            "10. Use tools like ThreadSanitizer, Valgrind helgrind"
+        ]
+        
+        if race_conditions:
+            strategy.append("11. Focus on areas with identified race conditions")
+        
+        if any(t["type"] == "io_dependency" for t in timing_issues):
+            strategy.append("12. Mock I/O to make timing deterministic")
+        
+        return strategy
+    
+    def _is_heisenbug(self, description: str) -> bool:
+        """Check if bug matches heisenbug characteristics"""
+        heisenbug_keywords = [
+            "intermittent", "sometimes", "occasionally", "random",
+            "can't reproduce", "disappears when debugging", "timing",
+            "race condition", "only in production"
+        ]
+        return any(keyword in description.lower() for keyword in heisenbug_keywords)
+    
+    def _generate_heisenbug_debugging_tips(self) -> List[str]:
+        """Generate tips for debugging heisenbugs"""
+        return [
+            "💡 Don't add debugger breakpoints - they change timing!",
+            "📊 Use non-intrusive logging instead",
+            "🔄 Run tests in parallel to increase probability",
+            "⏱️ Record execution with tools like 'rr' for deterministic replay",
+            "🧪 Use chaos engineering to inject timing variability",
+            "🔒 Check all shared state for proper synchronization",
+            "📈 Monitor CPU, memory, network during failures",
+            "🎯 Add invariant checks without changing timing",
+            "🔬 Use static analysis tools (ThreadSanitizer, Helgrind)",
+            "📝 Keep detailed logs of when bug appears vs doesn't"
+        ]
+
+
+class MemoryCorruptionDetector:
+    """Implements capability #26: Memory Corruption Detection"""
+    
+    async def detect_memory_corruption(self, 
+                                      code: str,
+                                      language: str = "python") -> Dict[str, Any]:
+        """
+        Identifies buffer overflows and memory corruption issues
+        
+        Args:
+            code: Code to analyze
+            language: Programming language
+            
+        Returns:
+            Memory corruption vulnerabilities and fixes
+        """
+        try:
+            # Analyze memory operations
+            memory_issues = self._analyze_memory_operations(code, language)
+            
+            # Check for buffer overflows
+            buffer_issues = self._check_buffer_overflows(code, language)
+            
+            # Detect use-after-free
+            uaf_issues = self._detect_use_after_free(code, language)
+            
+            # Check for memory leaks
+            leak_issues = self._detect_memory_leaks(code)
+            
+            # Generate fixes
+            fixes = self._generate_memory_fixes(
+                memory_issues + buffer_issues + uaf_issues + leak_issues
+            )
+            
+            # Recommend tools
+            tools = self._recommend_memory_tools(language)
+            
+            return {
+                "success": True,
+                "language": language,
+                "issues_found": len(memory_issues + buffer_issues + uaf_issues + leak_issues),
+                "memory_issues": memory_issues,
+                "buffer_overflows": buffer_issues,
+                "use_after_free": uaf_issues,
+                "memory_leaks": leak_issues,
+                "recommended_fixes": fixes,
+                "detection_tools": tools,
+                "prevention_guidelines": self._generate_prevention_guidelines(language)
+            }
+        except Exception as e:
+            logger.error("Memory corruption detection failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _analyze_memory_operations(self, code: str, language: str) -> List[Dict[str, Any]]:
+        """Analyze memory operations for potential issues"""
+        issues = []
+        
+        if language in ["c", "cpp", "c++"]:
+            # Check for unsafe operations
+            if "strcpy" in code or "strcat" in code:
+                issues.append({
+                    "severity": "critical",
+                    "type": "unsafe_string_operation",
+                    "description": "Using unsafe string functions (strcpy, strcat)",
+                    "cwe": "CWE-120: Buffer Copy without Checking Size of Input"
+                })
+            
+            if "malloc" in code and "free" not in code:
+                issues.append({
+                    "severity": "high",
+                    "type": "memory_leak",
+                    "description": "malloc without corresponding free",
+                    "cwe": "CWE-401: Memory Leak"
+                })
+            
+            if "gets(" in code:
+                issues.append({
+                    "severity": "critical",
+                    "type": "buffer_overflow",
+                    "description": "Using gets() - always unsafe!",
+                    "cwe": "CWE-676: Use of Potentially Dangerous Function"
+                })
+        
+        elif language == "python":
+            # Python has automatic memory management, but can still have issues
+            if "ctypes" in code or "cffi" in code:
+                issues.append({
+                    "severity": "medium",
+                    "type": "manual_memory_management",
+                    "description": "Manual memory management via ctypes/cffi",
+                    "cwe": "CWE-404: Improper Resource Shutdown"
+                })
+        
+        return issues
+    
+    def _check_buffer_overflows(self, code: str, language: str) -> List[Dict[str, str]]:
+        """Check for buffer overflow vulnerabilities"""
+        issues = []
+        
+        if language in ["c", "cpp", "c++"]:
+            # Array access without bounds checking
+            if "[" in code and "sizeof" not in code:
+                issues.append({
+                    "type": "potential_overflow",
+                    "description": "Array access without bounds checking",
+                    "fix": "Add bounds checking before array access"
+                })
+            
+            # Fixed-size buffer with user input
+            if "char" in code and "scanf" in code:
+                issues.append({
+                    "type": "input_overflow",
+                    "description": "Reading user input into fixed-size buffer",
+                    "fix": "Use scanf with width specifier or safer alternatives"
+                })
+        
+        return issues
+    
+    def _detect_use_after_free(self, code: str, language: str) -> List[Dict[str, str]]:
+        """Detect use-after-free vulnerabilities"""
+        issues = []
+        
+        if language in ["c", "cpp", "c++"]:
+            # Simple pattern: free followed by potential use
+            if "free(" in code:
+                issues.append({
+                    "type": "potential_uaf",
+                    "description": "Pointer freed but may be used later",
+                    "fix": "Set pointer to NULL after free, check before use"
+                })
+        
+        return issues
+    
+    def _detect_memory_leaks(self, code: str) -> List[Dict[str, str]]:
+        """Detect memory leaks"""
+        issues = []
+        
+        # Allocations without deallocation
+        if "new " in code and "delete" not in code:
+            issues.append({
+                "type": "cpp_memory_leak",
+                "description": "new without corresponding delete",
+                "fix": "Use smart pointers (unique_ptr, shared_ptr) or add delete"
+            })
+        
+        return issues
+    
+    def _generate_memory_fixes(self, issues: List[Dict]) -> List[Dict[str, str]]:
+        """Generate fixes for memory issues"""
+        fixes = []
+        
+        for issue in issues:
+            fix_dict = {
+                "issue": issue.get("description", issue.get("type")),
+                "severity": issue.get("severity", "medium"),
+                "fix": issue.get("fix", "Review and apply secure coding practices")
+            }
+            
+            # Add code example
+            if "strcpy" in str(issue):
+                fix_dict["code_example"] = '''
+// Instead of:
+strcpy(dest, src);  // UNSAFE!
+
+// Use:
+strncpy(dest, src, sizeof(dest) - 1);
+dest[sizeof(dest) - 1] = '\\0';
+
+// Or better:
+#include <string.h>
+size_t len = strnlen(src, sizeof(dest) - 1);
+memcpy(dest, src, len);
+dest[len] = '\\0';
+'''
+            
+            fixes.append(fix_dict)
+        
+        return fixes
+    
+    def _recommend_memory_tools(self, language: str) -> List[Dict[str, str]]:
+        """Recommend memory analysis tools"""
+        tools = [
+            {
+                "tool": "Valgrind",
+                "purpose": "Memory leak detection, invalid access",
+                "command": "valgrind --leak-check=full ./program"
+            },
+            {
+                "tool": "AddressSanitizer (ASan)",
+                "purpose": "Buffer overflows, use-after-free",
+                "command": "gcc -fsanitize=address -g program.c"
+            },
+            {
+                "tool": "MemorySanitizer (MSan)",
+                "purpose": "Uninitialized memory reads",
+                "command": "clang -fsanitize=memory program.c"
+            }
+        ]
+        
+        if language == "python":
+            tools.append({
+                "tool": "memory_profiler",
+                "purpose": "Memory usage profiling",
+                "command": "pip install memory_profiler; python -m memory_profiler script.py"
+            })
+        
+        return tools
+    
+    def _generate_prevention_guidelines(self, language: str) -> List[str]:
+        """Generate prevention guidelines"""
+        guidelines = [
+            "✅ Always validate input sizes before copying",
+            "✅ Use safe string functions (strncpy, snprintf)",
+            "✅ Check array bounds before access",
+            "✅ Set pointers to NULL after freeing",
+            "✅ Use automated tools (Valgrind, ASan) in CI/CD",
+            "✅ Enable compiler warnings (-Wall -Wextra)",
+            "✅ Use static analysis tools",
+            "✅ Implement RAII pattern for resource management"
+        ]
+        
+        if language in ["c", "cpp", "c++"]:
+            guidelines.extend([
+                "✅ Prefer std::string over char arrays",
+                "✅ Use std::vector over raw arrays",
+                "✅ Use smart pointers (unique_ptr, shared_ptr)",
+                "✅ Enable compiler sanitizers in development"
+            ])
+        
+        return guidelines
+
+
+class ConcurrentExecutionVisualizer:
+    """Implements capability #29: Concurrent Execution Visualization"""
+    
+    async def visualize_concurrent_execution(self,
+                                            code: str,
+                                            execution_trace: Dict[str, Any] = None) -> Dict[str, Any]:
+        """
+        Shows how parallel code executes
+        
+        Args:
+            code: Concurrent code to visualize
+            execution_trace: Optional execution trace data
+            
+        Returns:
+            Visualization data and timeline
+        """
+        try:
+            # Analyze concurrent structure
+            structure = self._analyze_concurrent_structure(code)
+            
+            # Generate execution timeline
+            timeline = self._generate_execution_timeline(code, structure)
+            
+            # Create thread interaction diagram
+            interactions = self._create_thread_interaction_diagram(structure)
+            
+            # Identify synchronization points
+            sync_points = self._identify_synchronization_points(code)
+            
+            # Generate visualization code
+            viz_code = self._generate_visualization_code(structure, timeline)
+            
+            return {
+                "success": True,
+                "concurrent_structure": structure,
+                "execution_timeline": timeline,
+                "thread_interactions": interactions,
+                "synchronization_points": sync_points,
+                "visualization_code": viz_code,
+                "visualization_tools": self._recommend_visualization_tools()
+            }
+        except Exception as e:
+            logger.error("Concurrent execution visualization failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _analyze_concurrent_structure(self, code: str) -> Dict[str, Any]:
+        """Analyze concurrent execution structure"""
+        structure = {
+            "threads": [],
+            "async_tasks": [],
+            "processes": [],
+            "shared_resources": [],
+            "locks": []
+        }
+        
+        # Detect threads
+        if "threading.Thread" in code or "Thread(" in code:
+            # Simple pattern matching for demo
+            thread_count = code.count("Thread(")
+            structure["threads"] = [f"Thread-{i}" for i in range(1, thread_count + 1)]
+        
+        # Detect async tasks
+        if "async def" in code or "asyncio" in code:
+            async_count = code.count("async def")
+            structure["async_tasks"] = [f"Task-{i}" for i in range(1, async_count + 1)]
+        
+        # Detect multiprocessing
+        if "multiprocessing" in code or "Process(" in code:
+            proc_count = code.count("Process(")
+            structure["processes"] = [f"Process-{i}" for i in range(1, proc_count + 1)]
+        
+        # Detect shared resources
+        if "Queue" in code:
+            structure["shared_resources"].append("Queue")
+        if "global " in code:
+            structure["shared_resources"].append("Global variables")
+        
+        # Detect locks
+        if "Lock()" in code:
+            structure["locks"].append("Mutex lock")
+        if "Semaphore" in code:
+            structure["locks"].append("Semaphore")
+        
+        return structure
+    
+    def _generate_execution_timeline(self, 
+                                    code: str,
+                                    structure: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Generate execution timeline"""
+        timeline = []
+        
+        # Generate sample timeline for threads
+        for i, thread in enumerate(structure["threads"]):
+            timeline.append({
+                "entity": thread,
+                "type": "thread",
+                "events": [
+                    {"time": 0.0, "event": "created"},
+                    {"time": 0.001, "event": "started"},
+                    {"time": 0.005 + i * 0.001, "event": "executing"},
+                    {"time": 0.010 + i * 0.002, "event": "completed"}
+                ]
+            })
+        
+        # Generate sample timeline for async tasks
+        for i, task in enumerate(structure["async_tasks"]):
+            timeline.append({
+                "entity": task,
+                "type": "async_task",
+                "events": [
+                    {"time": 0.0, "event": "created"},
+                    {"time": 0.001, "event": "awaiting"},
+                    {"time": 0.003 + i * 0.001, "event": "executing"},
+                    {"time": 0.006 + i * 0.001, "event": "completed"}
+                ]
+            })
+        
+        return timeline
+    
+    def _create_thread_interaction_diagram(self, structure: Dict[str, Any]) -> Dict[str, Any]:
+        """Create thread interaction diagram data"""
+        return {
+            "diagram_type": "sequence_diagram",
+            "entities": structure["threads"] + structure["async_tasks"],
+            "interactions": [
+                {
+                    "from": structure["threads"][0] if structure["threads"] else "Main",
+                    "to": structure["threads"][1] if len(structure["threads"]) > 1 else "Thread-1",
+                    "message": "signal/data",
+                    "time": 0.005
+                }
+            ] if structure["threads"] else [],
+            "visualization_format": "mermaid"
+        }
+    
+    def _identify_synchronization_points(self, code: str) -> List[Dict[str, str]]:
+        """Identify synchronization points in code"""
+        sync_points = []
+        
+        if "lock.acquire()" in code or "with lock:" in code:
+            sync_points.append({
+                "type": "mutex_lock",
+                "description": "Thread synchronization via mutex",
+                "line": "lock.acquire() / with lock:"
+            })
+        
+        if "join()" in code:
+            sync_points.append({
+                "type": "thread_join",
+                "description": "Wait for thread completion",
+                "line": "thread.join()"
+            })
+        
+        if "await " in code:
+            sync_points.append({
+                "type": "async_await",
+                "description": "Async task synchronization",
+                "line": "await task()"
+            })
+        
+        if "barrier" in code.lower():
+            sync_points.append({
+                "type": "barrier",
+                "description": "Thread barrier synchronization",
+                "line": "barrier.wait()"
+            })
+        
+        return sync_points
+    
+    def _generate_visualization_code(self,
+                                    structure: Dict[str, Any],
+                                    timeline: List[Dict]) -> str:
+        """Generate code to visualize concurrent execution"""
+        return '''
+# Concurrent Execution Visualization
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from datetime import datetime
+
+def visualize_concurrent_execution(timeline):
+    """Create Gantt chart of concurrent execution"""
+    fig, ax = plt.subplots(figsize=(12, 6))
+    
+    colors = {'thread': 'skyblue', 'async_task': 'lightgreen', 'process': 'salmon'}
+    
+    for idx, entity_data in enumerate(timeline):
+        entity = entity_data['entity']
+        entity_type = entity_data['type']
+        events = entity_data['events']
+        
+        # Find start and end times
+        start_time = next((e['time'] for e in events if e['event'] == 'started'), 0)
+        end_time = next((e['time'] for e in events if e['event'] == 'completed'), 0)
+        
+        # Draw execution bar
+        ax.barh(idx, end_time - start_time, left=start_time, 
+               height=0.8, color=colors.get(entity_type, 'gray'),
+               label=entity_type if idx == 0 else "")
+        
+        # Add entity label
+        ax.text(-0.001, idx, entity, ha='right', va='center')
+    
+    ax.set_xlabel('Time (seconds)')
+    ax.set_ylabel('Concurrent Entities')
+    ax.set_title('Concurrent Execution Timeline')
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig('concurrent_execution.png', dpi=150)
+    print("✅ Visualization saved to concurrent_execution.png")
+
+# Generate Mermaid sequence diagram
+def generate_mermaid_diagram(interactions):
+    """Generate Mermaid sequence diagram"""
+    diagram = "sequenceDiagram\\n"
+    
+    for interaction in interactions:
+        diagram += f"    {interaction['from']}->> {interaction['to']}: {interaction['message']}\\n"
+    
+    return diagram
+
+# Example usage:
+# visualize_concurrent_execution(timeline_data)
+'''
+    
+    def _recommend_visualization_tools(self) -> List[Dict[str, str]]:
+        """Recommend tools for visualizing concurrent execution"""
+        return [
+            {
+                "tool": "Python threading + matplotlib",
+                "purpose": "Custom timeline visualization",
+                "example": "Create Gantt charts of thread execution"
+            },
+            {
+                "tool": "Chrome Tracing (chrome://tracing)",
+                "purpose": "Professional timeline viewer",
+                "example": "Export JSON trace format"
+            },
+            {
+                "tool": "py-spy",
+                "purpose": "Live process visualization",
+                "command": "py-spy record -o profile.svg -- python script.py"
+            },
+            {
+                "tool": "Viztracer",
+                "purpose": "Thread/async visualization",
+                "command": "pip install viztracer; viztracer script.py"
+            },
+            {
+                "tool": "Intel VTune",
+                "purpose": "Professional concurrency analyzer",
+                "example": "Thread analysis and visualization"
+            },
+            {
+                "tool": "ThreadSanitizer + Visualization",
+                "purpose": "Race condition detection with visualization",
+                "command": "gcc -fsanitize=thread -g program.c"
+            }
+        ]
+
+
 __all__ = [
     'IntelligentBreakpointSetter',
     'RuntimeBehaviorPredictor',
@@ -954,6 +1707,9 @@ __all__ = [
     'MemoryLeakDetector',
     'NetworkIssueDiagnoser',
     'DatabaseTransactionAnalyzer',
-    'PerformanceProfiler'
+    'PerformanceProfiler',
+    'HeisenbugReproducer',
+    'MemoryCorruptionDetector',
+    'ConcurrentExecutionVisualizer'
 ]
 

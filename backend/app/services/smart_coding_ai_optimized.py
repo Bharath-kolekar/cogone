@@ -159,15 +159,18 @@ from .smart_coding_ai_advanced_analysis import (
     ComplianceChecker
 )
 
-# Import debugging implementations (Capabilities 18, 21-24, 27-28, 30)
+# Import debugging implementations (Capabilities 18, 21-30) - COMPLETE!
 from .smart_coding_ai_debugging import (
     IntelligentBreakpointSetter,
     RuntimeBehaviorPredictor,
     AutomatedRootCauseAnalyzer,
     MultiThreadingIssueDetector,
     MemoryLeakDetector,
+    HeisenbugReproducer,
+    MemoryCorruptionDetector,
     NetworkIssueDiagnoser,
     DatabaseTransactionAnalyzer,
+    ConcurrentExecutionVisualizer,
     PerformanceProfiler
 )
 
@@ -1550,14 +1553,17 @@ class SmartCodingAIOptimized:
         self.performance_bottleneck_detector = PerformanceBottleneckDetector()
         self.compliance_checker = ComplianceChecker()
         
-        # Debugging implementations (Capabilities 18, 21-24, 27-28, 30)
+        # Debugging implementations (Capabilities 18, 21-30) - COMPLETE!
         self.breakpoint_setter = IntelligentBreakpointSetter()
         self.behavior_predictor = RuntimeBehaviorPredictor()
         self.root_cause_analyzer = AutomatedRootCauseAnalyzer()
         self.threading_issue_detector = MultiThreadingIssueDetector()
         self.memory_leak_detector = MemoryLeakDetector()
+        self.heisenbug_reproducer = HeisenbugReproducer()
+        self.memory_corruption_detector = MemoryCorruptionDetector()
         self.network_diagnoser = NetworkIssueDiagnoser()
         self.db_transaction_analyzer = DatabaseTransactionAnalyzer()
+        self.concurrent_execution_visualizer = ConcurrentExecutionVisualizer()
         self.performance_profiler = PerformanceProfiler()
         
         # Testing implementations (Capabilities 31-37, 40)
@@ -1665,8 +1671,8 @@ class SmartCodingAIOptimized:
         self.quality_gates_enforcer = QualityGatesEnforcer()
         self.continuous_quality_monitor = ContinuousQualityMonitor()
         
-        # Mark capabilities as implemented - 🎉 108/200 = 54% - PAST 50%! 🎉
-        implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
+        # Mark capabilities as implemented - 🎉 111/200 = 55.5%! 🎉
+        implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                            31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
                            71, 72, 73, 74, 75, 77, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
@@ -5949,6 +5955,14 @@ async def get_item(item_id: int):
         """Capability #24: Detect multi-threading issues"""
         return await self.threading_issue_detector.detect_threading_issues(code)
     
+    async def reproduce_heisenbug(self, bug_description: str, code: str, failure_conditions: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #25: Heisenbug reproduction assistance"""
+        return await self.heisenbug_reproducer.help_reproduce_heisenbug(bug_description, code, failure_conditions)
+    
+    async def detect_memory_corruption(self, code: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #26: Memory corruption detection"""
+        return await self.memory_corruption_detector.detect_memory_corruption(code, language)
+    
     async def diagnose_network_issues(self, code: str, error_log: str = None) -> Dict[str, Any]:
         """Capability #27: Diagnose network issues"""
         return await self.network_diagnoser.diagnose_network_issues(code, error_log)
@@ -5956,6 +5970,10 @@ async def get_item(item_id: int):
     async def analyze_database_transactions(self, code: str) -> Dict[str, Any]:
         """Capability #28: Analyze database transactions"""
         return await self.db_transaction_analyzer.analyze_database_transactions(code)
+    
+    async def visualize_concurrent_execution(self, code: str, execution_trace: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #29: Concurrent execution visualization"""
+        return await self.concurrent_execution_visualizer.visualize_concurrent_execution(code, execution_trace)
     
     async def create_performance_profile(self, code: str, function_name: str = None) -> Dict[str, Any]:
         """Capability #30: Create performance profiling script"""
