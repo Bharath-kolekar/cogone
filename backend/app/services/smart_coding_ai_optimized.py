@@ -183,6 +183,18 @@ from .smart_coding_ai_testing import (
     TestCoverageOptimizer
 )
 
+# Import architecture implementations (Capabilities 41-44, 46, 48-50)
+from .smart_coding_ai_architecture import (
+    SystemArchitectureGenerator,
+    MicroserviceIdentifier,
+    DatabaseSchemaDesigner,
+    APIDesignGenerator,
+    CachingStrategyDesigner,
+    FaultTolerancePlanner,
+    ScalabilityBlueprinter,
+    MigrationPathPlanner
+)
+
 logger = structlog.get_logger()
 
 
@@ -1455,9 +1467,19 @@ class SmartCodingAIOptimized:
         self.test_data_generator = TestDataGenerator()
         self.test_coverage_optimizer = TestCoverageOptimizer()
         
-        # Mark capabilities as implemented (now 34 total)
+        # Architecture implementations (Capabilities 41-44, 46, 48-50)
+        self.architecture_generator = SystemArchitectureGenerator()
+        self.microservice_identifier = MicroserviceIdentifier()
+        self.database_schema_designer = DatabaseSchemaDesigner()
+        self.api_design_generator = APIDesignGenerator()
+        self.caching_strategy_designer = CachingStrategyDesigner()
+        self.fault_tolerance_planner = FaultTolerancePlanner()
+        self.scalability_blueprinter = ScalabilityBlueprinter()
+        self.migration_path_planner = MigrationPathPlanner()
+        
+        # Mark capabilities as implemented (now 42 total)
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 27, 28, 30,
-                           31, 32, 33, 34, 35, 36, 37, 40]
+                           31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
