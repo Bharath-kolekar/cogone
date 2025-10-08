@@ -324,6 +324,20 @@ from .smart_coding_ai_backend import (
     NotificationSystemCreator
 )
 
+# Import Data & Analytics implementations (Capabilities 131-140) - COMPLETE!
+from .smart_coding_ai_data_analytics import (
+    DatabaseQueryOptimizer,
+    DataPipelineGenerator,
+    AnalyticsImplementer,
+    MLPipelineCreator,
+    DataVisualizationGenerator,
+    ReportGenerationAutomator,
+    DataMigrationScripter,
+    DatabaseIndexOptimizer,
+    DataValidationImplementer,
+    RealtimeAnalyticsSetup
+)
+
 logger = structlog.get_logger()
 
 
@@ -1715,13 +1729,26 @@ class SmartCodingAIOptimized:
         self.search_implementer = SearchImplementer()
         self.notification_system_creator = NotificationSystemCreator()
         
-        # Mark capabilities as implemented - 🎉 133/200 = 66.5% - 11 COMPLETE CATEGORIES! 🎉
+        # Data & Analytics capabilities (131-140) - COMPLETE!
+        self.database_query_optimizer = DatabaseQueryOptimizer()
+        self.data_pipeline_generator = DataPipelineGenerator()
+        self.analytics_implementer = AnalyticsImplementer()
+        self.ml_pipeline_creator = MLPipelineCreator()
+        self.data_visualization_generator = DataVisualizationGenerator()
+        self.report_generation_automator = ReportGenerationAutomator()
+        self.data_migration_scripter = DataMigrationScripter()
+        self.database_index_optimizer = DatabaseIndexOptimizer()
+        self.data_validation_implementer = DataValidationImplementer()
+        self.realtime_analytics_setup = RealtimeAnalyticsSetup()
+        
+        # Mark capabilities as implemented - 🎉 143/200 = 71.5% - 12 COMPLETE CATEGORIES! 🎉
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                            31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
                            71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
                            91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
                            111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 129, 130,
+                           131, 132, 133, 134, 135, 136, 137, 138, 139, 140,
                            151, 152, 153, 154, 155, 156, 157, 158, 159, 160]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
@@ -6299,6 +6326,50 @@ async def get_item(item_id: int):
     async def setup_continuous_quality_monitoring(self, project_config: Dict[str, Any]) -> Dict[str, Any]:
         """Capability #130: Continuous quality monitoring"""
         return await self.continuous_quality_monitor.setup_continuous_monitoring(project_config)
+    
+    # ============================================================================
+    # DATA & ANALYTICS INTEGRATION (131-140)
+    # ============================================================================
+    
+    async def optimize_database_query(self, query: str, database_type: str = "postgresql", schema: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #131: Database query optimization"""
+        return await self.database_query_optimizer.optimize_query(query, database_type, schema)
+    
+    async def generate_data_pipeline(self, source: Dict[str, Any], destination: Dict[str, Any], transformations: List[str] = None) -> Dict[str, Any]:
+        """Capability #132: Data pipeline generation"""
+        return await self.data_pipeline_generator.generate_data_pipeline(source, destination, transformations)
+    
+    async def implement_analytics(self, events_to_track: List[str], analytics_platform: str = "custom") -> Dict[str, Any]:
+        """Capability #133: Analytics implementation"""
+        return await self.analytics_implementer.implement_analytics(events_to_track, analytics_platform)
+    
+    async def create_ml_pipeline(self, model_type: str = "classification", framework: str = "sklearn") -> Dict[str, Any]:
+        """Capability #134: Machine learning pipeline creation"""
+        return await self.ml_pipeline_creator.create_ml_pipeline(model_type, framework)
+    
+    async def generate_data_visualization(self, data: Dict[str, Any], chart_type: str = "auto", library: str = "plotly") -> Dict[str, Any]:
+        """Capability #135: Data visualization generation"""
+        return await self.data_visualization_generator.generate_visualization(data, chart_type, library)
+    
+    async def automate_report_generation(self, report_type: str, data_sources: List[Dict[str, Any]], schedule: str = "daily") -> Dict[str, Any]:
+        """Capability #136: Report generation automation"""
+        return await self.report_generation_automator.automate_report_generation(report_type, data_sources, schedule)
+    
+    async def create_data_migration_script(self, source_db: Dict[str, Any], target_db: Dict[str, Any], tables: List[str]) -> Dict[str, Any]:
+        """Capability #137: Data migration scripting"""
+        return await self.data_migration_scripter.create_migration_script(source_db, target_db, tables)
+    
+    async def optimize_database_indexes(self, table_name: str, queries: List[str] = None, database_type: str = "postgresql") -> Dict[str, Any]:
+        """Capability #138: Database index optimization"""
+        return await self.database_index_optimizer.optimize_indexes(table_name, queries, database_type)
+    
+    async def implement_data_validation(self, schema: Dict[str, Any], validation_rules: List[Dict] = None) -> Dict[str, Any]:
+        """Capability #139: Data validation implementation"""
+        return await self.data_validation_implementer.implement_data_validation(schema, validation_rules)
+    
+    async def setup_realtime_analytics(self, use_cases: List[str], latency_requirement_ms: int = 1000) -> Dict[str, Any]:
+        """Capability #140: Real-time analytics setup"""
+        return await self.realtime_analytics_setup.setup_realtime_analytics(use_cases, latency_requirement_ms)
     
     # ============================================================================
     # BACKEND & API REVOLUTION (151-160)
