@@ -267,6 +267,15 @@ from .smart_coding_ai_native import (
     RegulatoryComplianceChecker
 )
 
+# Import Requirements & Planning implementations (Capabilities 111-115)
+from .smart_coding_ai_requirements import (
+    RequirementsAnalyzer,
+    UserStoryGenerator,
+    AcceptanceCriteriaDefiner,
+    EstimationAutomator,
+    RiskAssessor
+)
+
 logger = structlog.get_logger()
 
 
@@ -1609,12 +1618,19 @@ class SmartCodingAIOptimized:
         self.cross_platform_optimizer = CrossPlatformOptimizer()
         self.regulatory_compliance_checker = RegulatoryComplianceChecker()
         
-        # Mark capabilities as implemented (now 90 total)
+        # Requirements & Planning capabilities (111-115)
+        self.requirements_analyzer = RequirementsAnalyzer()
+        self.user_story_generator = UserStoryGenerator()
+        self.acceptance_criteria_definer = AcceptanceCriteriaDefiner()
+        self.estimation_automator = EstimationAutomator()
+        self.risk_assessor = RiskAssessor()
+        
+        # Mark capabilities as implemented (now 95 total)
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
                            31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
                            71, 72, 73, 74, 75, 77, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
-                           101, 102, 103, 104, 105, 106, 107, 110]
+                           101, 102, 103, 104, 105, 106, 107, 110, 111, 112, 113, 114, 115]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
@@ -6051,6 +6067,30 @@ async def get_item(item_id: int):
     async def check_regulatory_compliance(self, code: str, regulations: List[str]) -> Dict[str, Any]:
         """Capability #110: Regulatory compliance checking"""
         return await self.regulatory_compliance_checker.check_compliance(code, regulations)
+    
+    # ============================================================================
+    # REQUIREMENTS & PLANNING TRANSFORMATION (111-115)
+    # ============================================================================
+    
+    async def analyze_requirements(self, raw_requirements: str, project_context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #111: Requirements analysis"""
+        return await self.requirements_analyzer.analyze_requirements(raw_requirements, project_context)
+    
+    async def generate_user_stories(self, requirements: List[Dict[str, Any]], personas: List[Dict[str, str]] = None) -> Dict[str, Any]:
+        """Capability #112: User story generation"""
+        return await self.user_story_generator.generate_user_stories(requirements, personas)
+    
+    async def define_acceptance_criteria(self, user_story: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #113: Acceptance criteria definition"""
+        return await self.acceptance_criteria_definer.define_acceptance_criteria(user_story)
+    
+    async def estimate_development(self, user_stories: List[Dict[str, Any]], team_data: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #114: Estimation automation"""
+        return await self.estimation_automator.estimate_development(user_stories, team_data)
+    
+    async def assess_risks(self, project_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #115: Risk assessment"""
+        return await self.risk_assessor.assess_risks(project_data)
 
 
 # Global optimized service instance
