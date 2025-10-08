@@ -123,6 +123,9 @@ from .smart_coding_ai_queue import QueueService
 from .smart_coding_ai_telemetry import TelemetryService
 from .smart_coding_ai_oauth import OAuthService
 
+# Import management services from extracted module (Step 8 of refactoring)
+from .smart_coding_ai_session import SessionMemoryManager
+
 logger = structlog.get_logger()
 
 
