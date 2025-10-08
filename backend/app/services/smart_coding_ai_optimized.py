@@ -159,6 +159,18 @@ from .smart_coding_ai_advanced_analysis import (
     ComplianceChecker
 )
 
+# Import debugging implementations (Capabilities 18, 21-24, 27-28, 30)
+from .smart_coding_ai_debugging import (
+    IntelligentBreakpointSetter,
+    RuntimeBehaviorPredictor,
+    AutomatedRootCauseAnalyzer,
+    MultiThreadingIssueDetector,
+    MemoryLeakDetector,
+    NetworkIssueDiagnoser,
+    DatabaseTransactionAnalyzer,
+    PerformanceProfiler
+)
+
 logger = structlog.get_logger()
 
 
@@ -1411,8 +1423,18 @@ class SmartCodingAIOptimized:
         self.performance_bottleneck_detector = PerformanceBottleneckDetector()
         self.compliance_checker = ComplianceChecker()
         
+        # Debugging implementations (Capabilities 18, 21-24, 27-28, 30)
+        self.breakpoint_setter = IntelligentBreakpointSetter()
+        self.behavior_predictor = RuntimeBehaviorPredictor()
+        self.root_cause_analyzer = AutomatedRootCauseAnalyzer()
+        self.threading_issue_detector = MultiThreadingIssueDetector()
+        self.memory_leak_detector = MemoryLeakDetector()
+        self.network_diagnoser = NetworkIssueDiagnoser()
+        self.db_transaction_analyzer = DatabaseTransactionAnalyzer()
+        self.performance_profiler = PerformanceProfiler()
+        
         # Mark capabilities as implemented
-        for cap_id in [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 20]:
+        for cap_id in [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 27, 28, 30]:
             self.capability_engine.mark_implemented(cap_id)
         
         logger.info("Capability engine integrated", 
@@ -5664,6 +5686,42 @@ async def get_item(item_id: int):
     async def check_compliance(self, code: str, standard: str = "pep8", language: str = "python") -> Dict[str, Any]:
         """Capability #20: Check code compliance"""
         return await self.compliance_checker.check_compliance(code, standard, language)
+    
+    # ============================================================================
+    # REVOLUTIONARY DEBUGGING CAPABILITIES (18, 21-24, 27-28, 30)
+    # ============================================================================
+    
+    async def detect_memory_leaks(self, code: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #18: Detect memory leaks"""
+        return await self.memory_leak_detector.detect_memory_leaks(code, language)
+    
+    async def suggest_breakpoints(self, code: str, issue_description: str = None) -> Dict[str, Any]:
+        """Capability #21: Suggest intelligent breakpoint locations"""
+        return await self.breakpoint_setter.suggest_breakpoints(code, issue_description)
+    
+    async def predict_runtime_behavior(self, code: str, inputs: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #22: Predict code behavior before execution"""
+        return await self.behavior_predictor.predict_behavior(code, inputs)
+    
+    async def analyze_root_cause(self, error_message: str, stack_trace: str, code: str = None) -> Dict[str, Any]:
+        """Capability #23: Automated root cause analysis"""
+        return await self.root_cause_analyzer.analyze_root_cause(error_message, stack_trace, code)
+    
+    async def detect_threading_issues(self, code: str) -> Dict[str, Any]:
+        """Capability #24: Detect multi-threading issues"""
+        return await self.threading_issue_detector.detect_threading_issues(code)
+    
+    async def diagnose_network_issues(self, code: str, error_log: str = None) -> Dict[str, Any]:
+        """Capability #27: Diagnose network issues"""
+        return await self.network_diagnoser.diagnose_network_issues(code, error_log)
+    
+    async def analyze_database_transactions(self, code: str) -> Dict[str, Any]:
+        """Capability #28: Analyze database transactions"""
+        return await self.db_transaction_analyzer.analyze_database_transactions(code)
+    
+    async def create_performance_profile(self, code: str, function_name: str = None) -> Dict[str, Any]:
+        """Capability #30: Create performance profiling script"""
+        return await self.performance_profiler.create_profiling_script(code, function_name)
 
 
 # Global optimized service instance
