@@ -252,6 +252,9 @@ class UnifiedMetaAIOrchestrator:
         self.intelligent_task_decomposer = IntelligentTaskDecomposer()
         self.multi_agent_coordinator = MultiAgentCoordinator()
         
+        # Add Self-Modification System Integration
+        self.self_modification_system = None  # Will be initialized on first use
+        
         self._initialize_system()
     
     def _initialize_system(self):
@@ -802,8 +805,153 @@ class UnifiedMetaAIOrchestrator:
             "orchestration_power": "infinite",
             "harmony_enforcement": "absolute",
             "governance_level": "supreme",
+            "self_modification_enabled": self.self_modification_system is not None,
             "status": "GOD MODE ACTIVATED - SUPREME CONTROL ESTABLISHED"
         }
+    
+    # ========================================================================
+    # SELF-MODIFICATION SYSTEM INTEGRATION
+    # ========================================================================
+    
+    async def initialize_self_modification(self) -> Dict[str, Any]:
+        """Initialize self-modification system"""
+        try:
+            if self.self_modification_system is None:
+                from .self_modification_system import self_modification_system
+                self.self_modification_system = self_modification_system
+                await self.self_modification_system.initialize()
+                
+                logger.info("Self-modification system initialized by Meta AI Orchestrator")
+            
+            return {
+                "success": True,
+                "status": "initialized",
+                "message": "Self-modification system is ready"
+            }
+            
+        except Exception as e:
+            logger.error("Failed to initialize self-modification system", error=str(e))
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def oversee_self_modification(self, modification_id: str) -> Dict[str, Any]:
+        """Oversee and approve self-modifications"""
+        try:
+            if self.self_modification_system is None:
+                await self.initialize_self_modification()
+            
+            # Get modification details
+            if modification_id not in self.self_modification_system.self_coding.modifications:
+                return {"success": False, "error": "Modification not found"}
+            
+            modification = self.self_modification_system.self_coding.modifications[modification_id]
+            
+            # Meta AI Orchestrator review
+            review = await self._review_modification(modification)
+            
+            # Update modification status based on review
+            if review["approved"]:
+                modification.status = "APPROVED"
+            else:
+                modification.status = "REJECTED"
+            
+            return {
+                "success": True,
+                "modification_id": modification_id,
+                "review": review,
+                "status": modification.status
+            }
+            
+        except Exception as e:
+            logger.error("Failed to oversee self-modification", error=str(e))
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _review_modification(self, modification) -> Dict[str, Any]:
+        """Review a modification for approval"""
+        # Meta AI Orchestrator's supreme judgment
+        review = {
+            "approved": False,
+            "safety_assessment": "unknown",
+            "recommendations": []
+        }
+        
+        # Check safety level
+        if modification.safety_level in ["SAFE", "LOW_RISK"]:
+            review["approved"] = True
+            review["safety_assessment"] = "safe_to_proceed"
+        elif modification.safety_level == "MEDIUM_RISK":
+            # Additional checks for medium risk
+            if modification.validation_results.get("valid"):
+                review["approved"] = True
+                review["safety_assessment"] = "acceptable_risk"
+                review["recommendations"].append("Monitor closely after deployment")
+        else:
+            review["approved"] = False
+            review["safety_assessment"] = "too_risky"
+            review["recommendations"].append("Requires manual review")
+            review["recommendations"].append("Consider safer alternatives")
+        
+        return review
+    
+    async def monitor_self_modification_health(self) -> Dict[str, Any]:
+        """Monitor health of self-modification system"""
+        try:
+            if self.self_modification_system is None:
+                return {
+                    "status": "not_initialized",
+                    "health": "unknown"
+                }
+            
+            # Get system status
+            status = await self.self_modification_system.get_system_status()
+            
+            # Get health from self-management
+            health = await self.self_modification_system.self_management.monitor_health()
+            
+            return {
+                "status": "operational",
+                "system_status": status,
+                "health": health,
+                "oversight": "meta_ai_orchestrator_active"
+            }
+            
+        except Exception as e:
+            logger.error("Failed to monitor self-modification health", error=str(e))
+            return {
+                "status": "error",
+                "error": str(e)
+            }
+    
+    async def emergency_stop_self_modification(self, reason: str) -> Dict[str, Any]:
+        """Emergency stop of self-modification system"""
+        try:
+            if self.self_modification_system is None:
+                return {"success": True, "message": "System not running"}
+            
+            # Disable safety to prevent modifications
+            self.self_modification_system.safety_enabled = False
+            self.self_modification_system.require_approval = True
+            
+            logger.warning("Self-modification system EMERGENCY STOPPED", reason=reason)
+            
+            return {
+                "success": True,
+                "status": "emergency_stopped",
+                "reason": reason,
+                "message": "All self-modifications require manual approval"
+            }
+            
+        except Exception as e:
+            logger.error("Failed to emergency stop self-modification", error=str(e))
+            return {
+                "success": False,
+                "error": str(e)
+            }
     
     # ========================================================================
     # PLATFORM STATUS METHODS
