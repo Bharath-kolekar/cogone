@@ -230,6 +230,17 @@ from .smart_coding_ai_devops import (
     PerformanceMonitoringSetup
 )
 
+# Import Collaboration implementations (Capabilities 81, 83-85, 87-89)
+from .smart_coding_ai_collaboration import (
+    CodeReviewAutomator,
+    PairProgrammingAssistant,
+    ConflictResolver,
+    CodeStandardizationEnforcer,
+    TeamPerformanceAnalyzer,
+    SkillGapIdentifier,
+    OnboardingAutomator
+)
+
 logger = structlog.get_logger()
 
 
@@ -1541,11 +1552,20 @@ class SmartCodingAIOptimized:
         self.deployment_strategy_planner = DeploymentStrategyPlanner()
         self.performance_monitoring_setup = PerformanceMonitoringSetup()
         
-        # Mark capabilities as implemented (now 65 total)
+        # Collaboration & Teamwork capabilities (81, 83-85, 87-89)
+        self.code_review_automator = CodeReviewAutomator()
+        self.pair_programming_assistant = PairProgrammingAssistant()
+        self.conflict_resolver = ConflictResolver()
+        self.code_standardization_enforcer = CodeStandardizationEnforcer()
+        self.team_performance_analyzer = TeamPerformanceAnalyzer()
+        self.skill_gap_identifier = SkillGapIdentifier()
+        self.onboarding_automator = OnboardingAutomator()
+        
+        # Mark capabilities as implemented (now 72 total)
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
                            31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
-                           71, 72, 73, 74, 75, 77, 80]
+                           71, 72, 73, 74, 75, 77, 80, 81, 83, 84, 85, 87, 88, 89]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
@@ -5870,6 +5890,38 @@ async def get_item(item_id: int):
     async def optimize_test_coverage(self, code: str, existing_tests: str = None) -> Dict[str, Any]:
         """Capability #40: Optimize test coverage"""
         return await self.test_coverage_optimizer.optimize_test_coverage(code, existing_tests)
+    
+    # ============================================================================
+    # COLLABORATION & TEAMWORK ENHANCEMENT CAPABILITIES (81, 83-85, 87-89)
+    # ============================================================================
+    
+    async def perform_code_review(self, code: str, pr_description: str = None) -> Dict[str, Any]:
+        """Capability #81: Automated code review"""
+        return await self.code_review_automator.perform_automated_review(code, pr_description)
+    
+    async def assist_pair_programming(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #83: Pair programming assistant"""
+        return await self.pair_programming_assistant.assist_pair_programming(context)
+    
+    async def resolve_merge_conflict(self, base_code: str, their_code: str, our_code: str) -> Dict[str, Any]:
+        """Capability #84: Intelligent conflict resolution"""
+        return await self.conflict_resolver.resolve_merge_conflict(base_code, their_code, our_code)
+    
+    async def enforce_coding_standards(self, code: str, standard: str = "pep8") -> Dict[str, Any]:
+        """Capability #85: Enforce coding standards"""
+        return await self.code_standardization_enforcer.enforce_coding_standards(code, standard)
+    
+    async def analyze_team_performance(self, git_history: List[Dict[str, Any]] = None, time_period: str = "30_days") -> Dict[str, Any]:
+        """Capability #87: Team performance analytics"""
+        return await self.team_performance_analyzer.analyze_team_performance(git_history, time_period)
+    
+    async def identify_skill_gaps(self, team_profile: Dict[str, Any], project_requirements: List[str]) -> Dict[str, Any]:
+        """Capability #88: Identify skill gaps"""
+        return await self.skill_gap_identifier.identify_skill_gaps(team_profile, project_requirements)
+    
+    async def create_onboarding_plan(self, role: str = "developer", tech_stack: List[str] = None) -> Dict[str, Any]:
+        """Capability #89: Create onboarding plan"""
+        return await self.onboarding_automator.create_onboarding_plan(role, tech_stack)
 
 
 # Global optimized service instance
