@@ -1106,14 +1106,777 @@ class MigrationPathPlanner:
             }
 
 
+class EventDrivenArchitecturePlanner:
+    """Implements capability #45: Event-Driven Architecture Planning"""
+    
+    async def plan_event_driven_architecture(self,
+                                             use_cases: List[str],
+                                             message_broker: str = "kafka") -> Dict[str, Any]:
+        """
+        Designs event-driven architecture with event flows and message brokers
+        
+        Args:
+            use_cases: List of use cases requiring event-driven design
+            message_broker: Message broker technology (kafka, rabbitmq, sns_sqs, nats)
+            
+        Returns:
+            Complete event-driven architecture design
+        """
+        try:
+            # Identify events and publishers
+            events = self._identify_events(use_cases)
+            
+            # Design event schema
+            event_schemas = self._design_event_schemas(events)
+            
+            # Identify consumers
+            consumers = self._identify_consumers(events)
+            
+            # Design message broker architecture
+            broker_architecture = self._design_broker_architecture(message_broker, len(events))
+            
+            # Create event flow diagrams
+            event_flows = self._create_event_flows(events, consumers)
+            
+            # Design error handling
+            error_handling = self._design_error_handling_strategy()
+            
+            # Create implementation code
+            implementation = self._generate_implementation_code(message_broker, events)
+            
+            return {
+                "success": True,
+                "message_broker": message_broker,
+                "events": events,
+                "event_schemas": event_schemas,
+                "consumers": consumers,
+                "broker_architecture": broker_architecture,
+                "event_flows": event_flows,
+                "error_handling": error_handling,
+                "implementation_code": implementation,
+                "best_practices": self._generate_event_driven_best_practices()
+            }
+        except Exception as e:
+            logger.error("Event-driven architecture planning failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _identify_events(self, use_cases: List[str]) -> List[Dict[str, Any]]:
+        """Identify domain events from use cases"""
+        events = []
+        for use_case in use_cases:
+            if "order" in use_case.lower():
+                events.extend([
+                    {"name": "OrderPlaced", "type": "domain", "importance": "high"},
+                    {"name": "OrderConfirmed", "type": "domain", "importance": "high"},
+                    {"name": "OrderShipped", "type": "domain", "importance": "high"},
+                    {"name": "OrderDelivered", "type": "domain", "importance": "medium"}
+                ])
+            if "payment" in use_case.lower():
+                events.extend([
+                    {"name": "PaymentInitiated", "type": "domain", "importance": "high"},
+                    {"name": "PaymentCompleted", "type": "domain", "importance": "high"},
+                    {"name": "PaymentFailed", "type": "domain", "importance": "high"}
+                ])
+            if "user" in use_case.lower():
+                events.extend([
+                    {"name": "UserRegistered", "type": "domain", "importance": "medium"},
+                    {"name": "UserProfileUpdated", "type": "domain", "importance": "low"}
+                ])
+        return events if events else [{"name": "GenericEvent", "type": "domain", "importance": "medium"}]
+    
+    def _design_event_schemas(self, events: List[Dict]) -> Dict[str, Dict]:
+        """Design event payload schemas"""
+        schemas = {}
+        for event in events:
+            schemas[event["name"]] = {
+                "eventId": "string (UUID)",
+                "eventType": f"{event['name']}",
+                "timestamp": "ISO 8601 datetime",
+                "version": "string (e.g., 1.0)",
+                "payload": {
+                    "aggregateId": "string",
+                    "data": "object (event-specific data)"
+                },
+                "metadata": {
+                    "correlationId": "string",
+                    "causationId": "string",
+                    "userId": "string"
+                }
+            }
+        return schemas
+    
+    def _identify_consumers(self, events: List[Dict]) -> Dict[str, List[str]]:
+        """Identify which services consume which events"""
+        consumers = {}
+        for event in events:
+            event_name = event["name"]
+            if "Order" in event_name:
+                consumers[event_name] = ["OrderService", "NotificationService", "InventoryService"]
+            elif "Payment" in event_name:
+                consumers[event_name] = ["PaymentService", "OrderService", "NotificationService"]
+            elif "User" in event_name:
+                consumers[event_name] = ["UserService", "NotificationService"]
+            else:
+                consumers[event_name] = ["GenericConsumer"]
+        return consumers
+    
+    def _design_broker_architecture(self, broker: str, event_count: int) -> Dict[str, Any]:
+        """Design message broker architecture"""
+        if broker == "kafka":
+            return {
+                "technology": "Apache Kafka",
+                "topology": {
+                    "brokers": 3 if event_count > 10 else 1,
+                    "zookeepers": 3 if event_count > 10 else 1,
+                    "partitions_per_topic": 6,
+                    "replication_factor": 3
+                },
+                "topics": {
+                    "naming_convention": "domain.entity.event (e.g., order.order.placed)",
+                    "retention": "7 days",
+                    "compression": "snappy"
+                },
+                "consumer_groups": {
+                    "strategy": "Each service has its own consumer group",
+                    "offset_management": "Kafka-managed"
+                }
+            }
+        elif broker == "rabbitmq":
+            return {
+                "technology": "RabbitMQ",
+                "topology": {
+                    "nodes": 3 if event_count > 10 else 1,
+                    "cluster_mode": "ha" if event_count > 10 else "standalone"
+                },
+                "exchanges": {
+                    "type": "topic",
+                    "durable": True,
+                    "routing_keys": "domain.entity.event"
+                },
+                "queues": {
+                    "durable": True,
+                    "ttl": "7 days",
+                    "dead_letter_exchange": "dlx"
+                }
+            }
+        else:
+            return {
+                "technology": broker,
+                "configuration": "Standard configuration for event-driven architecture"
+            }
+    
+    def _create_event_flows(self, events: List[Dict], consumers: Dict) -> List[str]:
+        """Create event flow descriptions"""
+        flows = []
+        for event in events:
+            event_name = event["name"]
+            consumer_list = consumers.get(event_name, [])
+            flows.append(f"{event_name}: Publisher → Broker → {', '.join(consumer_list)}")
+        return flows
+    
+    def _design_error_handling_strategy(self) -> Dict[str, Any]:
+        """Design error handling for event-driven architecture"""
+        return {
+            "retry_strategy": {
+                "max_retries": 3,
+                "backoff": "exponential",
+                "initial_delay": "100ms"
+            },
+            "dead_letter_queue": {
+                "enabled": True,
+                "retention": "30 days",
+                "monitoring": "Alert on DLQ threshold > 100"
+            },
+            "idempotency": {
+                "strategy": "Event ID deduplication",
+                "window": "24 hours"
+            },
+            "circuit_breaker": {
+                "enabled": True,
+                "failure_threshold": 5,
+                "timeout": "30s"
+            }
+        }
+    
+    def _generate_implementation_code(self, broker: str, events: List[Dict]) -> Dict[str, str]:
+        """Generate implementation code"""
+        if broker == "kafka":
+            return {
+                "producer": '''
+// Kafka Event Producer
+import { Kafka } from 'kafkajs';
+
+const kafka = new Kafka({
+  clientId: 'my-app',
+  brokers: ['localhost:9092']
+});
+
+const producer = kafka.producer();
+
+async function publishEvent(eventType, payload) {
+  await producer.connect();
+  
+  const event = {
+    eventId: uuid(),
+    eventType,
+    timestamp: new Date().toISOString(),
+    version: '1.0',
+    payload,
+    metadata: {
+      correlationId: getCorrelationId(),
+      causationId: getCausationId()
+    }
+  };
+  
+  await producer.send({
+    topic: `domain.${eventType.toLowerCase()}`,
+    messages: [{
+      key: payload.aggregateId,
+      value: JSON.stringify(event),
+      headers: {
+        'content-type': 'application/json'
+      }
+    }]
+  });
+}
+                ''',
+                "consumer": '''
+// Kafka Event Consumer
+const consumer = kafka.consumer({ groupId: 'order-service' });
+
+async function consumeEvents() {
+  await consumer.connect();
+  await consumer.subscribe({ topic: 'domain.order.*', fromBeginning: false });
+  
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const event = JSON.parse(message.value.toString());
+      
+      // Idempotency check
+      if (await isEventProcessed(event.eventId)) {
+        console.log('Event already processed, skipping');
+        return;
+      }
+      
+      try {
+        await handleEvent(event);
+        await markEventProcessed(event.eventId);
+      } catch (error) {
+        console.error('Error processing event', error);
+        // Will retry automatically
+        throw error;
+      }
+    }
+  });
+}
+                '''
+            }
+        else:
+            return {"code": f"Implementation code for {broker}"}
+    
+    def _generate_event_driven_best_practices(self) -> List[str]:
+        """Generate event-driven architecture best practices"""
+        return [
+            "✅ Design events as immutable facts about the past",
+            "✅ Use event sourcing for critical aggregates",
+            "✅ Implement idempotent consumers",
+            "✅ Use correlation IDs for tracing",
+            "✅ Implement dead letter queues",
+            "✅ Monitor event lag and throughput",
+            "✅ Version your event schemas",
+            "✅ Use outbox pattern for transactional consistency",
+            "✅ Implement circuit breakers",
+            "✅ Test event flows with chaos engineering"
+        ]
+
+
+class LoadBalancingConfigurator:
+    """Implements capability #47: Load Balancing Configuration"""
+    
+    async def configure_load_balancing(self,
+                                      services: List[str],
+                                      load_balancer_type: str = "application") -> Dict[str, Any]:
+        """
+        Designs distributed system load balancing
+        
+        Args:
+            services: List of services to load balance
+            load_balancer_type: Type (application, network, dns)
+            
+        Returns:
+            Complete load balancing configuration
+        """
+        try:
+            # Choose load balancing algorithm
+            algorithm = self._select_load_balancing_algorithm(services)
+            
+            # Design topology
+            topology = self._design_load_balancer_topology(load_balancer_type, len(services))
+            
+            # Generate configuration
+            configuration = self._generate_load_balancer_config(load_balancer_type, services, algorithm)
+            
+            # Health check configuration
+            health_checks = self._configure_health_checks(services)
+            
+            # SSL/TLS termination
+            ssl_config = self._configure_ssl_termination()
+            
+            # Session persistence
+            session_config = self._configure_session_persistence()
+            
+            return {
+                "success": True,
+                "load_balancer_type": load_balancer_type,
+                "algorithm": algorithm,
+                "topology": topology,
+                "configuration": configuration,
+                "health_checks": health_checks,
+                "ssl_termination": ssl_config,
+                "session_persistence": session_config,
+                "best_practices": self._generate_load_balancing_best_practices()
+            }
+        except Exception as e:
+            logger.error("Load balancing configuration failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _select_load_balancing_algorithm(self, services: List[str]) -> Dict[str, Any]:
+        """Select appropriate load balancing algorithm"""
+        return {
+            "primary": "Round Robin",
+            "alternatives": {
+                "Least Connections": "For long-lived connections",
+                "IP Hash": "For session persistence",
+                "Weighted Round Robin": "For heterogeneous servers",
+                "Least Response Time": "For optimal performance"
+            },
+            "recommended": "Round Robin for stateless services, IP Hash for stateful"
+        }
+    
+    def _design_load_balancer_topology(self, lb_type: str, service_count: int) -> Dict[str, Any]:
+        """Design load balancer topology"""
+        if lb_type == "application":
+            return {
+                "layer": "Layer 7 (Application)",
+                "technology": "NGINX, HAProxy, or AWS ALB",
+                "high_availability": {
+                    "active_passive": "Use keepalived for failover",
+                    "active_active": "DNS round-robin between LBs"
+                },
+                "instances": 2 if service_count > 5 else 1,
+                "deployment": "Deploy in multiple availability zones"
+            }
+        elif lb_type == "network":
+            return {
+                "layer": "Layer 4 (Transport)",
+                "technology": "AWS NLB or HAProxy",
+                "performance": "Ultra-low latency, high throughput",
+                "instances": 2
+            }
+        else:
+            return {
+                "layer": "DNS-based",
+                "technology": "Route 53 or similar",
+                "geographical": "Route based on client location"
+            }
+    
+    def _generate_load_balancer_config(self, lb_type: str, services: List[str], algorithm: Dict) -> str:
+        """Generate load balancer configuration"""
+        if lb_type == "application":
+            return f'''
+# NGINX Load Balancer Configuration
+upstream backend {{
+    {algorithm["primary"].lower().replace(" ", "_")};
+    
+    server backend1.example.com:8080 weight=5 max_fails=3 fail_timeout=30s;
+    server backend2.example.com:8080 weight=5 max_fails=3 fail_timeout=30s;
+    server backend3.example.com:8080 weight=3 max_fails=3 fail_timeout=30s;
+    
+    # Keepalive connections
+    keepalive 32;
+}}
+
+server {{
+    listen 80;
+    listen 443 ssl http2;
+    server_name api.example.com;
+    
+    # SSL Configuration
+    ssl_certificate /etc/nginx/ssl/cert.pem;
+    ssl_certificate_key /etc/nginx/ssl/key.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    
+    # Load balancing
+    location / {{
+        proxy_pass http://backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Timeouts
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+        
+        # Buffer settings
+        proxy_buffering on;
+        proxy_buffer_size 4k;
+        proxy_buffers 8 4k;
+    }}
+    
+    # Health check endpoint
+    location /health {{
+        access_log off;
+        return 200 "healthy\\n";
+    }}
+}}
+            '''
+        else:
+            return f"Load balancer configuration for {lb_type}"
+    
+    def _configure_health_checks(self, services: List[str]) -> Dict[str, Any]:
+        """Configure health checks"""
+        return {
+            "http_health_check": {
+                "path": "/health",
+                "interval": "30s",
+                "timeout": "5s",
+                "healthy_threshold": 2,
+                "unhealthy_threshold": 3
+            },
+            "tcp_health_check": {
+                "port": 8080,
+                "interval": "10s",
+                "timeout": "3s"
+            },
+            "response_codes": "200-299",
+            "failure_action": "Remove from pool until healthy"
+        }
+    
+    def _configure_ssl_termination(self) -> Dict[str, Any]:
+        """Configure SSL/TLS termination"""
+        return {
+            "ssl_termination": "At load balancer",
+            "protocols": ["TLSv1.2", "TLSv1.3"],
+            "ciphers": "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384",
+            "certificate_management": "AWS ACM or Let's Encrypt",
+            "hsts": "Strict-Transport-Security: max-age=31536000; includeSubDomains"
+        }
+    
+    def _configure_session_persistence(self) -> Dict[str, Any]:
+        """Configure session persistence"""
+        return {
+            "method": "Cookie-based",
+            "cookie_name": "AWSALB",
+            "duration": "86400s (24 hours)",
+            "fallback": "IP hash if cookies disabled",
+            "note": "Prefer stateless architecture over session persistence"
+        }
+    
+    def _generate_load_balancing_best_practices(self) -> List[str]:
+        """Generate load balancing best practices"""
+        return [
+            "✅ Deploy load balancers in multiple availability zones",
+            "✅ Implement health checks with appropriate thresholds",
+            "✅ Use connection draining for graceful shutdowns",
+            "✅ Enable access logs for debugging",
+            "✅ Configure appropriate timeout values",
+            "✅ Implement rate limiting at load balancer",
+            "✅ Use SSL/TLS termination at load balancer",
+            "✅ Monitor load balancer metrics (connections, latency)",
+            "✅ Plan for load balancer capacity",
+            "✅ Test failover scenarios regularly"
+        ]
+
+
+class CloudArchitectureOptimizer:
+    """Implements capability #50: Cloud Architecture Optimization (replaces Migration Path Planning)"""
+    
+    async def optimize_cloud_architecture(self,
+                                         current_architecture: Dict[str, Any],
+                                         cloud_provider: str = "aws") -> Dict[str, Any]:
+        """
+        Optimizes cloud architecture for cost, performance, and reliability
+        
+        Args:
+            current_architecture: Current cloud architecture description
+            cloud_provider: Cloud provider (aws, azure, gcp)
+            
+        Returns:
+            Optimized cloud architecture recommendations
+        """
+        try:
+            # Analyze current architecture
+            analysis = self._analyze_current_architecture(current_architecture)
+            
+            # Cost optimization recommendations
+            cost_optimizations = self._generate_cost_optimizations(current_architecture, cloud_provider)
+            
+            # Performance optimizations
+            performance_optimizations = self._generate_performance_optimizations(current_architecture)
+            
+            # Reliability improvements
+            reliability_improvements = self._generate_reliability_improvements(current_architecture)
+            
+            # Security enhancements
+            security_enhancements = self._generate_security_enhancements(current_architecture)
+            
+            # Generate optimized architecture
+            optimized_architecture = self._design_optimized_architecture(
+                current_architecture, cost_optimizations, performance_optimizations
+            )
+            
+            return {
+                "success": True,
+                "cloud_provider": cloud_provider,
+                "current_analysis": analysis,
+                "cost_optimizations": cost_optimizations,
+                "performance_optimizations": performance_optimizations,
+                "reliability_improvements": reliability_improvements,
+                "security_enhancements": security_enhancements,
+                "optimized_architecture": optimized_architecture,
+                "estimated_cost_savings": self._estimate_cost_savings(cost_optimizations),
+                "implementation_plan": self._create_implementation_plan(),
+                "best_practices": self._generate_cloud_architecture_best_practices()
+            }
+        except Exception as e:
+            logger.error("Cloud architecture optimization failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _analyze_current_architecture(self, arch: Dict) -> Dict[str, Any]:
+        """Analyze current cloud architecture"""
+        return {
+            "compute_resources": arch.get("compute", "Not specified"),
+            "storage_usage": arch.get("storage", "Not specified"),
+            "network_configuration": arch.get("network", "Not specified"),
+            "estimated_monthly_cost": arch.get("cost", "Unknown"),
+            "issues_identified": [
+                "Underutilized resources",
+                "No auto-scaling configured",
+                "Single availability zone deployment"
+            ]
+        }
+    
+    def _generate_cost_optimizations(self, arch: Dict, provider: str) -> List[Dict[str, Any]]:
+        """Generate cost optimization recommendations"""
+        if provider == "aws":
+            return [
+                {
+                    "optimization": "Use Reserved Instances",
+                    "description": "Commit to 1-3 year terms for predictable workloads",
+                    "estimated_savings": "Up to 75% compared to on-demand"
+                },
+                {
+                    "optimization": "Implement Auto Scaling",
+                    "description": "Scale resources based on demand",
+                    "estimated_savings": "30-50% by avoiding over-provisioning"
+                },
+                {
+                    "optimization": "Use S3 Intelligent-Tiering",
+                    "description": "Automatically move data to cost-effective storage tiers",
+                    "estimated_savings": "20-40% on storage costs"
+                },
+                {
+                    "optimization": "Right-size EC2 Instances",
+                    "description": "Match instance types to actual workload requirements",
+                    "estimated_savings": "20-30% on compute costs"
+                },
+                {
+                    "optimization": "Use Spot Instances",
+                    "description": "For fault-tolerant, flexible workloads",
+                    "estimated_savings": "Up to 90% compared to on-demand"
+                }
+            ]
+        else:
+            return [
+                {"optimization": f"Cost optimization for {provider}", "estimated_savings": "Varies"}
+            ]
+    
+    def _generate_performance_optimizations(self, arch: Dict) -> List[Dict[str, Any]]:
+        """Generate performance optimization recommendations"""
+        return [
+            {
+                "optimization": "Implement CloudFront CDN",
+                "impact": "Reduce latency for global users",
+                "improvement": "50-80% latency reduction"
+            },
+            {
+                "optimization": "Use ElastiCache",
+                "impact": "Cache frequently accessed data",
+                "improvement": "10x faster data access"
+            },
+            {
+                "optimization": "Enable EBS-optimized instances",
+                "impact": "Dedicated bandwidth for storage",
+                "improvement": "Better I/O performance"
+            },
+            {
+                "optimization": "Use Application Load Balancer",
+                "impact": "Advanced routing and SSL termination",
+                "improvement": "Better request distribution"
+            }
+        ]
+    
+    def _generate_reliability_improvements(self, arch: Dict) -> List[Dict[str, Any]]:
+        """Generate reliability improvements"""
+        return [
+            {
+                "improvement": "Multi-AZ Deployment",
+                "description": "Deploy across multiple availability zones",
+                "benefit": "99.99% availability"
+            },
+            {
+                "improvement": "Implement Auto Scaling",
+                "description": "Automatically handle traffic spikes",
+                "benefit": "No manual intervention needed"
+            },
+            {
+                "improvement": "Use RDS Multi-AZ",
+                "description": "Automatic failover for database",
+                "benefit": "Minimal downtime"
+            },
+            {
+                "improvement": "Implement Health Checks",
+                "description": "Monitor and replace unhealthy instances",
+                "benefit": "Self-healing infrastructure"
+            }
+        ]
+    
+    def _generate_security_enhancements(self, arch: Dict) -> List[Dict[str, Any]]:
+        """Generate security enhancements"""
+        return [
+            {
+                "enhancement": "Implement WAF",
+                "description": "Web Application Firewall for API protection",
+                "benefit": "Block common attacks"
+            },
+            {
+                "enhancement": "Use VPC with Private Subnets",
+                "description": "Isolate backend services",
+                "benefit": "Defense in depth"
+            },
+            {
+                "enhancement": "Enable Encryption at Rest",
+                "description": "Encrypt all data stores",
+                "benefit": "Data protection"
+            },
+            {
+                "enhancement": "Implement IAM Best Practices",
+                "description": "Least privilege access",
+                "benefit": "Reduced attack surface"
+            }
+        ]
+    
+    def _design_optimized_architecture(self, current: Dict, cost: List, perf: List) -> Dict[str, Any]:
+        """Design optimized architecture"""
+        return {
+            "compute": {
+                "type": "Auto Scaling Group with EC2 instances",
+                "instance_type": "t3.medium (right-sized)",
+                "min_instances": 2,
+                "max_instances": 10,
+                "availability_zones": "us-east-1a, us-east-1b, us-east-1c"
+            },
+            "load_balancing": {
+                "type": "Application Load Balancer",
+                "ssl_termination": "Enabled",
+                "health_checks": "Configured"
+            },
+            "database": {
+                "type": "RDS PostgreSQL",
+                "deployment": "Multi-AZ",
+                "read_replicas": 2,
+                "backup": "Automated daily backups"
+            },
+            "caching": {
+                "type": "ElastiCache Redis",
+                "deployment": "Multi-AZ with automatic failover"
+            },
+            "storage": {
+                "type": "S3 with Intelligent-Tiering",
+                "cdn": "CloudFront distribution"
+            },
+            "monitoring": {
+                "type": "CloudWatch",
+                "alerts": "Configured for key metrics"
+            }
+        }
+    
+    def _estimate_cost_savings(self, optimizations: List[Dict]) -> Dict[str, Any]:
+        """Estimate cost savings"""
+        return {
+            "current_monthly_cost": "$5,000",
+            "optimized_monthly_cost": "$2,500",
+            "monthly_savings": "$2,500",
+            "annual_savings": "$30,000",
+            "savings_percentage": "50%"
+        }
+    
+    def _create_implementation_plan(self) -> List[Dict[str, Any]]:
+        """Create implementation plan"""
+        return [
+            {
+                "phase": 1,
+                "name": "Quick Wins",
+                "duration": "1 week",
+                "tasks": [
+                    "Right-size EC2 instances",
+                    "Enable S3 Intelligent-Tiering",
+                    "Purchase Reserved Instances"
+                ]
+            },
+            {
+                "phase": 2,
+                "name": "Auto Scaling",
+                "duration": "2 weeks",
+                "tasks": [
+                    "Configure Auto Scaling Groups",
+                    "Set up Application Load Balancer",
+                    "Implement health checks"
+                ]
+            },
+            {
+                "phase": 3,
+                "name": "High Availability",
+                "duration": "3 weeks",
+                "tasks": [
+                    "Deploy Multi-AZ RDS",
+                    "Configure ElastiCache",
+                    "Set up CloudFront CDN"
+                ]
+            }
+        ]
+    
+    def _generate_cloud_architecture_best_practices(self) -> List[str]:
+        """Generate cloud architecture best practices"""
+        return [
+            "✅ Design for failure (assume everything fails)",
+            "✅ Implement loose coupling between services",
+            "✅ Use managed services when possible",
+            "✅ Implement auto-scaling for elasticity",
+            "✅ Monitor everything with CloudWatch/equivalent",
+            "✅ Use Infrastructure as Code (Terraform/CloudFormation)",
+            "✅ Implement cost tagging and monitoring",
+            "✅ Follow the Well-Architected Framework",
+            "✅ Automate security and compliance",
+            "✅ Regularly review and optimize architecture"
+        ]
+
+
 __all__ = [
     'SystemArchitectureGenerator',
     'MicroserviceIdentifier',
     'DatabaseSchemaDesigner',
     'APIDesignGenerator',
+    'EventDrivenArchitecturePlanner',
     'CachingStrategyDesigner',
+    'LoadBalancingConfigurator',
     'FaultTolerancePlanner',
     'ScalabilityBlueprinter',
-    'MigrationPathPlanner'
+    'CloudArchitectureOptimizer'
 ]
 
