@@ -208,6 +208,17 @@ from .smart_coding_ai_security import (
     IncidentResponsePlanner
 )
 
+# Import documentation implementations (Capabilities 61-63, 65-66, 68-69)
+from .smart_coding_ai_documentation import (
+    APIDocumentationGenerator,
+    ArchitectureDiagramGenerator,
+    CodeDocumentationGenerator,
+    DeploymentDocumentationGenerator,
+    TroubleshootingGuideGenerator,
+    ChangeLogGenerator,
+    CodeCommentGenerator
+)
+
 logger = structlog.get_logger()
 
 
@@ -1501,10 +1512,19 @@ class SmartCodingAIOptimized:
         self.security_code_reviewer = SecurityCodeReviewer()
         self.incident_response_planner = IncidentResponsePlanner()
         
-        # Mark capabilities as implemented (now 51 total)
+        # Documentation implementations (Capabilities 61-63, 65-66, 68-69)
+        self.api_documentation_generator = APIDocumentationGenerator()
+        self.architecture_diagram_generator = ArchitectureDiagramGenerator()
+        self.code_documentation_generator = CodeDocumentationGenerator()
+        self.deployment_documentation_generator = DeploymentDocumentationGenerator()
+        self.troubleshooting_guide_generator = TroubleshootingGuideGenerator()
+        self.changelog_generator = ChangeLogGenerator()
+        self.code_comment_generator = CodeCommentGenerator()
+        
+        # Mark capabilities as implemented (now 58 total)
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
                            31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
-                           51, 52, 53, 54, 55, 56, 58, 59, 60]
+                           51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
