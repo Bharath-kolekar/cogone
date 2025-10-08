@@ -1090,6 +1090,1072 @@ elasticapm.set_custom_context({'user_id': user_id})
 '''
 
 
+class LoggingInfrastructureDesigner:
+    """Implements capability #76: Logging Infrastructure Design"""
+    
+    async def design_logging_infrastructure(self, 
+                                           application_scale: str = "medium",
+                                           log_volume_gb_day: int = 100,
+                                           retention_days: int = 30) -> Dict[str, Any]:
+        """
+        Designs centralized logging systems
+        
+        Args:
+            application_scale: Scale (small, medium, large, enterprise)
+            log_volume_gb_day: Expected daily log volume in GB
+            retention_days: Log retention period
+            
+        Returns:
+            Complete logging infrastructure design
+        """
+        try:
+            # Select logging stack based on scale
+            stack = self._select_logging_stack(application_scale, log_volume_gb_day)
+            
+            # Design log collection
+            collection = self._design_log_collection(stack, application_scale)
+            
+            # Design log storage
+            storage = self._design_log_storage(stack, log_volume_gb_day, retention_days)
+            
+            # Design log processing
+            processing = self._design_log_processing(stack)
+            
+            # Design log visualization
+            visualization = self._design_log_visualization(stack)
+            
+            # Generate configuration
+            config = self._generate_logging_config(stack, collection, storage, processing)
+            
+            # Calculate costs
+            cost_estimate = self._estimate_logging_costs(log_volume_gb_day, retention_days, stack)
+            
+            return {
+                "success": True,
+                "logging_stack": stack,
+                "architecture": {
+                    "collection": collection,
+                    "storage": storage,
+                    "processing": processing,
+                    "visualization": visualization
+                },
+                "configuration": config,
+                "cost_estimate": cost_estimate,
+                "implementation_plan": self._create_implementation_plan(stack),
+                "best_practices": self._generate_logging_best_practices()
+            }
+        except Exception as e:
+            logger.error("Logging infrastructure design failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _select_logging_stack(self, scale: str, volume: int) -> Dict[str, str]:
+        """Select appropriate logging stack"""
+        if scale == "enterprise" or volume > 500:
+            return {
+                "name": "ELK Stack (Enterprise)",
+                "collector": "Filebeat/Logstash",
+                "storage": "Elasticsearch cluster",
+                "visualization": "Kibana",
+                "alerting": "ElastAlert"
+            }
+        elif scale == "large" or volume > 100:
+            return {
+                "name": "Loki + Prometheus",
+                "collector": "Promtail",
+                "storage": "Grafana Loki",
+                "visualization": "Grafana",
+                "alerting": "Alertmanager"
+            }
+        else:
+            return {
+                "name": "Lightweight Stack",
+                "collector": "Fluentd",
+                "storage": "Loki",
+                "visualization": "Grafana",
+                "alerting": "Grafana Alerts"
+            }
+    
+    def _design_log_collection(self, stack: Dict, scale: str) -> Dict[str, Any]:
+        """Design log collection strategy"""
+        return {
+            "collectors": [stack["collector"]],
+            "log_sources": [
+                "Application logs (stdout/stderr)",
+                "System logs (/var/log)",
+                "Container logs",
+                "Load balancer logs",
+                "Database logs",
+                "Security logs"
+            ],
+            "log_formats": ["JSON", "Structured", "Plain text"],
+            "collection_method": "Agent-based" if scale != "small" else "Sidecar",
+            "buffer_size": "256MB per collector",
+            "compression": "gzip"
+        }
+    
+    def _design_log_storage(self, stack: Dict, volume: int, retention: int) -> Dict[str, Any]:
+        """Design log storage strategy"""
+        total_storage_gb = volume * retention
+        
+        return {
+            "storage_backend": stack["storage"],
+            "retention_policy": {
+                "hot_storage": "7 days (fast SSD)",
+                "warm_storage": f"{retention - 7} days (standard storage)",
+                "cold_storage": "Archive to S3/GCS after retention"
+            },
+            "total_storage_required": f"{total_storage_gb} GB",
+            "storage_tier_distribution": {
+                "hot": f"{volume * 7} GB",
+                "warm": f"{volume * (retention - 7)} GB"
+            },
+            "compression_ratio": "5:1 expected",
+            "replication": "3x for production"
+        }
+    
+    def _design_log_processing(self, stack: Dict) -> Dict[str, Any]:
+        """Design log processing pipeline"""
+        return {
+            "processing_engine": stack.get("collector", "Logstash"),
+            "processing_stages": [
+                "Parse and structure logs",
+                "Enrich with metadata",
+                "Filter sensitive data",
+                "Apply log levels",
+                "Add timestamps",
+                "Index and store"
+            ],
+            "parsing_rules": {
+                "json_logs": "Parse as JSON",
+                "multiline_logs": "Aggregate multiline entries",
+                "error_logs": "Extract stack traces"
+            },
+            "filtering": [
+                "Remove debug logs in production",
+                "Mask PII and secrets",
+                "Drop health check logs"
+            ]
+        }
+    
+    def _design_log_visualization(self, stack: Dict) -> Dict[str, Any]:
+        """Design log visualization"""
+        return {
+            "visualization_tool": stack["visualization"],
+            "dashboards": [
+                "Application Performance Dashboard",
+                "Error Tracking Dashboard",
+                "Security Events Dashboard",
+                "Infrastructure Health Dashboard",
+                "User Activity Dashboard"
+            ],
+            "saved_searches": [
+                "ERROR and CRITICAL logs",
+                "Slow queries (>1s)",
+                "Authentication failures",
+                "5xx errors",
+                "Database connection errors"
+            ],
+            "alerts": [
+                "Error rate > 1%",
+                "Response time > 1s (p95)",
+                "Disk usage > 80%",
+                "Memory usage > 90%"
+            ]
+        }
+    
+    def _generate_logging_config(self, stack: Dict, collection: Dict, 
+                                 storage: Dict, processing: Dict) -> str:
+        """Generate logging configuration"""
+        if "ELK" in stack["name"]:
+            return '''
+# Filebeat configuration
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/*.log
+      - /var/log/app/*.log
+    fields:
+      environment: production
+      service: my-app
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+# Logstash configuration
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter {
+  json {
+    source => "message"
+  }
+  
+  mutate {
+    remove_field => ["agent", "ecs"]
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["elasticsearch:9200"]
+    index => "logs-%{+YYYY.MM.dd}"
+  }
+}
+
+# Elasticsearch index template
+PUT _index_template/logs-template
+{
+  "index_patterns": ["logs-*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 3,
+      "number_of_replicas": 2,
+      "index.lifecycle.name": "logs-policy"
+    }
+  }
+}
+'''
+        else:
+            return '''
+# Promtail configuration
+server:
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: varlogs
+        __path__: /var/log/*.log
+
+  - job_name: app
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: applogs
+        __path__: /var/log/app/*.log
+
+# Loki configuration
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+
+ingester:
+  lifecycler:
+    ring:
+      replication_factor: 1
+  chunk_idle_period: 5m
+  chunk_retain_period: 30s
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+'''
+    
+    def _estimate_logging_costs(self, volume: int, retention: int, stack: Dict) -> Dict[str, Any]:
+        """Estimate logging infrastructure costs"""
+        storage_gb = volume * retention
+        storage_cost_per_gb = 0.10  # USD per GB/month
+        
+        if "ELK" in stack["name"]:
+            compute_cost = 500  # Enterprise Elasticsearch cluster
+        elif "Loki" in stack["name"]:
+            compute_cost = 150  # Loki + Grafana
+        else:
+            compute_cost = 50  # Lightweight
+        
+        total_storage_cost = storage_gb * storage_cost_per_gb
+        total_monthly = compute_cost + total_storage_cost
+        
+        return {
+            "compute_cost_monthly": f"${compute_cost}",
+            "storage_cost_monthly": f"${total_storage_cost:.2f}",
+            "total_monthly_cost": f"${total_monthly:.2f}",
+            "cost_per_gb_day": f"${total_monthly / (volume * 30):.4f}"
+        }
+    
+    def _create_implementation_plan(self, stack: Dict) -> List[str]:
+        """Create implementation plan"""
+        return [
+            "1. Deploy logging infrastructure (Elasticsearch/Loki cluster)",
+            "2. Configure log collectors on all nodes",
+            "3. Set up log parsing and filtering rules",
+            "4. Configure log retention and rotation",
+            "5. Create visualization dashboards",
+            "6. Set up alerts and notifications",
+            "7. Test end-to-end log flow",
+            "8. Document logging standards",
+            "9. Train team on log analysis",
+            "10. Implement log-based monitoring"
+        ]
+    
+    def _generate_logging_best_practices(self) -> List[str]:
+        """Generate logging best practices"""
+        return [
+            "✅ Use structured logging (JSON format)",
+            "✅ Include correlation IDs for request tracing",
+            "✅ Log at appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
+            "✅ Never log sensitive data (passwords, tokens, PII)",
+            "✅ Use consistent log message formats",
+            "✅ Add contextual information (user ID, request ID, timestamp)",
+            "✅ Implement log sampling for high-volume endpoints",
+            "✅ Set up log-based alerts for critical errors",
+            "✅ Regularly review and optimize log retention",
+            "✅ Use log aggregation for distributed systems"
+        ]
+
+
+class DisasterRecoveryPlanner:
+    """Implements capability #78: Disaster Recovery Planning"""
+    
+    async def create_disaster_recovery_plan(self,
+                                           system_architecture: Dict[str, Any],
+                                           rto_minutes: int = 60,
+                                           rpo_minutes: int = 15) -> Dict[str, Any]:
+        """
+        Creates backup and recovery procedures
+        
+        Args:
+            system_architecture: System architecture details
+            rto_minutes: Recovery Time Objective (RTO)
+            rpo_minutes: Recovery Point Objective (RPO)
+            
+        Returns:
+            Comprehensive disaster recovery plan
+        """
+        try:
+            # Assess disaster risks
+            risks = self._assess_disaster_risks(system_architecture)
+            
+            # Design backup strategy
+            backup_strategy = self._design_backup_strategy(system_architecture, rpo_minutes)
+            
+            # Design recovery procedures
+            recovery_procedures = self._design_recovery_procedures(system_architecture, rto_minutes)
+            
+            # Generate failover plan
+            failover_plan = self._generate_failover_plan(system_architecture)
+            
+            # Create testing schedule
+            testing_schedule = self._create_dr_testing_schedule()
+            
+            # Generate runbooks
+            runbooks = self._generate_dr_runbooks(recovery_procedures)
+            
+            return {
+                "success": True,
+                "rto_minutes": rto_minutes,
+                "rpo_minutes": rpo_minutes,
+                "disaster_risks": risks,
+                "backup_strategy": backup_strategy,
+                "recovery_procedures": recovery_procedures,
+                "failover_plan": failover_plan,
+                "testing_schedule": testing_schedule,
+                "runbooks": runbooks,
+                "estimated_cost": self._estimate_dr_costs(backup_strategy, system_architecture)
+            }
+        except Exception as e:
+            logger.error("Disaster recovery planning failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _assess_disaster_risks(self, architecture: Dict) -> List[Dict[str, Any]]:
+        """Assess potential disaster scenarios"""
+        return [
+            {
+                "scenario": "Data Center Outage",
+                "probability": "Medium",
+                "impact": "Critical",
+                "mitigation": "Multi-region deployment",
+                "detection_time": "< 5 minutes"
+            },
+            {
+                "scenario": "Database Corruption",
+                "probability": "Low",
+                "impact": "Critical",
+                "mitigation": "Point-in-time recovery, automated backups",
+                "detection_time": "< 15 minutes"
+            },
+            {
+                "scenario": "Ransomware Attack",
+                "probability": "Medium",
+                "impact": "Critical",
+                "mitigation": "Immutable backups, air-gapped storage",
+                "detection_time": "< 30 minutes"
+            },
+            {
+                "scenario": "Accidental Data Deletion",
+                "probability": "High",
+                "impact": "High",
+                "mitigation": "Soft deletes, backup retention",
+                "detection_time": "< 1 hour"
+            },
+            {
+                "scenario": "Cloud Provider Outage",
+                "probability": "Low",
+                "impact": "Critical",
+                "mitigation": "Multi-cloud strategy",
+                "detection_time": "< 10 minutes"
+            }
+        ]
+    
+    def _design_backup_strategy(self, architecture: Dict, rpo_minutes: int) -> Dict[str, Any]:
+        """Design backup strategy"""
+        # Determine backup frequency based on RPO
+        if rpo_minutes <= 15:
+            backup_frequency = "Continuous (real-time replication)"
+        elif rpo_minutes <= 60:
+            backup_frequency = "Every 15 minutes"
+        elif rpo_minutes <= 240:
+            backup_frequency = "Hourly"
+        else:
+            backup_frequency = "Every 4 hours"
+        
+        return {
+            "backup_frequency": backup_frequency,
+            "backup_types": {
+                "database": {
+                    "method": "Continuous replication + Point-in-time recovery",
+                    "frequency": backup_frequency,
+                    "retention": "30 days hot, 1 year cold",
+                    "storage": "S3 with versioning enabled"
+                },
+                "application_data": {
+                    "method": "Incremental backups",
+                    "frequency": "Hourly",
+                    "retention": "7 days",
+                    "storage": "S3 Standard"
+                },
+                "configuration": {
+                    "method": "Git version control + automated snapshots",
+                    "frequency": "On every change",
+                    "retention": "Indefinite",
+                    "storage": "Git repository + S3"
+                },
+                "logs": {
+                    "method": "Continuous streaming",
+                    "frequency": "Real-time",
+                    "retention": "30 days hot, 1 year archive",
+                    "storage": "S3 with lifecycle policies"
+                }
+            },
+            "backup_validation": {
+                "automated_tests": "Daily restore tests",
+                "integrity_checks": "Weekly checksum verification",
+                "restore_drills": "Monthly full recovery simulation"
+            },
+            "backup_security": {
+                "encryption": "AES-256 encryption at rest",
+                "access_control": "Principle of least privilege",
+                "immutability": "S3 Object Lock for 30 days",
+                "geographic_redundancy": "Cross-region replication"
+            }
+        }
+    
+    def _design_recovery_procedures(self, architecture: Dict, rto_minutes: int) -> Dict[str, Any]:
+        """Design recovery procedures"""
+        return {
+            "rto_target": f"{rto_minutes} minutes",
+            "recovery_phases": [
+                {
+                    "phase": "Detection & Assessment",
+                    "duration": "0-5 minutes",
+                    "actions": [
+                        "Automated monitoring detects outage",
+                        "Incident response team notified",
+                        "Assess scope and impact",
+                        "Determine recovery strategy"
+                    ]
+                },
+                {
+                    "phase": "Failover Activation",
+                    "duration": "5-15 minutes",
+                    "actions": [
+                        "Activate DR site",
+                        "Update DNS records",
+                        "Restore from latest backup",
+                        "Verify data integrity"
+                    ]
+                },
+                {
+                    "phase": "Service Restoration",
+                    "duration": "15-45 minutes",
+                    "actions": [
+                        "Start application services",
+                        "Verify health checks",
+                        "Resume traffic routing",
+                        "Monitor for issues"
+                    ]
+                },
+                {
+                    "phase": "Validation & Communication",
+                    "duration": "45-60 minutes",
+                    "actions": [
+                        "Validate full functionality",
+                        "Notify stakeholders",
+                        "Update status page",
+                        "Begin post-mortem"
+                    ]
+                }
+            ],
+            "recovery_priorities": [
+                {"priority": 1, "component": "Authentication service", "rto": "10 minutes"},
+                {"priority": 2, "component": "Core API", "rto": "15 minutes"},
+                {"priority": 3, "component": "Database", "rto": "20 minutes"},
+                {"priority": 4, "component": "Frontend application", "rto": "30 minutes"},
+                {"priority": 5, "component": "Analytics/reporting", "rto": "60 minutes"}
+            ]
+        }
+    
+    def _generate_failover_plan(self, architecture: Dict) -> Dict[str, Any]:
+        """Generate failover plan"""
+        return {
+            "failover_strategy": "Automated failover with manual approval for critical systems",
+            "primary_site": "us-east-1",
+            "dr_site": "us-west-2",
+            "failover_triggers": [
+                "Primary site health check failure > 5 minutes",
+                "Database replication lag > 1 hour",
+                "Error rate > 10%",
+                "Manual activation by incident commander"
+            ],
+            "failover_process": [
+                "1. Stop writes to primary database",
+                "2. Promote DR database to primary",
+                "3. Update DNS to point to DR site (TTL: 60s)",
+                "4. Start application servers in DR site",
+                "5. Enable traffic routing to DR site",
+                "6. Monitor and validate"
+            ],
+            "failback_process": [
+                "1. Repair primary site",
+                "2. Sync data from DR to primary",
+                "3. Validate data consistency",
+                "4. Perform test cutover",
+                "5. Execute production cutover during maintenance window",
+                "6. Resume normal operations"
+            ],
+            "communication_plan": {
+                "internal": "Slack incident channel + PagerDuty",
+                "external": "Status page + Email notifications",
+                "escalation": "CTO notified if RTO exceeded"
+            }
+        }
+    
+    def _create_dr_testing_schedule(self) -> Dict[str, Any]:
+        """Create DR testing schedule"""
+        return {
+            "tabletop_exercises": {
+                "frequency": "Quarterly",
+                "duration": "2 hours",
+                "participants": "All engineers + management",
+                "objectives": "Review procedures, identify gaps"
+            },
+            "backup_restore_tests": {
+                "frequency": "Monthly",
+                "duration": "4 hours",
+                "scope": "Full database restore to test environment",
+                "success_criteria": "Complete restore within RPO/RTO"
+            },
+            "failover_drills": {
+                "frequency": "Bi-annually",
+                "duration": "8 hours",
+                "scope": "Full production failover to DR site",
+                "success_criteria": "Meet RTO with zero data loss"
+            },
+            "disaster_simulation": {
+                "frequency": "Annually",
+                "duration": "Full day",
+                "scope": "Unannounced test of full DR procedures",
+                "success_criteria": "Meet all SLAs during simulated disaster"
+            }
+        }
+    
+    def _generate_dr_runbooks(self, procedures: Dict) -> List[Dict[str, str]]:
+        """Generate DR runbooks"""
+        return [
+            {
+                "title": "Database Disaster Recovery",
+                "steps": """
+1. Verify database failure (check health endpoint)
+2. Stop application writes: `kubectl scale deployment app --replicas=0`
+3. Promote DR database: `aws rds promote-read-replica --db-instance-identifier dr-db`
+4. Update connection strings in secrets
+5. Start application with new database
+6. Verify data integrity
+7. Monitor replication lag
+                """,
+                "estimated_time": "20 minutes",
+                "required_access": "AWS RDS admin, Kubernetes admin"
+            },
+            {
+                "title": "Full Site Failover",
+                "steps": """
+1. Declare incident and notify team
+2. Assess primary site status
+3. Execute failover script: `./scripts/failover-to-dr.sh`
+4. Monitor automated DNS update
+5. Verify DR site health checks
+6. Enable traffic routing
+7. Communicate status to stakeholders
+8. Begin post-incident review
+                """,
+                "estimated_time": "45 minutes",
+                "required_access": "AWS Route53 admin, Production deployment"
+            },
+            {
+                "title": "Ransomware Recovery",
+                "steps": """
+1. Isolate affected systems immediately
+2. Contact security team and law enforcement
+3. Identify last clean backup before infection
+4. Restore from immutable backup
+5. Scan restored systems for malware
+6. Reset all credentials and secrets
+7. Review and strengthen security controls
+8. Document incident for post-mortem
+                """,
+                "estimated_time": "4-8 hours",
+                "required_access": "Security team, Backup admin, All system access"
+            }
+        ]
+    
+    def _estimate_dr_costs(self, backup_strategy: Dict, architecture: Dict) -> Dict[str, Any]:
+        """Estimate DR costs"""
+        return {
+            "backup_storage": "$500/month (S3 with replication)",
+            "dr_infrastructure": "$2000/month (Warm standby in DR region)",
+            "testing_costs": "$500/quarter (For DR drills)",
+            "total_annual_cost": "$36,000/year",
+            "cost_as_percentage_of_infrastructure": "15-20%",
+            "cost_benefit": "Protects against potential $1M+ losses from extended outage"
+        }
+
+
+class EnvironmentConfigurationManager:
+    """Implements capability #79: Environment Configuration Management"""
+    
+    async def manage_environment_configs(self,
+                                        environments: List[str] = None,
+                                        config_type: str = "all") -> Dict[str, Any]:
+        """
+        Manages dev/stage/prod configurations
+        
+        Args:
+            environments: List of environments (dev, staging, production)
+            config_type: Type of config (application, infrastructure, secrets, all)
+            
+        Returns:
+            Environment configuration management system
+        """
+        try:
+            environments = environments or ["development", "staging", "production"]
+            
+            # Generate config structure
+            config_structure = self._generate_config_structure(environments)
+            
+            # Create config templates
+            templates = self._create_config_templates(environments, config_type)
+            
+            # Design secrets management
+            secrets_management = self._design_secrets_management(environments)
+            
+            # Create deployment configs
+            deployment_configs = self._create_deployment_configs(environments)
+            
+            # Generate config validation
+            validation = self._generate_config_validation()
+            
+            # Create config promotion workflow
+            promotion_workflow = self._create_promotion_workflow(environments)
+            
+            return {
+                "success": True,
+                "environments": environments,
+                "config_structure": config_structure,
+                "config_templates": templates,
+                "secrets_management": secrets_management,
+                "deployment_configs": deployment_configs,
+                "validation": validation,
+                "promotion_workflow": promotion_workflow,
+                "best_practices": self._generate_config_best_practices()
+            }
+        except Exception as e:
+            logger.error("Environment configuration management failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _generate_config_structure(self, environments: List[str]) -> Dict[str, Any]:
+        """Generate configuration structure"""
+        return {
+            "directory_structure": """
+config/
+├── base/                    # Shared configuration
+│   ├── application.yaml
+│   ├── database.yaml
+│   └── cache.yaml
+├── environments/
+│   ├── development/
+│   │   ├── application.yaml
+│   │   ├── database.yaml
+│   │   └── secrets.yaml
+│   ├── staging/
+│   │   ├── application.yaml
+│   │   ├── database.yaml
+│   │   └── secrets.yaml
+│   └── production/
+│       ├── application.yaml
+│       ├── database.yaml
+│       └── secrets.yaml
+├── kubernetes/
+│   ├── base/
+│   └── overlays/
+│       ├── development/
+│       ├── staging/
+│       └── production/
+└── terraform/
+    ├── modules/
+    └── environments/
+        ├── dev/
+        ├── staging/
+        └── prod/
+            """,
+            "config_layers": [
+                "Base configuration (shared across all environments)",
+                "Environment-specific overrides",
+                "Secret values (injected at runtime)",
+                "Feature flags (dynamic configuration)"
+            ],
+            "supported_formats": ["YAML", "JSON", "ENV files", "Kubernetes ConfigMaps/Secrets"]
+        }
+    
+    def _create_config_templates(self, environments: List[str], config_type: str) -> Dict[str, str]:
+        """Create configuration templates"""
+        templates = {}
+        
+        for env in environments:
+            if env == "development":
+                templates[env] = '''
+# Development Environment Configuration
+environment: development
+debug: true
+log_level: DEBUG
+
+database:
+  host: localhost
+  port: 5432
+  database: myapp_dev
+  pool_size: 5
+  ssl_mode: disable
+
+cache:
+  type: memory
+  ttl: 300
+
+api:
+  rate_limit: 1000/minute
+  timeout: 30s
+  
+features:
+  new_ui: true
+  experimental_features: true
+  
+monitoring:
+  enabled: false
+  
+cors:
+  allowed_origins: ["*"]
+'''
+            elif env == "staging":
+                templates[env] = '''
+# Staging Environment Configuration
+environment: staging
+debug: false
+log_level: INFO
+
+database:
+  host: staging-db.example.com
+  port: 5432
+  database: myapp_staging
+  pool_size: 20
+  ssl_mode: require
+
+cache:
+  type: redis
+  host: staging-redis.example.com
+  ttl: 3600
+
+api:
+  rate_limit: 100/minute
+  timeout: 10s
+  
+features:
+  new_ui: true
+  experimental_features: false
+  
+monitoring:
+  enabled: true
+  apm_url: https://staging-apm.example.com
+  
+cors:
+  allowed_origins: ["https://staging.example.com"]
+'''
+            elif env == "production":
+                templates[env] = '''
+# Production Environment Configuration
+environment: production
+debug: false
+log_level: WARNING
+
+database:
+  host: prod-db.example.com
+  port: 5432
+  database: myapp_prod
+  pool_size: 50
+  ssl_mode: require
+  connection_timeout: 5s
+
+cache:
+  type: redis
+  host: prod-redis.example.com
+  ttl: 7200
+  cluster_mode: true
+
+api:
+  rate_limit: 1000/minute
+  timeout: 5s
+  
+features:
+  new_ui: true
+  experimental_features: false
+  
+monitoring:
+  enabled: true
+  apm_url: https://apm.example.com
+  
+cors:
+  allowed_origins: ["https://example.com", "https://www.example.com"]
+  
+security:
+  force_https: true
+  hsts_enabled: true
+  
+performance:
+  enable_caching: true
+  compression: true
+'''
+        
+        return templates
+    
+    def _design_secrets_management(self, environments: List[str]) -> Dict[str, Any]:
+        """Design secrets management strategy"""
+        return {
+            "secrets_provider": "AWS Secrets Manager / HashiCorp Vault / Azure Key Vault",
+            "secret_types": {
+                "database_credentials": {
+                    "storage": "Secrets Manager",
+                    "rotation": "90 days automated",
+                    "access": "Application IAM role only"
+                },
+                "api_keys": {
+                    "storage": "Secrets Manager",
+                    "rotation": "Manual on request",
+                    "access": "Restricted by environment"
+                },
+                "encryption_keys": {
+                    "storage": "KMS",
+                    "rotation": "Automated annually",
+                    "access": "Application + DevOps team"
+                },
+                "ssl_certificates": {
+                    "storage": "Certificate Manager",
+                    "rotation": "Automated via Let's Encrypt",
+                    "access": "Load balancer only"
+                }
+            },
+            "secret_injection": {
+                "method": "Environment variables from secrets manager",
+                "kubernetes": "External Secrets Operator",
+                "docker": "Docker secrets / Vault agent",
+                "serverless": "Parameter Store integration"
+            },
+            "access_control": {
+                "principle": "Least privilege",
+                "development": "Read access to dev secrets only",
+                "staging": "Read access to staging secrets",
+                "production": "Restricted to production deployers + on-call"
+            },
+            "secret_scanning": {
+                "pre_commit": "git-secrets hook",
+                "ci_pipeline": "TruffleHog / GitGuardian",
+                "runtime": "Automated secret detection"
+            }
+        }
+    
+    def _create_deployment_configs(self, environments: List[str]) -> Dict[str, Dict]:
+        """Create deployment configurations"""
+        configs = {}
+        
+        for env in environments:
+            if env == "development":
+                configs[env] = {
+                    "replicas": 1,
+                    "resources": {"cpu": "100m", "memory": "256Mi"},
+                    "auto_scaling": False,
+                    "deployment_strategy": "Recreate",
+                    "health_check_interval": "30s"
+                }
+            elif env == "staging":
+                configs[env] = {
+                    "replicas": 2,
+                    "resources": {"cpu": "500m", "memory": "1Gi"},
+                    "auto_scaling": True,
+                    "min_replicas": 2,
+                    "max_replicas": 5,
+                    "deployment_strategy": "RollingUpdate",
+                    "health_check_interval": "10s"
+                }
+            elif env == "production":
+                configs[env] = {
+                    "replicas": 5,
+                    "resources": {"cpu": "2000m", "memory": "4Gi"},
+                    "auto_scaling": True,
+                    "min_replicas": 5,
+                    "max_replicas": 20,
+                    "deployment_strategy": "BlueGreen",
+                    "health_check_interval": "5s",
+                    "readiness_probe": "enabled",
+                    "liveness_probe": "enabled"
+                }
+        
+        return configs
+    
+    def _generate_config_validation(self) -> Dict[str, Any]:
+        """Generate configuration validation"""
+        return {
+            "validation_schema": '''
+{
+  "type": "object",
+  "required": ["environment", "database", "cache"],
+  "properties": {
+    "environment": {
+      "type": "string",
+      "enum": ["development", "staging", "production"]
+    },
+    "debug": {
+      "type": "boolean"
+    },
+    "database": {
+      "type": "object",
+      "required": ["host", "port", "database"],
+      "properties": {
+        "host": {"type": "string"},
+        "port": {"type": "integer"},
+        "database": {"type": "string"},
+        "pool_size": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}
+            ''',
+            "validation_tools": [
+                "JSON Schema validation",
+                "Kubernetes validation (kubectl apply --dry-run)",
+                "Terraform plan validation",
+                "Custom validation scripts"
+            ],
+            "validation_gates": {
+                "pre_commit": "Validate config syntax",
+                "ci_pipeline": "Validate against schema",
+                "pre_deployment": "Validate connectivity and credentials",
+                "post_deployment": "Validate application health"
+            }
+        }
+    
+    def _create_promotion_workflow(self, environments: List[str]) -> Dict[str, Any]:
+        """Create configuration promotion workflow"""
+        return {
+            "promotion_path": "development -> staging -> production",
+            "promotion_process": [
+                {
+                    "step": 1,
+                    "action": "Update configuration in version control",
+                    "automation": "Git commit + pull request"
+                },
+                {
+                    "step": 2,
+                    "action": "Peer review configuration changes",
+                    "automation": "GitHub PR review required"
+                },
+                {
+                    "step": 3,
+                    "action": "Validate configuration",
+                    "automation": "CI pipeline runs validation tests"
+                },
+                {
+                    "step": 4,
+                    "action": "Deploy to target environment",
+                    "automation": "Automated deployment on merge"
+                },
+                {
+                    "step": 5,
+                    "action": "Verify deployment",
+                    "automation": "Health checks + smoke tests"
+                },
+                {
+                    "step": 6,
+                    "action": "Promote to next environment",
+                    "automation": "Manual approval for production"
+                }
+            ],
+            "rollback_procedure": {
+                "trigger": "Failed health checks or manual intervention",
+                "method": "Revert to previous configuration version",
+                "automation": "Automated rollback on deployment failure"
+            },
+            "change_management": {
+                "development": "No approval required",
+                "staging": "Engineering lead approval",
+                "production": "Change advisory board + scheduled maintenance window"
+            }
+        }
+    
+    def _generate_config_best_practices(self) -> List[str]:
+        """Generate configuration best practices"""
+        return [
+            "✅ Store all configuration in version control",
+            "✅ Never commit secrets to git",
+            "✅ Use environment-specific config files",
+            "✅ Validate configurations in CI/CD pipeline",
+            "✅ Use secrets managers for sensitive data",
+            "✅ Implement configuration as code (IaC)",
+            "✅ Document all configuration parameters",
+            "✅ Use feature flags for gradual rollouts",
+            "✅ Maintain configuration schema and validation",
+            "✅ Implement automated config backups",
+            "✅ Review and audit configuration changes",
+            "✅ Use separate AWS/cloud accounts per environment"
+        ]
+
+
 __all__ = [
     'InfrastructureAsCodeGenerator',
     'CICDPipelineGenerator',
@@ -1097,6 +2163,9 @@ __all__ = [
     'KubernetesManifestGenerator',
     'MonitoringConfigurator',
     'DeploymentStrategyPlanner',
-    'PerformanceMonitoringSetup'
+    'PerformanceMonitoringSetup',
+    'LoggingInfrastructureDesigner',
+    'DisasterRecoveryPlanner',
+    'EnvironmentConfigurationManager'
 ]
 
