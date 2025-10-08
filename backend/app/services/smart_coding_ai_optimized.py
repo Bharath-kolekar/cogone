@@ -241,6 +241,20 @@ from .smart_coding_ai_collaboration import (
     OnboardingAutomator
 )
 
+# Import Legacy Modernization implementations (Capabilities 91-100)
+from .smart_coding_ai_legacy_modernization import (
+    LegacyCodeAnalyzer,
+    MonolithRefactorer,
+    APIModernizer,
+    DatabaseMigrator,
+    FrontendModernizer,
+    SecurityHardener,
+    PerformanceOptimizer,
+    DocumentationGenerator,
+    TestingFrameworkModernizer,
+    ContinuousModernizationPlanner
+)
+
 logger = structlog.get_logger()
 
 
@@ -1561,11 +1575,23 @@ class SmartCodingAIOptimized:
         self.skill_gap_identifier = SkillGapIdentifier()
         self.onboarding_automator = OnboardingAutomator()
         
-        # Mark capabilities as implemented (now 72 total)
+        # Legacy Modernization capabilities (91-100)
+        self.legacy_code_analyzer = LegacyCodeAnalyzer()
+        self.monolith_refactorer = MonolithRefactorer()
+        self.api_modernizer = APIModernizer()
+        self.database_migrator = DatabaseMigrator()
+        self.frontend_modernizer = FrontendModernizer()
+        self.security_hardener_legacy = SecurityHardener()
+        self.performance_optimizer_legacy = PerformanceOptimizer()
+        self.documentation_generator_legacy = DocumentationGenerator()
+        self.testing_framework_modernizer = TestingFrameworkModernizer()
+        self.continuous_modernization_planner = ContinuousModernizationPlanner()
+        
+        # Mark capabilities as implemented (now 82 total)
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
                            31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
-                           71, 72, 73, 74, 75, 77, 80, 81, 83, 84, 85, 87, 88, 89]
+                           71, 72, 73, 74, 75, 77, 80, 81, 83, 84, 85, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
@@ -5922,6 +5948,50 @@ async def get_item(item_id: int):
     async def create_onboarding_plan(self, role: str = "developer", tech_stack: List[str] = None) -> Dict[str, Any]:
         """Capability #89: Create onboarding plan"""
         return await self.onboarding_automator.create_onboarding_plan(role, tech_stack)
+    
+    # ============================================================================
+    # LEGACY SYSTEM MODERNIZATION CAPABILITIES (91-100)
+    # ============================================================================
+    
+    async def analyze_legacy_code(self, codebase_path: str = None, code_sample: str = None) -> Dict[str, Any]:
+        """Capability #91: Analyze legacy code for modernization"""
+        return await self.legacy_code_analyzer.analyze_legacy_code(codebase_path, code_sample)
+    
+    async def refactor_monolith(self, codebase_path: str) -> Dict[str, Any]:
+        """Capability #92: Refactor monolith to microservices"""
+        return await self.monolith_refactorer.refactor_to_microservices(codebase_path)
+    
+    async def modernize_api(self, api_spec: Dict[str, Any] = None, code: str = None) -> Dict[str, Any]:
+        """Capability #93: Modernize legacy API"""
+        return await self.api_modernizer.modernize_api(api_spec, code)
+    
+    async def migrate_database(self, source_db: str, target_db: str, schema: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Capability #94: Plan database migration"""
+        return await self.database_migrator.plan_migration(source_db, target_db, schema)
+    
+    async def modernize_frontend(self, framework: str, code: str) -> Dict[str, Any]:
+        """Capability #95: Modernize frontend code"""
+        return await self.frontend_modernizer.modernize_frontend(framework, code)
+    
+    async def harden_legacy_security(self, code: str) -> Dict[str, Any]:
+        """Capability #96: Security hardening for legacy systems"""
+        return await self.security_hardener_legacy.harden_security(code)
+    
+    async def optimize_legacy_performance(self, code: str, language: str = "python") -> Dict[str, Any]:
+        """Capability #97: Optimize legacy code performance"""
+        return await self.performance_optimizer_legacy.optimize_performance(code, language)
+    
+    async def generate_legacy_documentation(self, code: str) -> Dict[str, Any]:
+        """Capability #98: Generate documentation for legacy code"""
+        return await self.documentation_generator_legacy.generate_documentation(code)
+    
+    async def modernize_testing_framework(self, test_code: str, source_framework: str, target_framework: str) -> Dict[str, Any]:
+        """Capability #99: Modernize testing framework"""
+        return await self.testing_framework_modernizer.modernize_tests(test_code, source_framework, target_framework)
+    
+    async def plan_continuous_modernization(self, codebase_analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Capability #100: Create continuous modernization strategy"""
+        return await self.continuous_modernization_planner.create_strategy(codebase_analysis)
 
 
 # Global optimized service instance
