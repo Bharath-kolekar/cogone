@@ -1187,14 +1187,1199 @@ class RiskAssessor:
             }
 
 
-# Note: Capabilities 116-120 would continue here with similar implementations:
-# ResourcePlanner, ProjectTimelineGenerator, MilestonePlanner, StakeholderReportGenerator, SuccessMetricDefiner
+class ResourcePlanner:
+    """Implements capability #116: Resource Planning"""
+    
+    async def plan_resources(self, 
+                            project_requirements: List[Dict[str, Any]],
+                            team_info: Dict[str, Any] = None,
+                            budget: float = None) -> Dict[str, Any]:
+        """
+        Recommends optimal team composition and resources
+        
+        Args:
+            project_requirements: List of project requirements
+            team_info: Current team information
+            budget: Available budget
+            
+        Returns:
+            Resource plan with team composition and resource allocation
+        """
+        try:
+            # Analyze skill requirements
+            skills_needed = self._analyze_skill_requirements(project_requirements)
+            
+            # Determine team size
+            team_composition = self._determine_team_composition(
+                project_requirements, 
+                skills_needed,
+                team_info or {}
+            )
+            
+            # Calculate resource allocation
+            resource_allocation = self._calculate_resource_allocation(
+                team_composition,
+                project_requirements
+            )
+            
+            # Estimate costs
+            cost_estimate = self._estimate_costs(team_composition, budget)
+            
+            # Create hiring plan
+            hiring_plan = self._create_hiring_plan(team_composition, team_info or {})
+            
+            # Generate training needs
+            training_needs = self._identify_training_needs(
+                team_composition,
+                team_info or {}
+            )
+            
+            return {
+                "success": True,
+                "skills_required": skills_needed,
+                "team_composition": team_composition,
+                "resource_allocation": resource_allocation,
+                "cost_estimate": cost_estimate,
+                "hiring_plan": hiring_plan,
+                "training_needs": training_needs,
+                "recommendations": self._generate_resource_recommendations(
+                    team_composition,
+                    cost_estimate,
+                    budget
+                )
+            }
+        except Exception as e:
+            logger.error("Resource planning failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _analyze_skill_requirements(self, requirements: List[Dict]) -> Dict[str, Any]:
+        """Analyze required skills from requirements"""
+        skills = {
+            "technical": set(),
+            "domain": set(),
+            "soft_skills": set()
+        }
+        
+        # Analyze each requirement
+        for req in requirements:
+            desc = req.get("description", "").lower()
+            
+            # Technical skills
+            if any(tech in desc for tech in ["frontend", "react", "vue", "angular"]):
+                skills["technical"].add("Frontend Development")
+            if any(tech in desc for tech in ["backend", "api", "server"]):
+                skills["technical"].add("Backend Development")
+            if any(tech in desc for tech in ["database", "sql", "nosql"]):
+                skills["technical"].add("Database Design")
+            if any(tech in desc for tech in ["devops", "deployment", "ci/cd"]):
+                skills["technical"].add("DevOps")
+            if any(tech in desc for tech in ["mobile", "ios", "android"]):
+                skills["technical"].add("Mobile Development")
+            if any(tech in desc for tech in ["ml", "ai", "machine learning"]):
+                skills["technical"].add("Machine Learning")
+            
+            # Domain skills
+            if any(domain in desc for domain in ["healthcare", "medical"]):
+                skills["domain"].add("Healthcare Domain")
+            if any(domain in desc for domain in ["finance", "payment", "banking"]):
+                skills["domain"].add("Financial Services")
+            if any(domain in desc for domain in ["ecommerce", "retail"]):
+                skills["domain"].add("E-commerce")
+        
+        # Convert sets to lists
+        return {
+            "technical": list(skills["technical"]),
+            "domain": list(skills["domain"]),
+            "soft_skills": ["Communication", "Problem Solving", "Teamwork", "Time Management"]
+        }
+    
+    def _determine_team_composition(self, requirements: List[Dict], 
+                                   skills: Dict, team_info: Dict) -> Dict[str, Any]:
+        """Determine optimal team composition"""
+        req_count = len(requirements)
+        complexity_score = sum(
+            3 if req.get("complexity") == "complex" else 
+            2 if req.get("complexity") == "medium" else 1
+            for req in requirements
+        )
+        
+        # Base team size on requirements count and complexity
+        base_team_size = max(3, min(10, req_count // 5 + complexity_score // 10))
+        
+        return {
+            "total_size": base_team_size,
+            "roles": {
+                "Tech Lead": 1,
+                "Senior Developer": max(1, base_team_size // 4),
+                "Mid-level Developer": max(2, base_team_size // 2),
+                "Junior Developer": max(1, base_team_size // 4),
+                "QA Engineer": max(1, base_team_size // 5),
+                "DevOps Engineer": 1 if "DevOps" in skills.get("technical", []) else 0,
+                "Product Manager": 1,
+                "UX Designer": 1 if any("Frontend" in s for s in skills.get("technical", [])) else 0
+            },
+            "allocation": "Full-time equivalent (FTE)",
+            "duration": "Project-based"
+        }
+    
+    def _calculate_resource_allocation(self, team: Dict, requirements: List[Dict]) -> Dict[str, Any]:
+        """Calculate resource allocation across project phases"""
+        total_size = team["total_size"]
+        
+        return {
+            "planning_phase": {
+                "duration": "2-4 weeks",
+                "resources": f"{min(4, total_size)} people",
+                "focus": "Requirements, Architecture, Planning"
+            },
+            "development_phase": {
+                "duration": "12-24 weeks",
+                "resources": f"{total_size} people",
+                "focus": "Implementation, Testing, Integration"
+            },
+            "testing_phase": {
+                "duration": "4-6 weeks",
+                "resources": f"{max(3, total_size // 2)} people",
+                "focus": "QA, UAT, Performance Testing"
+            },
+            "deployment_phase": {
+                "duration": "2-3 weeks",
+                "resources": f"{min(5, total_size)} people",
+                "focus": "Deployment, Monitoring, Documentation"
+            },
+            "maintenance_phase": {
+                "duration": "Ongoing",
+                "resources": f"{max(2, total_size // 3)} people",
+                "focus": "Bug fixes, Updates, Support"
+            }
+        }
+    
+    def _estimate_costs(self, team: Dict, budget: float = None) -> Dict[str, Any]:
+        """Estimate project costs"""
+        # Average salary estimates per role (annual)
+        salary_rates = {
+            "Tech Lead": 150000,
+            "Senior Developer": 120000,
+            "Mid-level Developer": 90000,
+            "Junior Developer": 65000,
+            "QA Engineer": 75000,
+            "DevOps Engineer": 110000,
+            "Product Manager": 130000,
+            "UX Designer": 95000
+        }
+        
+        total_annual_cost = sum(
+            salary_rates.get(role, 80000) * count
+            for role, count in team.get("roles", {}).items()
+        )
+        
+        # Add overhead (benefits, tools, infrastructure)
+        overhead_multiplier = 1.3
+        total_with_overhead = total_annual_cost * overhead_multiplier
+        
+        monthly_cost = total_with_overhead / 12
+        
+        result = {
+            "team_salaries": f"${total_annual_cost:,.0f}/year",
+            "with_overhead": f"${total_with_overhead:,.0f}/year",
+            "monthly_cost": f"${monthly_cost:,.0f}/month",
+            "breakdown": {
+                role: f"${salary_rates.get(role, 80000) * count:,.0f}/year"
+                for role, count in team.get("roles", {}).items()
+                if count > 0
+            }
+        }
+        
+        if budget:
+            result["budget_fit"] = "Within budget" if total_with_overhead <= budget else "Over budget"
+            result["budget_utilization"] = f"{(total_with_overhead / budget * 100):.1f}%"
+        
+        return result
+    
+    def _create_hiring_plan(self, team: Dict, current_team: Dict) -> List[Dict[str, str]]:
+        """Create hiring plan"""
+        needed_roles = team.get("roles", {})
+        current_roles = current_team.get("roles", {})
+        
+        hiring_plan = []
+        
+        for role, needed_count in needed_roles.items():
+            current_count = current_roles.get(role, 0)
+            gap = needed_count - current_count
+            
+            if gap > 0:
+                hiring_plan.append({
+                    "role": role,
+                    "positions": gap,
+                    "priority": "High" if role in ["Tech Lead", "Senior Developer"] else "Medium",
+                    "timeline": "Immediate" if gap > 2 else "Within 4 weeks",
+                    "requirements": f"{gap} {role}{'s' if gap > 1 else ''} needed"
+                })
+        
+        return hiring_plan if hiring_plan else [{"message": "Current team is sufficient"}]
+    
+    def _identify_training_needs(self, team: Dict, current_team: Dict) -> List[Dict[str, str]]:
+        """Identify training needs"""
+        return [
+            {
+                "topic": "Modern Development Practices",
+                "target": "All developers",
+                "duration": "2 weeks",
+                "priority": "Medium"
+            },
+            {
+                "topic": "Cloud Architecture",
+                "target": "Senior developers, DevOps",
+                "duration": "1 week",
+                "priority": "High"
+            },
+            {
+                "topic": "Security Best Practices",
+                "target": "All technical roles",
+                "duration": "1 week",
+                "priority": "High"
+            }
+        ]
+    
+    def _generate_resource_recommendations(self, team: Dict, cost: Dict, budget: float = None) -> List[str]:
+        """Generate resource recommendations"""
+        recommendations = []
+        
+        if team["total_size"] > 10:
+            recommendations.append("⚠️ Large team size - consider splitting into sub-teams")
+        
+        if budget and "Over budget" in cost.get("budget_fit", ""):
+            recommendations.append("💰 Consider phased approach or reduced scope to fit budget")
+        
+        recommendations.extend([
+            "✅ Include buffer resources for unexpected challenges",
+            "✅ Plan for knowledge transfer and documentation",
+            "✅ Consider contractors for specialized short-term needs",
+            "✅ Implement cross-training to reduce bus factor"
+        ])
+        
+        return recommendations
+
+
+class ProjectTimelineGenerator:
+    """Implements capability #117: Project Timeline Generation"""
+    
+    async def generate_timeline(self,
+                               project_scope: Dict[str, Any],
+                               team_size: int = 5,
+                               start_date: str = None) -> Dict[str, Any]:
+        """
+        Creates realistic project timelines
+        
+        Args:
+            project_scope: Project scope and requirements
+            team_size: Number of team members
+            start_date: Project start date (YYYY-MM-DD)
+            
+        Returns:
+            Detailed project timeline with phases and milestones
+        """
+        try:
+            start = datetime.fromisoformat(start_date) if start_date else datetime.now()
+            
+            # Estimate project duration
+            duration = self._estimate_project_duration(project_scope, team_size)
+            
+            # Generate phases
+            phases = self._generate_project_phases(start, duration, project_scope)
+            
+            # Create Gantt chart data
+            gantt_data = self._create_gantt_data(phases)
+            
+            # Identify dependencies
+            dependencies = self._identify_dependencies(phases)
+            
+            # Calculate critical path
+            critical_path = self._calculate_critical_path(phases, dependencies)
+            
+            # Generate timeline visualization
+            timeline_viz = self._generate_timeline_visualization(phases)
+            
+            return {
+                "success": True,
+                "project_duration": duration,
+                "start_date": start.isoformat(),
+                "end_date": (start + timedelta(weeks=duration["weeks"])).isoformat(),
+                "phases": phases,
+                "gantt_data": gantt_data,
+                "dependencies": dependencies,
+                "critical_path": critical_path,
+                "timeline_visualization": timeline_viz,
+                "buffer_recommendations": self._recommend_buffers(duration)
+            }
+        except Exception as e:
+            logger.error("Timeline generation failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _estimate_project_duration(self, scope: Dict, team_size: int) -> Dict[str, int]:
+        """Estimate project duration"""
+        requirements_count = len(scope.get("requirements", []))
+        complexity = scope.get("complexity", "medium")
+        
+        # Base estimate: 1 week per requirement for medium complexity
+        base_weeks = requirements_count
+        
+        # Adjust for complexity
+        complexity_multiplier = {
+            "simple": 0.7,
+            "medium": 1.0,
+            "complex": 1.5
+        }.get(complexity, 1.0)
+        
+        # Adjust for team size (diminishing returns)
+        team_multiplier = 1.0 if team_size <= 3 else 0.8 if team_size <= 6 else 0.7
+        
+        adjusted_weeks = int(base_weeks * complexity_multiplier * team_multiplier)
+        
+        # Add buffer
+        total_weeks = int(adjusted_weeks * 1.2)  # 20% buffer
+        
+        return {
+            "weeks": total_weeks,
+            "months": total_weeks // 4,
+            "base_estimate": adjusted_weeks,
+            "buffer": total_weeks - adjusted_weeks
+        }
+    
+    def _generate_project_phases(self, start: datetime, duration: Dict, scope: Dict) -> List[Dict[str, Any]]:
+        """Generate project phases"""
+        total_weeks = duration["weeks"]
+        
+        phases = []
+        current_date = start
+        
+        # Phase 1: Planning & Design (15% of timeline)
+        planning_weeks = max(2, int(total_weeks * 0.15))
+        phases.append({
+            "name": "Planning & Design",
+            "start_date": current_date.isoformat(),
+            "end_date": (current_date + timedelta(weeks=planning_weeks)).isoformat(),
+            "duration_weeks": planning_weeks,
+            "tasks": [
+                "Requirements finalization",
+                "Architecture design",
+                "Technology stack selection",
+                "Project setup"
+            ],
+            "deliverables": ["Architecture document", "Technical specifications", "Project plan"]
+        })
+        current_date += timedelta(weeks=planning_weeks)
+        
+        # Phase 2: Development Sprint 1 (25% of timeline)
+        dev1_weeks = max(4, int(total_weeks * 0.25))
+        phases.append({
+            "name": "Development Sprint 1",
+            "start_date": current_date.isoformat(),
+            "end_date": (current_date + timedelta(weeks=dev1_weeks)).isoformat(),
+            "duration_weeks": dev1_weeks,
+            "tasks": [
+                "Core feature development",
+                "Database implementation",
+                "API development",
+                "Unit testing"
+            ],
+            "deliverables": ["Working backend", "Database schema", "API documentation"]
+        })
+        current_date += timedelta(weeks=dev1_weeks)
+        
+        # Phase 3: Development Sprint 2 (25% of timeline)
+        dev2_weeks = max(4, int(total_weeks * 0.25))
+        phases.append({
+            "name": "Development Sprint 2",
+            "start_date": current_date.isoformat(),
+            "end_date": (current_date + timedelta(weeks=dev2_weeks)).isoformat(),
+            "duration_weeks": dev2_weeks,
+            "tasks": [
+                "Frontend development",
+                "Integration",
+                "Feature completion",
+                "Integration testing"
+            ],
+            "deliverables": ["Complete frontend", "Integrated application", "Test suite"]
+        })
+        current_date += timedelta(weeks=dev2_weeks)
+        
+        # Phase 4: Testing & QA (20% of timeline)
+        qa_weeks = max(3, int(total_weeks * 0.20))
+        phases.append({
+            "name": "Testing & QA",
+            "start_date": current_date.isoformat(),
+            "end_date": (current_date + timedelta(weeks=qa_weeks)).isoformat(),
+            "duration_weeks": qa_weeks,
+            "tasks": [
+                "System testing",
+                "Performance testing",
+                "Security testing",
+                "User acceptance testing"
+            ],
+            "deliverables": ["Test reports", "Bug fixes", "Performance metrics"]
+        })
+        current_date += timedelta(weeks=qa_weeks)
+        
+        # Phase 5: Deployment & Launch (15% of timeline)
+        deploy_weeks = max(2, int(total_weeks * 0.15))
+        phases.append({
+            "name": "Deployment & Launch",
+            "start_date": current_date.isoformat(),
+            "end_date": (current_date + timedelta(weeks=deploy_weeks)).isoformat(),
+            "duration_weeks": deploy_weeks,
+            "tasks": [
+                "Production deployment",
+                "Monitoring setup",
+                "Documentation",
+                "Training"
+            ],
+            "deliverables": ["Production system", "Documentation", "Training materials"]
+        })
+        
+        return phases
+    
+    def _create_gantt_data(self, phases: List[Dict]) -> Dict[str, Any]:
+        """Create Gantt chart data"""
+        return {
+            "chart_type": "gantt",
+            "phases": [
+                {
+                    "task": phase["name"],
+                    "start": phase["start_date"],
+                    "end": phase["end_date"],
+                    "duration": f"{phase['duration_weeks']} weeks"
+                }
+                for phase in phases
+            ],
+            "format": "JSON for visualization libraries (D3.js, Chart.js, etc.)"
+        }
+    
+    def _identify_dependencies(self, phases: List[Dict]) -> List[Dict[str, str]]:
+        """Identify phase dependencies"""
+        dependencies = []
+        for i in range(len(phases) - 1):
+            dependencies.append({
+                "from": phases[i]["name"],
+                "to": phases[i + 1]["name"],
+                "type": "finish-to-start",
+                "description": f"{phases[i + 1]['name']} depends on completion of {phases[i]['name']}"
+            })
+        return dependencies
+    
+    def _calculate_critical_path(self, phases: List[Dict], dependencies: List[Dict]) -> Dict[str, Any]:
+        """Calculate critical path"""
+        return {
+            "path": [phase["name"] for phase in phases],
+            "total_duration": f"{sum(p['duration_weeks'] for p in phases)} weeks",
+            "critical_tasks": [
+                "Requirements finalization",
+                "Core feature development",
+                "System testing",
+                "Production deployment"
+            ],
+            "slack_time": "Minimal - all phases are on critical path"
+        }
+    
+    def _generate_timeline_visualization(self, phases: List[Dict]) -> str:
+        """Generate timeline visualization"""
+        return """
+Project Timeline (Gantt Chart)
+
+""" + "\n".join([
+    f"[{phase['name']}] {phase['start_date'][:10]} -> {phase['end_date'][:10]} ({phase['duration_weeks']} weeks)"
+    for phase in phases
+])
+    
+    def _recommend_buffers(self, duration: Dict) -> List[str]:
+        """Recommend buffer time"""
+        return [
+            f"✅ {duration['buffer']} weeks buffer already included",
+            "⚠️ Add 2-week buffer for unexpected issues",
+            "✅ Plan for holidays and team availability",
+            "✅ Include time for stakeholder reviews",
+            "⚠️ Consider adding contingency for third-party dependencies"
+        ]
+
+
+class MilestonePlanner:
+    """Implements capability #118: Milestone Planning"""
+    
+    async def plan_milestones(self,
+                             project_timeline: Dict[str, Any],
+                             stakeholder_needs: List[str] = None) -> Dict[str, Any]:
+        """
+        Identifies key project milestones
+        
+        Args:
+            project_timeline: Project timeline from timeline generator
+            stakeholder_needs: Stakeholder requirements for milestones
+            
+        Returns:
+            Milestone plan with dates and deliverables
+        """
+        try:
+            # Extract phases from timeline
+            phases = project_timeline.get("phases", [])
+            
+            # Generate milestones
+            milestones = self._generate_milestones(phases, stakeholder_needs or [])
+            
+            # Create milestone calendar
+            calendar = self._create_milestone_calendar(milestones)
+            
+            # Define success criteria
+            success_criteria = self._define_milestone_success_criteria(milestones)
+            
+            # Create review schedule
+            review_schedule = self._create_review_schedule(milestones)
+            
+            return {
+                "success": True,
+                "total_milestones": len(milestones),
+                "milestones": milestones,
+                "calendar": calendar,
+                "success_criteria": success_criteria,
+                "review_schedule": review_schedule,
+                "recommendations": self._generate_milestone_recommendations()
+            }
+        except Exception as e:
+            logger.error("Milestone planning failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _generate_milestones(self, phases: List[Dict], stakeholder_needs: List[str]) -> List[Dict[str, Any]]:
+        """Generate project milestones"""
+        milestones = []
+        
+        # Milestone 1: Project Kickoff
+        if phases:
+            milestones.append({
+                "id": "M1",
+                "name": "Project Kickoff",
+                "date": phases[0]["start_date"],
+                "type": "start",
+                "deliverables": [
+                    "Project charter signed",
+                    "Team assembled",
+                    "Initial planning complete"
+                ],
+                "stakeholders": ["Project team", "Management", "Sponsors"],
+                "criticality": "High"
+            })
+        
+        # Milestone 2: Design Complete (end of planning phase)
+        if len(phases) > 0:
+            milestones.append({
+                "id": "M2",
+                "name": "Design & Architecture Complete",
+                "date": phases[0]["end_date"],
+                "type": "phase_completion",
+                "deliverables": [
+                    "Architecture approved",
+                    "Technical specifications signed off",
+                    "Development environment ready"
+                ],
+                "stakeholders": ["Technical team", "Product owners"],
+                "criticality": "Critical"
+            })
+        
+        # Milestone 3: MVP/Alpha Release
+        if len(phases) > 1:
+            milestones.append({
+                "id": "M3",
+                "name": "MVP Release",
+                "date": phases[1]["end_date"],
+                "type": "deliverable",
+                "deliverables": [
+                    "Core features working",
+                    "Internal demo ready",
+                    "Basic testing complete"
+                ],
+                "stakeholders": ["Product team", "Early adopters"],
+                "criticality": "High"
+            })
+        
+        # Milestone 4: Beta Release
+        if len(phases) > 2:
+            milestones.append({
+                "id": "M4",
+                "name": "Beta Release",
+                "date": phases[2]["end_date"],
+                "type": "deliverable",
+                "deliverables": [
+                    "All features complete",
+                    "Integration testing done",
+                    "Beta testing begins"
+                ],
+                "stakeholders": ["QA team", "Beta testers", "Product team"],
+                "criticality": "High"
+            })
+        
+        # Milestone 5: Production Ready
+        if len(phases) > 3:
+            milestones.append({
+                "id": "M5",
+                "name": "Production Ready",
+                "date": phases[3]["end_date"],
+                "type": "quality_gate",
+                "deliverables": [
+                    "All tests passed",
+                    "Performance validated",
+                    "Security audit complete"
+                ],
+                "stakeholders": ["QA team", "Security team", "Management"],
+                "criticality": "Critical"
+            })
+        
+        # Milestone 6: Launch
+        if len(phases) > 4:
+            milestones.append({
+                "id": "M6",
+                "name": "Production Launch",
+                "date": phases[4]["end_date"],
+                "type": "launch",
+                "deliverables": [
+                    "System deployed to production",
+                    "Monitoring active",
+                    "Documentation complete",
+                    "Training delivered"
+                ],
+                "stakeholders": ["All stakeholders", "End users"],
+                "criticality": "Critical"
+            })
+        
+        return milestones
+    
+    def _create_milestone_calendar(self, milestones: List[Dict]) -> Dict[str, Any]:
+        """Create milestone calendar"""
+        return {
+            "format": "calendar",
+            "milestones_by_date": {
+                milestone["date"]: {
+                    "id": milestone["id"],
+                    "name": milestone["name"],
+                    "type": milestone["type"]
+                }
+                for milestone in milestones
+            },
+            "key_dates": [
+                f"{milestone['id']}: {milestone['name']} - {milestone['date'][:10]}"
+                for milestone in milestones
+            ]
+        }
+    
+    def _define_milestone_success_criteria(self, milestones: List[Dict]) -> Dict[str, List[str]]:
+        """Define success criteria for milestones"""
+        return {
+            milestone["id"]: [
+                f"✅ {deliverable}"
+                for deliverable in milestone["deliverables"]
+            ] + [
+                "✅ Stakeholder sign-off received",
+                "✅ All dependencies met",
+                "✅ No critical issues outstanding"
+            ]
+            for milestone in milestones
+        }
+    
+    def _create_review_schedule(self, milestones: List[Dict]) -> List[Dict[str, str]]:
+        """Create milestone review schedule"""
+        return [
+            {
+                "milestone": milestone["name"],
+                "review_date": milestone["date"],
+                "review_type": "Formal milestone review",
+                "attendees": ", ".join(milestone["stakeholders"]),
+                "agenda": f"Review {milestone['name']} deliverables and approve next phase"
+            }
+            for milestone in milestones
+            if milestone["criticality"] in ["Critical", "High"]
+        ]
+    
+    def _generate_milestone_recommendations(self) -> List[str]:
+        """Generate milestone recommendations"""
+        return [
+            "✅ Celebrate milestone achievements with the team",
+            "✅ Document lessons learned at each milestone",
+            "✅ Adjust subsequent milestones based on progress",
+            "⚠️ Include buffer time between critical milestones",
+            "✅ Communicate milestone status to all stakeholders",
+            "✅ Use milestones as decision gates for project continuation"
+        ]
+
+
+class StakeholderReportGenerator:
+    """Implements capability #119: Stakeholder Report Generation"""
+    
+    async def generate_report(self,
+                             project_status: Dict[str, Any],
+                             report_type: str = "status",
+                             audience: str = "executive") -> Dict[str, Any]:
+        """
+        Creates progress reports for stakeholders
+        
+        Args:
+            project_status: Current project status data
+            report_type: Type of report (status, milestone, risk, budget)
+            audience: Target audience (executive, technical, team)
+            
+        Returns:
+            Formatted stakeholder report
+        """
+        try:
+            # Generate executive summary
+            executive_summary = self._generate_executive_summary(project_status)
+            
+            # Create status overview
+            status_overview = self._create_status_overview(project_status)
+            
+            # Generate metrics dashboard
+            metrics = self._generate_metrics_dashboard(project_status)
+            
+            # Create risk summary
+            risk_summary = self._create_risk_summary(project_status)
+            
+            # Generate recommendations
+            recommendations = self._generate_recommendations(project_status)
+            
+            # Format report
+            formatted_report = self._format_report(
+                executive_summary,
+                status_overview,
+                metrics,
+                risk_summary,
+                recommendations,
+                audience
+            )
+            
+            return {
+                "success": True,
+                "report_type": report_type,
+                "audience": audience,
+                "generated_date": datetime.now().isoformat(),
+                "executive_summary": executive_summary,
+                "status_overview": status_overview,
+                "metrics": metrics,
+                "risk_summary": risk_summary,
+                "recommendations": recommendations,
+                "formatted_report": formatted_report
+            }
+        except Exception as e:
+            logger.error("Report generation failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _generate_executive_summary(self, status: Dict) -> str:
+        """Generate executive summary"""
+        progress = status.get("progress", 50)
+        on_track = status.get("on_track", True)
+        
+        return f"""
+EXECUTIVE SUMMARY
+-----------------
+Project Status: {'🟢 On Track' if on_track else '🔴 At Risk'}
+Overall Progress: {progress}% complete
+Budget Status: {status.get('budget_status', 'Within budget')}
+Timeline: {status.get('timeline_status', 'On schedule')}
+
+Key Highlights:
+- {status.get('completed_milestones', 0)} of {status.get('total_milestones', 0)} milestones completed
+- {status.get('team_velocity', 'Good')} team velocity
+- {status.get('open_risks', 0)} open risks requiring attention
+
+Next Major Milestone: {status.get('next_milestone', 'TBD')}
+        """.strip()
+    
+    def _create_status_overview(self, status: Dict) -> Dict[str, Any]:
+        """Create detailed status overview"""
+        return {
+            "current_phase": status.get("current_phase", "Development"),
+            "completed_tasks": status.get("completed_tasks", 0),
+            "in_progress_tasks": status.get("in_progress_tasks", 0),
+            "pending_tasks": status.get("pending_tasks", 0),
+            "team_status": {
+                "size": status.get("team_size", 5),
+                "availability": "100%",
+                "morale": "High"
+            },
+            "recent_accomplishments": [
+                "Completed core feature development",
+                "Integrated third-party APIs",
+                "Passed security audit"
+            ],
+            "upcoming_activities": [
+                "Performance testing",
+                "User acceptance testing",
+                "Production deployment preparation"
+            ]
+        }
+    
+    def _generate_metrics_dashboard(self, status: Dict) -> Dict[str, Any]:
+        """Generate metrics dashboard"""
+        return {
+            "progress_metrics": {
+                "overall_completion": f"{status.get('progress', 50)}%",
+                "velocity": f"{status.get('velocity', 8)} story points/sprint",
+                "burn_rate": f"${status.get('burn_rate', 50000)}/month"
+            },
+            "quality_metrics": {
+                "test_coverage": "85%",
+                "code_quality_score": "A",
+                "bug_count": status.get("bugs", 12),
+                "critical_bugs": 0
+            },
+            "timeline_metrics": {
+                "days_elapsed": status.get("days_elapsed", 90),
+                "days_remaining": status.get("days_remaining", 60),
+                "schedule_variance": "+3 days (ahead of schedule)"
+            },
+            "budget_metrics": {
+                "budget_spent": f"{status.get('budget_spent', 60)}%",
+                "cost_variance": "-5% (under budget)",
+                "projected_total_cost": "$450,000"
+            }
+        }
+    
+    def _create_risk_summary(self, status: Dict) -> Dict[str, Any]:
+        """Create risk summary"""
+        return {
+            "risk_status": "🟡 Medium",
+            "active_risks": [
+                {
+                    "id": "R1",
+                    "risk": "Third-party API availability",
+                    "severity": "Medium",
+                    "mitigation": "Implemented fallback mechanism"
+                },
+                {
+                    "id": "R2",
+                    "risk": "Team member availability",
+                    "severity": "Low",
+                    "mitigation": "Cross-training in progress"
+                }
+            ],
+            "resolved_risks": 5,
+            "risk_trend": "Improving"
+        }
+    
+    def _generate_recommendations(self, status: Dict) -> List[str]:
+        """Generate recommendations"""
+        recommendations = []
+        
+        if status.get("progress", 50) < 30:
+            recommendations.append("⚠️ Consider adding resources to accelerate progress")
+        
+        if status.get("bugs", 0) > 20:
+            recommendations.append("⚠️ Focus on bug resolution before new feature development")
+        
+        recommendations.extend([
+            "✅ Continue current development pace",
+            "✅ Plan for user acceptance testing in next phase",
+            "✅ Begin production readiness preparations"
+        ])
+        
+        return recommendations
+    
+    def _format_report(self, summary: str, overview: Dict, metrics: Dict, 
+                      risks: Dict, recommendations: List[str], audience: str) -> str:
+        """Format complete report"""
+        if audience == "executive":
+            return f"""
+PROJECT STATUS REPORT
+=====================
+
+{summary}
+
+METRICS AT A GLANCE
+-------------------
+Progress: {metrics['progress_metrics']['overall_completion']}
+Quality: {metrics['quality_metrics']['code_quality_score']}
+Timeline: {metrics['timeline_metrics']['schedule_variance']}
+Budget: {metrics['budget_metrics']['cost_variance']}
+
+RECOMMENDATIONS
+---------------
+{chr(10).join(recommendations)}
+
+Report Generated: {datetime.now().strftime('%Y-%m-%d')}
+            """.strip()
+        else:
+            # Technical or team audience gets more detail
+            return f"""
+DETAILED PROJECT STATUS REPORT
+==============================
+
+{summary}
+
+DETAILED METRICS
+----------------
+{metrics}
+
+RISK SUMMARY
+------------
+{risks}
+
+RECOMMENDATIONS
+---------------
+{chr(10).join(recommendations)}
+            """.strip()
+
+
+class SuccessMetricDefiner:
+    """Implements capability #120: Success Metric Definition"""
+    
+    async def define_success_metrics(self,
+                                    project_goals: List[str],
+                                    stakeholder_priorities: Dict[str, str] = None) -> Dict[str, Any]:
+        """
+        Defines and tracks project success metrics
+        
+        Args:
+            project_goals: List of project goals
+            stakeholder_priorities: Stakeholder priorities
+            
+        Returns:
+            Success metrics definition and tracking framework
+        """
+        try:
+            # Define KPIs
+            kpis = self._define_kpis(project_goals, stakeholder_priorities or {})
+            
+            # Create measurement framework
+            measurement_framework = self._create_measurement_framework(kpis)
+            
+            # Define success thresholds
+            thresholds = self._define_success_thresholds(kpis)
+            
+            # Create tracking dashboard
+            dashboard = self._create_tracking_dashboard(kpis)
+            
+            # Generate reporting cadence
+            reporting_cadence = self._generate_reporting_cadence()
+            
+            return {
+                "success": True,
+                "kpis": kpis,
+                "measurement_framework": measurement_framework,
+                "success_thresholds": thresholds,
+                "tracking_dashboard": dashboard,
+                "reporting_cadence": reporting_cadence,
+                "recommendations": self._generate_metric_recommendations()
+            }
+        except Exception as e:
+            logger.error("Success metric definition failed", error=str(e))
+            return {"success": False, "error": str(e)}
+    
+    def _define_kpis(self, goals: List[str], priorities: Dict) -> List[Dict[str, Any]]:
+        """Define Key Performance Indicators"""
+        kpis = [
+            {
+                "id": "KPI1",
+                "name": "On-Time Delivery",
+                "description": "Percentage of deliverables completed on schedule",
+                "category": "Timeline",
+                "target": "95%",
+                "measurement": "Tasks completed by due date / Total tasks",
+                "frequency": "Weekly",
+                "owner": "Project Manager"
+            },
+            {
+                "id": "KPI2",
+                "name": "Budget Adherence",
+                "description": "Variance from planned budget",
+                "category": "Financial",
+                "target": "Within 10% of budget",
+                "measurement": "Actual spend vs planned spend",
+                "frequency": "Monthly",
+                "owner": "Finance Team"
+            },
+            {
+                "id": "KPI3",
+                "name": "Code Quality",
+                "description": "Overall code quality score",
+                "category": "Quality",
+                "target": ">= 85%",
+                "measurement": "Test coverage + Code complexity + Documentation",
+                "frequency": "Continuous",
+                "owner": "Tech Lead"
+            },
+            {
+                "id": "KPI4",
+                "name": "Team Velocity",
+                "description": "Story points completed per sprint",
+                "category": "Productivity",
+                "target": "8-10 points/sprint",
+                "measurement": "Completed story points",
+                "frequency": "Per sprint",
+                "owner": "Scrum Master"
+            },
+            {
+                "id": "KPI5",
+                "name": "User Satisfaction",
+                "description": "End user satisfaction score",
+                "category": "Quality",
+                "target": ">= 4.0/5.0",
+                "measurement": "User surveys and feedback",
+                "frequency": "Post-launch, then quarterly",
+                "owner": "Product Manager"
+            },
+            {
+                "id": "KPI6",
+                "name": "System Performance",
+                "description": "Application response time",
+                "category": "Technical",
+                "target": "< 200ms (p95)",
+                "measurement": "API response time monitoring",
+                "frequency": "Continuous",
+                "owner": "DevOps Team"
+            },
+            {
+                "id": "KPI7",
+                "name": "Defect Density",
+                "description": "Number of bugs per 1000 lines of code",
+                "category": "Quality",
+                "target": "< 1.0",
+                "measurement": "Total bugs / (LOC / 1000)",
+                "frequency": "Weekly",
+                "owner": "QA Lead"
+            },
+            {
+                "id": "KPI8",
+                "name": "Team Morale",
+                "description": "Team satisfaction and engagement",
+                "category": "People",
+                "target": ">= 4.0/5.0",
+                "measurement": "Team surveys",
+                "frequency": "Monthly",
+                "owner": "Engineering Manager"
+            }
+        ]
+        
+        return kpis
+    
+    def _create_measurement_framework(self, kpis: List[Dict]) -> Dict[str, Any]:
+        """Create measurement framework"""
+        return {
+            "data_collection": {
+                "automated": [
+                    "Code quality metrics (SonarQube, CodeClimate)",
+                    "Performance metrics (APM tools)",
+                    "Timeline metrics (Project management tools)"
+                ],
+                "manual": [
+                    "User satisfaction surveys",
+                    "Team morale surveys",
+                    "Stakeholder feedback"
+                ]
+            },
+            "data_storage": {
+                "system": "Business Intelligence platform",
+                "retention": "2 years",
+                "access": "Stakeholders and team leads"
+            },
+            "analysis": {
+                "tools": ["Tableau", "Power BI", "Custom dashboards"],
+                "cadence": "Weekly analysis, monthly deep dive",
+                "responsible": "Data Analytics team"
+            }
+        }
+    
+    def _define_success_thresholds(self, kpis: List[Dict]) -> Dict[str, Dict[str, str]]:
+        """Define success thresholds"""
+        return {
+            kpi["id"]: {
+                "excellent": kpi["target"],
+                "acceptable": self._calculate_acceptable_threshold(kpi),
+                "needs_improvement": "Below acceptable threshold",
+                "current_status": "Tracking"
+            }
+            for kpi in kpis
+        }
+    
+    def _calculate_acceptable_threshold(self, kpi: Dict) -> str:
+        """Calculate acceptable threshold"""
+        if "%" in kpi["target"]:
+            return f">= {int(kpi['target'].replace('%', '').replace('>=', '').strip()) - 10}%"
+        else:
+            return f"Within 20% of target: {kpi['target']}"
+    
+    def _create_tracking_dashboard(self, kpis: List[Dict]) -> Dict[str, Any]:
+        """Create tracking dashboard spec"""
+        return {
+            "dashboard_name": "Project Success Metrics Dashboard",
+            "sections": [
+                {
+                    "name": "Executive Overview",
+                    "metrics": ["Overall project health", "Budget status", "Timeline status"],
+                    "visualization": "Scorecard"
+                },
+                {
+                    "name": "Timeline Metrics",
+                    "metrics": [kpi["name"] for kpi in kpis if kpi["category"] == "Timeline"],
+                    "visualization": "Burndown chart + Progress bars"
+                },
+                {
+                    "name": "Quality Metrics",
+                    "metrics": [kpi["name"] for kpi in kpis if kpi["category"] == "Quality"],
+                    "visualization": "Trend lines + Heat maps"
+                },
+                {
+                    "name": "Financial Metrics",
+                    "metrics": [kpi["name"] for kpi in kpis if kpi["category"] == "Financial"],
+                    "visualization": "Budget burn chart"
+                }
+            ],
+            "refresh_rate": "Real-time for automated metrics, daily for manual",
+            "access": "Role-based (Executive, Team, Public views)"
+        }
+    
+    def _generate_reporting_cadence(self) -> Dict[str, Any]:
+        """Generate reporting cadence"""
+        return {
+            "daily": {
+                "metrics": ["Team velocity", "Active bugs"],
+                "format": "Automated email summary",
+                "audience": "Development team"
+            },
+            "weekly": {
+                "metrics": ["All KPIs", "Progress vs plan"],
+                "format": "Status report",
+                "audience": "Project team + Management"
+            },
+            "monthly": {
+                "metrics": ["All KPIs", "Trends", "Forecasts"],
+                "format": "Executive presentation",
+                "audience": "Executive stakeholders"
+            },
+            "milestone": {
+                "metrics": ["All KPIs", "Achievement of milestone goals"],
+                "format": "Comprehensive review",
+                "audience": "All stakeholders"
+            }
+        }
+    
+    def _generate_metric_recommendations(self) -> List[str]:
+        """Generate metric recommendations"""
+        return [
+            "✅ Review and adjust metrics quarterly",
+            "✅ Automate data collection where possible",
+            "✅ Share metrics transparently with the team",
+            "✅ Use metrics for continuous improvement, not punishment",
+            "⚠️ Balance quantitative metrics with qualitative feedback",
+            "✅ Align metrics with organizational objectives",
+            "✅ Celebrate when targets are achieved"
+        ]
+
 
 __all__ = [
     'RequirementsAnalyzer',
     'UserStoryGenerator',
     'AcceptanceCriteriaDefiner',
     'EstimationAutomator',
-    'RiskAssessor'
+    'RiskAssessor',
+    'ResourcePlanner',
+    'ProjectTimelineGenerator',
+    'MilestonePlanner',
+    'StakeholderReportGenerator',
+    'SuccessMetricDefiner'
 ]
 

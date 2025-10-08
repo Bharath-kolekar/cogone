@@ -273,13 +273,18 @@ from .smart_coding_ai_native import (
     RegulatoryComplianceChecker
 )
 
-# Import Requirements & Planning implementations (Capabilities 111-115)
+# Import Requirements & Planning implementations (Capabilities 111-120) - COMPLETE!
 from .smart_coding_ai_requirements import (
     RequirementsAnalyzer,
     UserStoryGenerator,
     AcceptanceCriteriaDefiner,
     EstimationAutomator,
-    RiskAssessor
+    RiskAssessor,
+    ResourcePlanner,
+    ProjectTimelineGenerator,
+    MilestonePlanner,
+    StakeholderReportGenerator,
+    SuccessMetricDefiner
 )
 
 # Import Quick Wins implementations (Capabilities 38, 39, 57, 82, 86, 90)
@@ -1652,12 +1657,17 @@ class SmartCodingAIOptimized:
         self.cross_platform_optimizer = CrossPlatformOptimizer()
         self.regulatory_compliance_checker = RegulatoryComplianceChecker()
         
-        # Requirements & Planning capabilities (111-115)
+        # Requirements & Planning capabilities (111-120) - COMPLETE!
         self.requirements_analyzer = RequirementsAnalyzer()
         self.user_story_generator = UserStoryGenerator()
         self.acceptance_criteria_definer = AcceptanceCriteriaDefiner()
         self.estimation_automator = EstimationAutomator()
         self.risk_assessor = RiskAssessor()
+        self.resource_planner = ResourcePlanner()
+        self.project_timeline_generator = ProjectTimelineGenerator()
+        self.milestone_planner = MilestonePlanner()
+        self.stakeholder_report_generator = StakeholderReportGenerator()
+        self.success_metric_definer = SuccessMetricDefiner()
         
         # Quick Wins capabilities (38, 39, 57, 82, 86, 90)
         self.test_oracle_generator = TestOracleGenerator()
@@ -1677,13 +1687,13 @@ class SmartCodingAIOptimized:
         self.quality_gates_enforcer = QualityGatesEnforcer()
         self.continuous_quality_monitor = ContinuousQualityMonitor()
         
-        # Mark capabilities as implemented - 🎉 116/200 = 58%! 🎉
+        # Mark capabilities as implemented - 🎉 121/200 = 60.5% - PAST 60%! 🎉
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                            31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 46, 48, 49, 50,
                            51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
                            71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
                            91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 110,
-                           111, 112, 113, 114, 115, 121, 122, 123, 124, 125, 126, 129, 130]
+                           111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 129, 130]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
@@ -6156,6 +6166,26 @@ async def get_item(item_id: int):
     async def assess_risks(self, project_data: Dict[str, Any]) -> Dict[str, Any]:
         """Capability #115: Risk assessment"""
         return await self.risk_assessor.assess_risks(project_data)
+    
+    async def plan_resources(self, project_requirements: List[Dict[str, Any]], team_info: Dict[str, Any] = None, budget: float = None) -> Dict[str, Any]:
+        """Capability #116: Resource planning"""
+        return await self.resource_planner.plan_resources(project_requirements, team_info, budget)
+    
+    async def generate_project_timeline(self, project_scope: Dict[str, Any], team_size: int = 5, start_date: str = None) -> Dict[str, Any]:
+        """Capability #117: Project timeline generation"""
+        return await self.project_timeline_generator.generate_timeline(project_scope, team_size, start_date)
+    
+    async def plan_milestones(self, project_timeline: Dict[str, Any], stakeholder_needs: List[str] = None) -> Dict[str, Any]:
+        """Capability #118: Milestone planning"""
+        return await self.milestone_planner.plan_milestones(project_timeline, stakeholder_needs)
+    
+    async def generate_stakeholder_report(self, project_status: Dict[str, Any], report_type: str = "status", audience: str = "executive") -> Dict[str, Any]:
+        """Capability #119: Stakeholder report generation"""
+        return await self.stakeholder_report_generator.generate_report(project_status, report_type, audience)
+    
+    async def define_success_metrics(self, project_goals: List[str], stakeholder_priorities: Dict[str, str] = None) -> Dict[str, Any]:
+        """Capability #120: Success metric definition"""
+        return await self.success_metric_definer.define_success_metrics(project_goals, stakeholder_priorities)
     
     # ============================================================================
     # QUICK WINS - COMPLETING CATEGORIES (38, 39, 57, 82, 86, 90)
