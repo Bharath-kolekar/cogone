@@ -219,6 +219,17 @@ from .smart_coding_ai_documentation import (
     CodeCommentGenerator
 )
 
+# Import DevOps implementations (Capabilities 71-75, 77, 80)
+from .smart_coding_ai_devops import (
+    InfrastructureAsCodeGenerator,
+    CICDPipelineGenerator,
+    DockerfileOptimizer,
+    KubernetesManifestGenerator,
+    MonitoringConfigurator,
+    DeploymentStrategyPlanner,
+    PerformanceMonitoringSetup
+)
+
 logger = structlog.get_logger()
 
 
@@ -1521,10 +1532,20 @@ class SmartCodingAIOptimized:
         self.changelog_generator = ChangeLogGenerator()
         self.code_comment_generator = CodeCommentGenerator()
         
-        # Mark capabilities as implemented (now 58 total)
+        # DevOps implementations (Capabilities 10, 71-75, 77, 80)
+        self.infrastructure_as_code_generator = InfrastructureAsCodeGenerator()
+        self.cicd_pipeline_generator = CICDPipelineGenerator()
+        self.dockerfile_optimizer = DockerfileOptimizer()
+        self.kubernetes_manifest_generator = KubernetesManifestGenerator()
+        self.monitoring_configurator = MonitoringConfigurator()
+        self.deployment_strategy_planner = DeploymentStrategyPlanner()
+        self.performance_monitoring_setup = PerformanceMonitoringSetup()
+        
+        # Mark capabilities as implemented (now 65 total)
         implemented_caps = [3, 4, 7, 8, 9, 10, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 30,
                            31, 32, 33, 34, 35, 36, 37, 40, 41, 42, 43, 44, 46, 48, 49, 50,
-                           51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69]
+                           51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 65, 66, 68, 69,
+                           71, 72, 73, 74, 75, 77, 80]
         for cap_id in implemented_caps:
             self.capability_engine.mark_implemented(cap_id)
         
