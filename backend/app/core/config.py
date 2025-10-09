@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # Application
     APP_NAME: str = "Voice-to-App SaaS Platform"
     VERSION: str = "1.0.0"
-    DEBUG: bool = False
+    DEBUG: bool = True  # ✅ Enable debug mode for development (enables API docs at /docs)
     ENVIRONMENT: str = "development"
     
     # Security

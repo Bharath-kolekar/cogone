@@ -543,3 +543,68 @@ async def get_cpu_performance() -> Dict[str, Any]:
             "error": str(e),
             "timestamp": datetime.now().isoformat()
         }
+    
+    def get_cpu_metrics(self) -> Dict[str, Any]:
+        """
+        Get current CPU metrics - REAL IMPLEMENTATION
+        
+        Returns actual CPU usage, worker count, and optimization metrics
+        """
+        try:
+            import psutil
+            
+            # Get real CPU metrics
+            cpu_percent = psutil.cpu_percent(interval=0.1, percpu=False)
+            cpu_per_core = psutil.cpu_percent(interval=0.1, percpu=True)
+            cpu_count = psutil.cpu_count(logical=True)
+            cpu_count_physical = psutil.cpu_count(logical=False)
+            
+            # Get load average (Unix-like systems)
+            try:
+                load_avg = psutil.getloadavg()
+                load_1min, load_5min, load_15min = load_avg
+            except (AttributeError, OSError):
+                # Windows doesn't have getloadavg
+                load_1min = load_5min = load_15min = cpu_percent / 100.0
+            
+            # Get CPU frequency
+            try:
+                freq = psutil.cpu_freq()
+                current_freq = freq.current if freq else 0
+                max_freq = freq.max if freq else 0
+            except:
+                current_freq = max_freq = 0
+            
+            metrics = {
+                "cpu_usage_percent": round(cpu_percent, 1),
+                "cpu_per_core": [round(c, 1) for c in cpu_per_core] if cpu_per_core else [],
+                "cpu_count_logical": cpu_count,
+                "cpu_count_physical": cpu_count_physical,
+                "load_average_1min": round(load_1min, 2),
+                "load_average_5min": round(load_5min, 2),
+                "load_average_15min": round(load_15min, 2),
+                "frequency_mhz": round(current_freq, 0) if current_freq else 0,
+                "frequency_max_mhz": round(max_freq, 0) if max_freq else 0,
+                "worker_count": self.max_workers,
+                "total_cores": self.total_cores,
+                "tasks_processed": self.optimization_metrics.get("tasks_processed", 0),
+                "cpu_efficiency": round(self.optimization_metrics.get("cpu_efficiency", 0.0), 2),
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            return metrics
+            
+        except ImportError:
+            logger.warning("psutil not installed for get_cpu_metrics")
+            return {
+                "worker_count": self.max_workers,
+                "total_cores": self.total_cores,
+                "note": "Install psutil for detailed CPU metrics: pip install psutil"
+            }
+        except Exception as e:
+            logger.error("Error getting CPU metrics", error=str(e))
+            return {
+                "worker_count": self.max_workers,
+                "total_cores": self.total_cores,
+                "error": str(e)
+            }

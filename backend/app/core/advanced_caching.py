@@ -448,6 +448,83 @@ class MultiTierCaching:
             return False
 
 
+    def get_cache_metrics(self) -> Dict[str, Any]:
+        """
+        Get cache metrics and statistics - REAL IMPLEMENTATION
+        
+        Returns actual cache performance metrics
+        """
+        try:
+            # Calculate L1 cache statistics
+            l1_size = len(self.l1_cache)
+            l1_capacity = self.max_l1_size
+            l1_usage_percent = (l1_size / l1_capacity * 100) if l1_capacity > 0 else 0
+            
+            # Get actual metrics from CacheMetrics
+            total_requests = self.metrics.hits + self.metrics.misses
+            hit_rate = (self.metrics.hits / total_requests) if total_requests > 0 else 0.0
+            miss_rate = (self.metrics.misses / total_requests) if total_requests > 0 else 0.0
+            
+            # Calculate average operation times
+            avg_get_time = (
+                self.metrics.get_time_total / self.metrics.get_count
+            ) if self.metrics.get_count > 0 else 0.0
+            
+            avg_set_time = (
+                self.metrics.set_time_total / self.metrics.set_count
+            ) if self.metrics.set_count > 0 else 0.0
+            
+            # L2 cache info (Redis)
+            l2_available = self.l2_cache is not None
+            l2_size = 0
+            if l2_available:
+                try:
+                    # Try to get Redis info if available
+                    if hasattr(self.l2_cache, 'dbsize'):
+                        l2_size = self.l2_cache.dbsize()
+                except:
+                    pass
+            
+            metrics = {
+                "l1_cache": {
+                    "size": l1_size,
+                    "capacity": l1_capacity,
+                    "usage_percent": round(l1_usage_percent, 1),
+                    "entries": l1_size
+                },
+                "l2_cache": {
+                    "available": l2_available,
+                    "size": l2_size,
+                    "type": "redis" if l2_available else "none"
+                },
+                "performance": {
+                    "total_requests": total_requests,
+                    "hits": self.metrics.hits,
+                    "misses": self.metrics.misses,
+                    "hit_rate": round(hit_rate, 4),
+                    "miss_rate": round(miss_rate, 4),
+                    "evictions": self.metrics.evictions,
+                    "avg_get_time_ms": round(avg_get_time * 1000, 2),
+                    "avg_set_time_ms": round(avg_set_time * 1000, 2)
+                },
+                "efficiency": {
+                    "compression_enabled": self.compression_enabled,
+                    "encryption_enabled": self.encryption_enabled,
+                    "memory_saved_bytes": self.metrics.memory_saved
+                },
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            return metrics
+            
+        except Exception as e:
+            logger.error("Error getting cache metrics", error=str(e))
+            return {
+                "l1_cache": {"size": len(self.l1_cache)},
+                "error": str(e)
+            }
+
+
 # Global cache instance
 advanced_cache = MultiTierCaching()
 
