@@ -42,6 +42,21 @@ from .consciousness_core import (
     MetacognitiveProcess
 )
 
+# Import Zero Assumption DNA (Core DNA)
+from .zero_assumption_dna import (
+    must_exist,
+    must_be_type,
+    must_not_be_empty,
+    must_have_key,
+    no_silent_failures
+)
+
+from .zero_assumption_ai_integration import (
+    verify_ai_prompt,
+    verify_ai_response,
+    zero_assumption_ai
+)
+
 # Import Architecture Compliance System
 from app.core.architecture_compliance import (
     ArchitectureComplianceEngine,
@@ -4090,6 +4105,8 @@ class SmartCodingAIOptimized:
                 "conscious_evolution": False
             }
 
+    @no_silent_failures("generate_code")
+    @zero_assumption_ai.no_ai_hallucinations("code_generation")
     async def generate_code(
         self, 
         prompt: str, 
@@ -4098,10 +4115,54 @@ class SmartCodingAIOptimized:
     ) -> Dict[str, Any]:
         """
         Generate code using optimized AI with 100% accuracy
+        
+        Enhanced with Zero Assumption DNA: DO NOT ASSUME ANYTHING
+        - Verifies all inputs
+        - Validates generated code
+        - Checks consistency
+        - No silent failures
+        
         Core DNA: Includes automatic consistency validation
+        
+        Args:
+            prompt: Code generation prompt
+            language: Target programming language
+            context: Optional context information
+        
+        Returns:
+            Generated code with full validation
+        
+        Raises:
+            AssumptionViolation: If any validation fails
         """
+        # DO NOT ASSUME: Inputs exist and are valid
+        must_exist(prompt, "code_generation_prompt")
+        must_be_type(prompt, str, "code_generation_prompt")
+        must_not_be_empty(prompt, "code_generation_prompt")
+        
+        must_exist(language, "programming_language")
+        must_be_type(language, str, "programming_language")
+        must_not_be_empty(language, "programming_language")
+        
+        # Validate prompt
+        validated_prompt = verify_ai_prompt(prompt, "code_generation_prompt")
+        
+        # Verify language is supported
+        supported_languages = ["python", "javascript", "typescript", "java", "go", "rust", "c++", "c#"]
+        if language.lower() not in supported_languages:
+            logger.warning(
+                "Unsupported language requested",
+                language=language,
+                supported=supported_languages
+            )
+        
         try:
-            logger.info("Generating code with optimized AI and Core DNA validation", prompt=prompt, language=language)
+            logger.info(
+                "Generating code with Zero Assumptions and Core DNA validation",
+                prompt_length=len(validated_prompt),
+                language=language,
+                has_context=context is not None
+            )
             
             # Use ensemble optimization for code generation
             generation_context = {
@@ -4114,13 +4175,27 @@ class SmartCodingAIOptimized:
             # Get optimized completions for code generation
             completions = await self.get_optimized_completions(generation_context, max_completions=1)
             
+            # DO NOT ASSUME: Completions were generated
             if completions:
+                must_not_be_empty(completions, "ai_completions")
+                
                 best_completion = completions[0]
+                must_exist(best_completion, "best_completion")
+                
+                # DO NOT ASSUME: Completion has text
                 generated_code = best_completion.text
+                must_not_be_empty(generated_code, "generated_code")
+                
                 confidence = best_completion.ensemble_score
             else:
                 # Fallback to template-based generation
+                logger.warning("No AI completions returned, using template fallback")
                 generated_code = await self._generate_code_template(prompt, language)
+                
+                # DO NOT ASSUME: Template generation succeeded
+                must_exist(generated_code, "template_generated_code")
+                must_not_be_empty(generated_code, "template_generated_code")
+                
                 confidence = 0.85
             
             # Core DNA: Validate consistency before returning
