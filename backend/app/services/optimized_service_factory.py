@@ -160,7 +160,19 @@ class OptimizedServiceFactory:
         if not strategy_class:
             raise ValueError(f"Unknown AI provider: {provider_type}")
         
-        return strategy_class(api_key="dummy_key")  # In real implementation, pass actual API key
+        # Get API key from settings based on provider type
+        from app.core.config import get_settings
+        settings = get_settings()
+        
+        api_key_map = {
+            "groq": settings.GROQ_API_KEY,
+            "openai": settings.OPENAI_API_KEY,
+            "anthropic": settings.ANTHROPIC_API_KEY,
+            "together": settings.TOGETHER_API_KEY,
+        }
+        
+        api_key = api_key_map.get(provider_type.lower()) or "dev-api-key"
+        return strategy_class(api_key=api_key)
     
     def notify_observers(self, event_data: Dict[str, Any]):
         """Notify all observers (Observer Pattern)"""
