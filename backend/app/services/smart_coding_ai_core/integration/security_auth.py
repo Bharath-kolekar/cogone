@@ -41,7 +41,7 @@ from datetime import datetime, timedelta
 from urllib.parse import urlencode, parse_qs, urlparse
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 import jwt
 
@@ -72,7 +72,7 @@ class CodeObfuscationEngine:
         env_entropy = hashlib.sha256(str(datetime.now().timestamp()).encode()).digest()
         
         # Combine with PBKDF2 (100,000 iterations)
-        kdf = PBKDF2(
+        kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=hw_random[:32],
