@@ -39,7 +39,10 @@ async def get_consistency_dna_status():
         }
     except Exception as e:
         logger.error(f"Error getting consistency DNA status: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Consistency DNA service unavailable: {str(e)}"
+        )
 
 @router.post("/validate-code")
 async def validate_code_consistency(request: Dict[str, Any]):
