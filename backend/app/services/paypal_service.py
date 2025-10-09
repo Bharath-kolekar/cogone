@@ -66,6 +66,22 @@ class PayPalService:
             "status": "COMPLETED"  # ⚠️ FAKE STATUS
         }
     
+    async def get_order(self, order_id: str) -> Dict[str, Any]:
+        """
+        Get PayPal order details - MOCK IMPLEMENTATION
+        
+        ⚠️ Returns fake data, does not call real PayPal API
+        """
+        logger.warning("⚠️ Using STUB PayPal get_order - returns fake data")
+        return {
+            "id": order_id,
+            "status": "CREATED",  # ⚠️ FAKE STATUS
+            "amount": {
+                "currency_code": "USD",
+                "value": "0.00"
+            }
+        }
+    
     async def verify_webhook(self, payload: str, signature: str) -> bool:
         """
         Verify PayPal webhook signature - MOCK IMPLEMENTATION
