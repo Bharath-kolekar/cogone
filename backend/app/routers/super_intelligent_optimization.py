@@ -61,7 +61,7 @@ class SuperIntelligenceStatus(BaseModel):
 @router.post("/optimize", response_model=OptimizationResponse)
 async def optimize_super_intelligence(
     request: OptimizationRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(AuthDependencies.get_current_user),
     background_tasks: BackgroundTasks = BackgroundTasks()
 ):
     """Optimize system using super intelligent techniques"""
@@ -198,7 +198,7 @@ async def get_optimization_levels():
 
 @router.get("/status", response_model=SuperIntelligenceStatus)
 async def get_super_intelligence_status(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(AuthDependencies.get_current_user)
 ):
     """Get current super intelligence status"""
     try:
@@ -339,7 +339,7 @@ async def get_performance_comparison():
 @router.post("/evolve-system")
 async def evolve_system(
     evolution_parameters: Dict[str, Any],
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(AuthDependencies.get_current_user),
     background_tasks: BackgroundTasks = BackgroundTasks()
 ):
     """Evolve system using super intelligent techniques"""
@@ -387,7 +387,7 @@ async def evolve_system(
 @router.get("/optimization-history")
 async def get_optimization_history(
     limit: int = Query(default=50, description="Number of optimization results to return"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(AuthDependencies.get_current_user)
 ):
     """Get optimization history"""
     try:
