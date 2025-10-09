@@ -412,3 +412,24 @@ async def get_communication_protocols(
                     user_id=current_user.id,
                     error=str(e))
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for multi-agent-coordinator service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "multi-agent-coordinator",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )

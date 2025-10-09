@@ -41,3 +41,24 @@ async def test_emit_events(session_id: str):
     logger.info("Demo task created", session_id=session_id, task_id=id(task))
     
     return {"status": "started", "session_id": session_id, "message": "Events task created"}
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for smart-coding-ai-status service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "smart-coding-ai-status",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )

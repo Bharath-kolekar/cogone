@@ -1,0 +1,2763 @@
+{
+  "timestamp": "2025-10-09T17:09:53.802079",
+  "total": 687,
+  "tested": 494,
+  "passed": 338,
+  "failed": 156,
+  "skipped": 193,
+  "elapsed_seconds": 1066.6201705932617,
+  "passed_endpoints": [
+    {
+      "path": "/api/v0/admin/admin/dashboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/admin/admin/features",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/admin/admin/features/{feature_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/admin/admin/features/category/{category}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/admin/admin/system-config",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/admin/admin/ai-assistant",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/admin/admin/alerts",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/advanced-features/feature-status/{feature_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/advanced-features/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/advanced-features/available-features",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/advanced-features/optimization-levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/advanced-features/user-features",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/advanced-features/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/agent-mode/status/{task_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/agent-mode/service-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/agent-mode/progress/{task_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/agent-mode/preview/{task_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/agent-mode/config",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-agents/optimization-levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-agents/metrics/{agent_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-agents/performance-comparison",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-agents/governance/agent-metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-agents/governance/agents-compliance-summary",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-capabilities/capabilities/overview",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-capabilities/capabilities/all",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-capabilities/capabilities/category/{category_name}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/comprehensive",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/insights",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/health-score",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/ai-optimization",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/ai-predictions",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/predictive-scaling",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/trends",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/anomalies",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/optimization-opportunities",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/performance-summary",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/data-points",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/apps/list",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/apps/{app_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/apps/templates/{template_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/apps/collaborate/invitations",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/apps/analytics/{app_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architectures",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architectures/{architecture_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architectures/{architecture_id}/diagrams",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/diagrams/{diagram_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/analyses/{analysis_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architectures/{architecture_id}/components",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architectures/{architecture_id}/relationships",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architecture-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/diagram-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/component-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/relationship-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/architecture-generator/repair-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/auth/oauth/{provider}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/auth/language-toggle",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/auth/2fa/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/code/languages",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/code/templates/{language}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/compliance/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/compliance/principles/{principle}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/compliance/design-patterns",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/compliance/violations",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/compliance/recommendations",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/compliance/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/compliance/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/consciousness-levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/consciousness-states",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/metacognitive-processes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/self-awareness",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/consciousness-metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/consciousness-history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consistency-dna/monitoring/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consistency-dna/monitoring/start",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consistency-dna/monitoring/stop",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consistency-dna/monitoring/dashboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consistency-dna/rules",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consistency-dna/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consistency-dna/validate-project",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consistency-dna/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/deployment/status/{deployment_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/deployment/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/deployment/environments",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/deployment/deployment-history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/deployment/active-deployments",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/deployment/health-check",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/deployment/deployment-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/workflow/active-cycles",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/workflow/completed-cycles",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/ethical-frameworks",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/enterprise-principles",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/business-values",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/impact-assessment",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/professional-standards",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical/system-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/ethical-ai/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/tools/register",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/tools/{tool_id}/execute",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/tools",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/assistant/process",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/assistant/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/context/store",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/monitoring/record-metric",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/monitoring/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/monitoring/dashboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/monitoring/alerts",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/comprehensive/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/gamification/points/balance",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/gamification/achievements",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/gamification/referrals/stats",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/gamification/streaks",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/gamification/rewards",
+      "method": "GET"
+    },
+    {
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/coordinate/ai-orchestrator",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/manage/ai-agents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/coordinate/ai-engines",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/oversee/ai-services",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/coordinate/smart-coding-ai",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/orchestration/results",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/orchestration/results/latest",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/enforce/governance",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/ensure/harmony",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/rules",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/rules/active",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/compliance",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/optimize/success-metrics",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/success-metrics/optimized",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/success-metrics/enhanced",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/optimizations/performance",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/analytics/predictive",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/optimization/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/metrics/accuracy",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/metrics/performance",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/metrics/reliability",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/metrics/harmony",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/optimization/levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/success-metrics/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/issues/active",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/issues/all",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/escalations/actions",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/escalations/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/solutions/permanent",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/health/history/{component_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/platform/health-summary",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/ai-orchestrator/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/escalation/levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/solutions/types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/god-mode/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/components/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/components/health/{component_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/platform/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/smart-coding/accuracy",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/harmony/score",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/initialize",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/cpu/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimization/memory/optimize-gc",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/memory/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimization/storage/optimize-tiering",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/storage/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimization/network/optimize-pooling",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/system/cleanup",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimized/smart-coding-ai/core-dna-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimized/services/optimization-report",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimized/services/design-patterns/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimized/services/performance/comparison",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimized/services/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/methods",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/subscriptions",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/plans",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/status/{order_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/providers",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/subscription-plans",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/user-payments",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/webhook/paypal",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/payments/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/report",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/alerts",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/memory/pools",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/profiling",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/resource-limits",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/performance/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/proactive-dna/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/proactive-dna/proactiveness-levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/proactive-dna/action-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/proactive-dna/learning-modes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/proactive-dna/enable-adaptive-learning",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/disable-adaptive-learning",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/proactive-dna/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/cache/stats",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/cache/clear",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/cache/invalidate/{pattern}",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/cache/performance",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/cpu/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/performance/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/performance/alerts",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/performance/metrics/throughput",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/optimization/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/optimization/recommendations",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/monitoring/realtime",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/ai/optimization/recommendations",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/ai/performance/predictions",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/ai/optimization/trigger",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/scaling/recommendations",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/scaling/trigger",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/analytics/dashboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/analytics/insights",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/optimization/advanced/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/optimization/advanced/trigger",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/enhanced/architecture-compliance/analyze",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/enhanced/performance-architecture/optimize",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/enhanced/quality-attributes/comprehensive",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/reality-check-dna/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/reality-check-dna/patterns",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/agents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/agents/{agent_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/accuracy/report",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/performance/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/status/optimized",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/strategies/available",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/models/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/health/optimized",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/benchmarks",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/user/{user_id}/context",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/contextual-suggestions",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/auth/user-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/oauth/providers",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/queue/{queue_name}/dequeue",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/queue/stats",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/telemetry/stats",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/coding-recommendations",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/core-dna/architecture-compliance/analyze",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/core-dna/architecture-compliance/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/core-dna/performance-architecture/optimize",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/core-dna/performance-architecture/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-agents/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-agents/modes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-agents/capabilities",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-agents/agents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-agents/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/generate-ethical-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/generate-ethical-code-stream",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/validate-ethical-request",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/validate-existing-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/ethical-metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/ethical-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/ethical-configuration",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/update-ethical-configuration",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/batch-ethical-validation",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-ethical/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/modes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/strategies",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/tasks/{task_id}/result",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/agents",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarm-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/validation-methods",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/swarm-ai/consensus-levels",
+      "method": "GET"
+    },
+    {
+      "path": "/test/smart-coding-ai/emit-events/{session_id}",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/tools/{tool_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/tools/",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/tools/{tool_id}/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/tools/health/all",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/tools/capabilities/{capability}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/tools/active",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/tools/stats",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/tools/categories",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/session/{session_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/capabilities",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/auto-save/pending-changes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/auto-save/batch-groups",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/auto-save/change-history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/auto-save/auto-save-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/components",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/components/{component_id}/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/tasks/active",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/tasks/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/workflows",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/context/{context_id}/data",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/capabilities",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/components",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/components/{component_id}/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/capabilities",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/statistics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice/generate/{app_id}/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice/supported-languages",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice/quota",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/status/{request_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/result/{request_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/supported-languages",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/supported-app-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/orchestration-modes",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/code-generation-strategies",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/user-requests",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/voice-to-app/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/webhooks/razorpay",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/webhooks/paypal",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/webhooks/twilio/sms",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/webhooks/github",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/webhooks/vercel",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/webhooks/render",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/webhooks/test",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/webhooks/logs",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/zero-cost/status/{stack_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/zero-cost/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/zero-cost/providers",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/zero-cost/deployment-types",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/zero-cost/cost-calculator",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/zero-cost/health",
+      "method": "GET"
+    }
+  ],
+  "failed_endpoints": [
+    {
+      "path": "/api/v0/agent-mode/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/agents/registry",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/agents/{agent_id}/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-capabilities/capabilities/{capability_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-capabilities/capabilities/implemented",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ai-capabilities/capabilities/categories",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/analytics/strategic",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/apps/templates/list",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/auth/register",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/auth/otp/request",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/auth/otp/verify",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/auth/refresh",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/auth/oauth/{provider}/callback",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/auth/2fa/verify-login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/introspect",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/make-conscious-decision",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/think-creatively",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/empathize",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/transcend",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/generate-conscious-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/evolve-consciously",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/set-consciousness-level",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consciousness-dna/set-consciousness-state",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consistency-dna/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/consistency-dna/validate-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consistency-dna/generate-consistent-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consistency-dna/auto-fix-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/consistency-dna/alerts/resolve",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/deployment/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/ethical-ai/process-request",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/security/validate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/security/validate-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/quality/analyze",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/quality/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/goals/validate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/errors/recover",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/errors/strategies",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/accuracy/validate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/consistency/enforce",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/context/{context_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/context/statistics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/comprehensive/validate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/governance/ethical-compliance-check",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/governance/ethical-principles-enforcement",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/ethical-ai/governance/ethical-ai-metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/ethical-ai/governance/ethical-violation-detection",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/gamification/leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/orchestrate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/rules/{rule_id}/update",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/optimize/performance/{component_id}",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/analytics/predictive/{component_id}",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/monitor/component-health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/escalate/issue",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/execute/permanent-solution",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/monitoring/start",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/enforce",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/meta-orchestrator/governance/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimization/cpu/optimize-tasks",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/cpu/optimize-service",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/memory/allocate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/memory/deallocate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/memory/optimize-service",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/storage/store",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/storage/retrieve/{item_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimization/storage/backup",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/storage/optimize-service",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/network/optimize-request",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/network/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/optimization/network/optimize-service",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/system/optimize-all",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/optimization/system/metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/task/{task_id}/result",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/optimization-report",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/strategies",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/orchestrator-levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/smarty/session-context/{session_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/orchestration/smarty/capabilities",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/payments/webhook/razorpay",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/predict-and-prepare",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/adapt-to-patterns",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/optimize-proactively",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/prevent-issues",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/enhance-user-experience",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/generate-proactive-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/proactive-dna/set-proactiveness-level",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/protocols",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/cpu/optimize",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/cpu/usage",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/quality/performance/alerts/{alert_id}/resolve",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/performance/metrics/response-time",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/performance/metrics/error",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/optimization/trigger",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/quality/analytics/trends",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/reality-check-dna/check-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/reality-check-dna/check-file",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/reality-check-dna/check-directory",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/self-modification/code/modifications",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/debug/bugs",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/manage/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/manage/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/settings",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/enhanced-status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/circuit-breaker",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/health-check",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/backups",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/self-validation/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/self-health/check",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/self-health/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/self-correction/history",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/monitoring/stats",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/zero-breakage-dna/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/self-modification/zero-breakage-dna/guarantee-report",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/completions",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/suggestions",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/snippets",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/documentation",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/completions/optimized",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/optimization/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/optimize/trigger",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/optimize/calibrate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/generate-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/review-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/create-workspace",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion/stream",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion/context-aware",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion/intelligent",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion/suggestions",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion/confidence",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/inline-completion/performance",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/core-dna/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/core-dna/optimize-all",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/governance/code-compliance-check",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/governance/code-quality-enforcement",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/governance/smart-coding-metrics",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/governance/accuracy-enforcement",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-agents/create-agent",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-agents/generate-code",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-agents/status/{agent_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-agents/batch-code-generation",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/orchestrate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/status/{plan_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/batch-orchestrate",
+      "method": "POST"
+    },
+    {
+      "path": "/api/v0/status/{coordination_id}",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/strategies",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/health",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/integration-levels",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/components/health-check",
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/components/health-check",
+      "method": "GET"
+    }
+  ],
+  "skipped_endpoints": [
+    {
+      "path": "/api/v0/admin/admin/features/toggle",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/admin/admin/features/configure",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/admin/admin/usage/{feature_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/advanced-features/enable-feature",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/advanced-features/run-optimization",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/advanced-features/disable-feature/{feature_id}",
+      "reason": "Unsupported methods: ['DELETE']"
+    },
+    {
+      "path": "/api/v0/agent-mode/activate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/agent-mode/rollback",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/agent-mode/analyze",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/agent-mode/dependencies",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/agent-mode/test",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/agent-mode/comments",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ai-agents/interact",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ai-agents/optimize/{agent_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ai-agents/governance/agent-compliance-check",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ai-agents/governance/agent-policy-enforcement",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/analytics/trigger-analysis",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/apps/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/apps/templates/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/apps/templates/{template_id}/use",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/apps/collaborate/invite",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/apps/collaborate/accept/{invitation_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/apps/export/{app_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architectures/{architecture_id}/analyze",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/architecture-generator/architectures/{architecture_id}/generate-all-diagrams",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/architecture-generator/repair",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/architecture-generator/analyze-diagram",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/architecture-generator/optimize-diagram",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/auth/logout",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/auth/2fa/setup",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/auth/2fa/verify",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/auth/2fa/disable",
+      "reason": "Unsupported methods: ['DELETE']"
+    },
+    {
+      "path": "/api/v0/auth/2fa/backup-codes",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/code/change",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/code/suggestions",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/code/validate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/compliance/analyze",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/compliance/optimize",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/coordinate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/coordinate/strategic",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/deployment/deploy",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/deployment/deploy-async",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/deployment/rollback/{deployment_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ethical/evaluate-ethics",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ethical/suggest-alternatives",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ethical/analyze-business-purpose",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ethical/generate-code",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ethical/implement-feature-detached",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/ethical/workflow/development-cycle",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/gamification/points/award",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/gamification/achievements/unlock",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/gamification/referrals/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/gamification/referrals/use",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/gamification/share",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/gamification/rewards/redeem/{reward_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimize",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/services/smart-coding-ai/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/services/auth/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/services/voice/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/services/goal-integrity/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/smart-coding-ai/generate-code",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/auth/authenticate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/voice/process",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/optimized/goal-integrity/check",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/submit-task",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/emergency-failover/{failed_orchestrator}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/decompose-task",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/smarty/code-completion",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/smarty/code-generation",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/smarty/codebase-analysis",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/smarty/pattern-recognition",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/orchestration/demonstrate-advantage",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/payments/create-order",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/payments/verify",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/payments/subscription/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/payments/upi/qr",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/payments/subscription/{subscription_id}/cancel",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/payments/refund/{payment_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/initialize",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/optimize",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/memory/optimize",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/cpu/optimize",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/memory/pool/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/profiling/start",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/profiling/end",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/resource-limits/update",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/monitoring/start",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/performance/monitoring/stop",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/code/generate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/code/modify",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/code/apply",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/code/rollback",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/debug/detect-bugs",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/debug/fix-bug",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/test/generate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/test/run",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/test/optimize-coverage",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/manage/auto-repair",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/circuit-breaker/reset",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/backups/{backup_id}/restore",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/enable",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/safety/disable",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/self-validation/validate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/self-correction/auto-correct",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/full-self-check",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/monitoring/start",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/monitoring/stop",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/self-modification/zero-breakage-dna/check-consistency",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/analyze-project",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/search",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/session/context",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/session/{session_id}",
+      "reason": "Unsupported methods: ['PUT']"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/memory/enhance-completion",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/auth/initialize-state",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/auth/assign-role",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/auth/authorize-operation",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/oauth/{provider}/initiate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/oauth/{provider}/callback",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/oauth/{provider}/refresh",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/cache/operation",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/queue/enqueue",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/queue/{queue_name}/{item_id}/complete",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/queue/{queue_name}/{item_id}/fail",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/telemetry/record",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/auth/check-permission",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/chat/codebase",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/chat/analyze-flow",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/chat/explain-component",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/chat/find-relationships",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/chat/debug-issues",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/chat/search-natural",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smart-coding-ai/chat/analyze-auth",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/smarty-agents/config/{agent_id}",
+      "reason": "Unsupported methods: ['PUT']"
+    },
+    {
+      "path": "/api/v0/smarty-agents/remove/{agent_id}",
+      "reason": "Unsupported methods: ['DELETE']"
+    },
+    {
+      "path": "/api/v0/smarty-orchestrator/cancel/{plan_id}",
+      "reason": "Unsupported methods: ['DELETE']"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/tasks",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/tasks/{task_id}/execute",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/configure",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/swarm-ai/swarms/{swarm_id}/batch-execute",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/tools/register",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/tools/{tool_id}/execute",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/tools/ai/generate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/tools/ai/chat",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/trpc/{procedure}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/execute-with-full-intelligence",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/autonomous-self-improve",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/conscious-self-modification",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/proactive-self-healing",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/unified-autonomous-dna/generate-consistent-autonomous-code",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/session/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/voice-to-code",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/voice-to-code/text",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/chat/assistant",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/orchestrate/task",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/whatsapp/process-message",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/whatsapp/send-code",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/smart-coding-ai/integration/whatsapp/send-chat",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/auto-save/register-change",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/auto-save/register-batch-changes",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/auto-save/accept-change/{change_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/auto-save/reject-change/{change_id}",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/auto-save/keep-all-changes",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/auto-save/reject-all-changes",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/auto-save/config",
+      "reason": "Unsupported methods: ['PUT']"
+    },
+    {
+      "path": "/api/v1/auto-save/cleanup",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/components/register",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/tasks/execute",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/tasks/intelligent-route",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/workflows/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/workflows/{workflow_id}/execute",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/context/create",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/ai-orchestrator/context/share-data",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/comprehensive",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/factual-accuracy",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/context-awareness",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/consistency",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/security",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/performance",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/maximum-accuracy",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/maximum-consistency",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/maximum-thresholds",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/validate/resource-optimization",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/tasks/execute-with-validation",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v1/unified-orchestrator/components/register",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/voice/transcribe",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/voice/intent",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/voice/generate",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/voice/deploy",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/voice-to-app/generate-app",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/voice-to-app/generate-app-async",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/voice-to-app/cancel/{request_id}",
+      "reason": "Unsupported methods: ['DELETE']"
+    },
+    {
+      "path": "/api/v0/zero-cost/deploy",
+      "reason": "Requires authentication"
+    },
+    {
+      "path": "/api/v0/zero-cost/deploy-stack",
+      "reason": "Requires authentication"
+    }
+  ]
+}

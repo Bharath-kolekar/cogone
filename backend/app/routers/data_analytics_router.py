@@ -210,3 +210,24 @@ async def list_data_analytics_capabilities():
         "completion_percentage": 100
     }
 
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for data-analytics service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "data-analytics",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )

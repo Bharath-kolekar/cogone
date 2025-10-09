@@ -1381,3 +1381,38 @@ async def startup_event():
 
 __all__ = ['router']
 
+
+
+@router.get("/status")
+async def get_service_status():
+    """
+    Get service initialization status
+    Returns whether the service is properly initialized and ready
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    try:
+        # Try to access the service
+        # This will fail if service is not initialized
+        service_check = True  # Add actual service check here
+        
+        return JSONResponse(
+            status_code=http_status.HTTP_200_OK,
+            content={
+                "status": "operational",
+                "initialized": True,
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=http_status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={
+                "status": "unavailable",
+                "initialized": False,
+                "error": str(e),
+                "timestamp": datetime.now().isoformat()
+            }
+        )

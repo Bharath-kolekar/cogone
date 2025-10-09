@@ -463,3 +463,24 @@ async def get_optimized_services_health(
     except Exception as e:
         logger.error("Failed to get optimized services health", error=str(e))
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for optimized-services service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "optimized-services",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )

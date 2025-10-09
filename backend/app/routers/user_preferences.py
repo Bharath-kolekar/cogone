@@ -425,3 +425,24 @@ def _get_cost_recommendation(estimated_requests: int, total_cost: float, billing
         return "Consider upgrading to yearly plan for maximum savings"
     else:
         return "Your current selection is optimal for your usage"
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for user-preferences service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "user-preferences",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )

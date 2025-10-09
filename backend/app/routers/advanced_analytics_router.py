@@ -409,3 +409,24 @@ async def get_analytics_data_points_endpoint(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to fetch analytics data points: {str(e)}"
         )
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for advanced-analytics service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "advanced-analytics",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )

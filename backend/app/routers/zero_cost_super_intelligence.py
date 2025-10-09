@@ -480,3 +480,24 @@ async def _store_zero_cost_optimization_result(result: ZeroCostOptimizationResul
         logger.info(f"Stored zero-cost optimization result {result.optimization_id} for user {user_id}")
     except Exception as e:
         logger.error(f"Failed to store zero-cost optimization result: {e}")
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for zero-cost-super-intelligence service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "zero-cost-super-intelligence",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )

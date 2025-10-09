@@ -532,3 +532,24 @@ async def chat_with_ai(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"AI chat failed: {str(e)}"
         )
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for tool-integration service
+    Returns service status and availability
+    """
+    from datetime import datetime
+    from fastapi.responses import JSONResponse
+    from fastapi import status as http_status
+    
+    return JSONResponse(
+        status_code=http_status.HTTP_200_OK,
+        content={
+            "status": "healthy",
+            "service": "tool-integration",
+            "timestamp": datetime.now().isoformat(),
+            "version": "1.0.0"
+        }
+    )
