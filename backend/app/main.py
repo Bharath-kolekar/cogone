@@ -75,12 +75,24 @@ from app.routers import (
     self_modification,
     unified_autonomous_dna_router,
     reality_check_dna_router,
+    # Phase 1.5: Missing routers with health endpoints
+    code_intelligence_router,
+    data_analytics_router,
+    frontend_router,
+    governance_router,
+    hardware_optimization,
+    profiles,
+    smart_coding_ai_status,
+    super_intelligent_optimization,
+    system_optimization_router,
+    transcribe,
+    user_preferences,
+    zero_cost_super_intelligence,
 )
 from app.trpc.app_router import get_trpc_router
 from app.middleware.rate_limiter import RateLimitMiddleware
 from app.middleware.auth import AuthMiddleware
 from app.middleware.logging import LoggingMiddleware
-from app.routers.smart_coding_ai_status import router as smart_coding_ai_status_router
 
 # Configure structured logging
 structlog.configure(
@@ -176,7 +188,7 @@ app.include_router(admin.router, prefix="/api/v0/admin", tags=["Admin"])
 app.include_router(webhooks.router, prefix="/api/v0/webhooks", tags=["Webhooks"])
 app.include_router(smart_coding_ai_optimized.router, prefix="/api/v0/smart-coding-ai", tags=["Smart Coding AI"])
 app.include_router(capabilities_router.router, prefix="/api/v0/ai-capabilities", tags=["AI Capabilities"])
-app.include_router(smart_coding_ai_integration_router.router, tags=["Smart Coding AI Integration"])
+app.include_router(smart_coding_ai_integration_router.router, prefix="/api/v1/smart-coding-ai/integration", tags=["Smart Coding AI Integration"])
 app.include_router(auto_save_router.router, tags=["Auto-Save & Keep All Changes"])
 app.include_router(ai_component_orchestrator_router.router, tags=["AI Component Orchestrator"])
 app.include_router(unified_ai_orchestrator_router.router, tags=["Unified AI Orchestrator"])
@@ -203,7 +215,6 @@ app.include_router(smarty_ai_orchestrator_router.router, prefix="/api/v0/smarty-
 app.include_router(smarty_agent_integration_router.router, prefix="/api/v0/smarty-agents", tags=["Smarty Agent Integration"])
 app.include_router(enhanced_voice_to_app_router.router, prefix="/api/v0/voice-to-app", tags=["Enhanced Voice-to-App"])
 app.include_router(enhanced_payment_router.router, prefix="/api/v0/payments", tags=["Enhanced Payments"])
-app.include_router(smart_coding_ai_status_router)
 
 # tRPC Router
 app.include_router(get_trpc_router(), prefix="/api", tags=["tRPC"])
@@ -232,6 +243,19 @@ app.include_router(unified_autonomous_dna_router.router, prefix="/api/v0", tags=
 
 # Reality Check DNA - Anti-Hallucination System
 app.include_router(reality_check_dna_router.router, prefix="/api/v0", tags=["Reality Check DNA"])
+
+# Phase 1.5: Missing routers with health endpoints
+app.include_router(code_intelligence_router.router, prefix="/api/v0/code-intelligence", tags=["Code Intelligence"])
+app.include_router(data_analytics_router.router, prefix="/api/v0/data-analytics", tags=["Data Analytics"])
+app.include_router(frontend_router.router, prefix="/api/v0/frontend", tags=["Frontend"])
+app.include_router(governance_router.router, prefix="/api/v0/governance", tags=["Governance"])
+app.include_router(hardware_optimization.router, prefix="/api/v0/hardware-optimization", tags=["Hardware Optimization"])
+app.include_router(profiles.router, prefix="/api/v0/profiles", tags=["User Profiles"])
+app.include_router(smart_coding_ai_status.router, prefix="/api/v0/smart-coding-ai-status", tags=["Smart Coding AI Status"])
+app.include_router(super_intelligent_optimization.router, prefix="/api/v0/super-intelligent-optimization", tags=["Super Intelligent Optimization"])
+app.include_router(transcribe.router, prefix="/api/v0/transcribe", tags=["Transcription"])
+app.include_router(user_preferences.router, prefix="/api/v0/user-preferences", tags=["User Preferences"])
+app.include_router(zero_cost_super_intelligence.router, prefix="/api/v0/zero-cost-super-intelligence", tags=["Zero Cost Super Intelligence"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")
