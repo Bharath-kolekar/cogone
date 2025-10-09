@@ -17,6 +17,7 @@ from ..models.tool_integration_models import (
 )
 from ..services.tool_integration_manager import ToolIntegrationManager, GroqConfig
 from ..core.dependencies import get_current_user, require_permission
+from ..core.config import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -29,14 +30,16 @@ def get_tool_manager() -> ToolIntegrationManager:
     """Get tool integration manager instance"""
     global tool_manager
     if tool_manager is None:
-        # Initialize with Groq configuration
+        # Initialize with Groq configuration from settings
+        settings = get_settings()
         groq_config = GroqConfig(
-            api_key="your-groq-api-key",  # This should come from environment
+            api_key=settings.GROQ_API_KEY or "dev-groq-api-key",  # ✅ Use environment variable
             model="llama3-8b-8192",
             max_tokens=8000,
             temperature=0.7
         )
         tool_manager = ToolIntegrationManager(groq_config)
+        logger.info("Tool Integration Manager initialized with Groq config from settings")
     return tool_manager
 
 @router.post("/register", response_model=Dict[str, Any])

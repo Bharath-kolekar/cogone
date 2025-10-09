@@ -323,15 +323,19 @@ class CodeValidator:
 
 class SelfCodingEngine:
     """Engine for self-coding capabilities"""
-    
+
     def __init__(self):
         self.modifications: Dict[str, ModificationRecord] = {}
         self.validator = CodeValidator()
         self.sandbox = SafetySandbox()
-        
+
         # Enhanced safety system
         from .self_modification_enhanced_safety import enhanced_safety_system
         self.enhanced_safety = enhanced_safety_system
+        
+        # CORE DNA: Zero-Breakage through 100% Consistency
+        from .zero_breakage_consistency_dna import zero_breakage_dna
+        self.zero_breakage_dna = zero_breakage_dna
     
     async def generate_code(self, specification: str, file_path: str, 
                           context: Dict[str, Any] = None) -> Dict[str, Any]:
@@ -369,6 +373,31 @@ class SelfCodingEngine:
             
             # Generate code
             generated_code = await self._generate_code_content(specification, context)
+            
+            # 🧬 CORE DNA ENFORCEMENT: Zero-Breakage through 100% Consistency
+            logger.info("🧬 Enforcing Zero-Breakage DNA on generated code")
+            dna_allowed, dna_final_code, dna_analysis = await self.zero_breakage_dna.enforce_zero_breakage(
+                generated_code,
+                file_path,
+                {"specification": specification, **(context or {})}
+            )
+            
+            if not dna_allowed:
+                logger.warning("❌ Code blocked by Zero-Breakage DNA",
+                             reasons=dna_analysis.get("breakage_analysis").reasons)
+                return {
+                    "success": False,
+                    "error": "Code blocked by Zero-Breakage Consistency DNA",
+                    "dna_analysis": dna_analysis,
+                    "breakage_guarantee": "0% self-breakage enforced",
+                    "modification_id": modification_id
+                }
+            
+            # Use DNA-validated code (may have been auto-fixed)
+            generated_code = dna_final_code
+            logger.info("✅ Zero-Breakage DNA enforcement passed",
+                       consistency_score=dna_analysis.get("consistency_score"),
+                       action_taken=dna_analysis.get("action_taken"))
             
             # Validate code
             validation = await self.validator.validate_code(generated_code, file_path)
@@ -456,6 +485,31 @@ class SelfCodingEngine:
             
             # Generate modified code
             modified_code = await self._apply_modifications(current_code, modifications)
+            
+            # 🧬 CORE DNA ENFORCEMENT: Zero-Breakage through 100% Consistency
+            logger.info("🧬 Enforcing Zero-Breakage DNA on modified code")
+            dna_allowed, dna_final_code, dna_analysis = await self.zero_breakage_dna.enforce_zero_breakage(
+                modified_code,
+                file_path,
+                {"modifications": modifications, "reason": reason}
+            )
+            
+            if not dna_allowed:
+                logger.warning("❌ Modification blocked by Zero-Breakage DNA",
+                             reasons=dna_analysis.get("breakage_analysis").reasons)
+                return {
+                    "success": False,
+                    "error": "Modification blocked by Zero-Breakage Consistency DNA",
+                    "dna_analysis": dna_analysis,
+                    "breakage_guarantee": "0% self-breakage enforced",
+                    "modification_id": modification_id
+                }
+            
+            # Use DNA-validated code (may have been auto-fixed)
+            modified_code = dna_final_code
+            logger.info("✅ Zero-Breakage DNA enforcement passed",
+                       consistency_score=dna_analysis.get("consistency_score"),
+                       action_taken=dna_analysis.get("action_taken"))
             
             # Validate modifications
             validation = await self.validator.validate_code(modified_code, file_path)
@@ -1236,6 +1290,10 @@ class SelfModificationSystem:
         self.self_testing = SelfTestingEngine()
         self.self_management = SelfManagementEngine()
         
+        # Advanced self-awareness capabilities
+        from .self_validation_health_correction import self_vhc_system
+        self.self_validation_health_correction = self_vhc_system
+        
         # Safety settings
         self.safety_enabled = True
         self.auto_apply_threshold = SafetyLevel.LOW_RISK
@@ -1245,12 +1303,34 @@ class SelfModificationSystem:
         """Initialize the self-modification system"""
         logger.info("Initializing self-modification system")
         
+        # 🧬 Report Zero-Breakage DNA status
+        dna_status = self.self_coding.zero_breakage_dna.get_dna_status()
+        logger.info("🧬 Zero-Breakage Consistency DNA active",
+                   guarantee=dna_status["guarantee"],
+                   version=dna_status["dna_version"])
+        
         # Run initial health check
         health = await self.self_management.monitor_health()
         logger.info("Initial health check complete", status=health["overall_status"])
+        
+        # Run self-validation
+        validation = await self.self_validation_health_correction.self_validation.validate_self(
+            level="COMPREHENSIVE"
+        )
+        logger.info("Self-validation complete", score=validation.get("score", 0))
+        
+        # Run self health check
+        self_health = await self.self_validation_health_correction.self_health.perform_health_check()
+        logger.info("Self health check complete", score=self_health.get("overall_score", 0))
     
     async def get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status"""
+        vhc_status = await self.self_validation_health_correction.get_system_status()
+        
+        # 🧬 Get Zero-Breakage DNA status
+        dna_status = self.self_coding.zero_breakage_dna.get_dna_status()
+        dna_guarantee_report = self.self_coding.zero_breakage_dna.get_breakage_guarantee_report()
+        
         return {
             "self_coding": {
                 "modifications_count": len(self.self_coding.modifications),
@@ -1268,6 +1348,11 @@ class SelfModificationSystem:
             "self_management": {
                 "health_checks": len(self.self_management.health_checks),
                 "auto_repairs": len(self.self_management.auto_repairs)
+            },
+            "self_validation_health_correction": vhc_status,
+            "zero_breakage_dna": {
+                "status": dna_status,
+                "guarantee_report": dna_guarantee_report
             },
             "safety": {
                 "safety_enabled": self.safety_enabled,

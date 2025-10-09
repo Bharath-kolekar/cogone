@@ -73,6 +73,7 @@ from app.routers import (
     production_deployment_router,
     code_processing,
     self_modification,
+    unified_autonomous_dna_router,
 )
 from app.trpc.app_router import get_trpc_router
 from app.middleware.rate_limiter import RateLimitMiddleware
@@ -224,6 +225,9 @@ app.include_router(code_processing.router, prefix="/api/v0/code", tags=["Code Pr
 
 # Self-Modification Router - Self-Coding, Self-Debugging, Self-Testing, Self-Management
 app.include_router(self_modification.router, prefix="/api/v0", tags=["Self-Modification"])
+
+# Unified Autonomous DNA Integration - Complete Integrated AI System
+app.include_router(unified_autonomous_dna_router.router, prefix="/api/v0", tags=["Unified Autonomous DNA"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")

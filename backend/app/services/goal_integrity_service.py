@@ -666,35 +666,68 @@ class GoalIntegrityService:
             logger.error("Failed to log activity", error=str(e))
 
     # Helper methods for metrics collection
+    # ⚠️ NOTE: The following helper methods return STUB data for development
+    # These should be replaced with actual implementations in production
+    
     async def _verify_user_activity(self, user_id: str) -> bool:
-        """Verify user activity is valid"""
-        # Implementation would check user session validity
+        """
+        Verify user activity is valid - STUB IMPLEMENTATION
+        
+        ⚠️ Always returns True, should check actual user session validity
+        """
+        # TODO: Implement actual user session validation
+        logger.debug("⚠️ Using STUB _verify_user_activity - always returns True", user_id=user_id)
         return True
 
     async def _get_recent_metrics(self, goal_id: str) -> Dict[str, Any]:
-        """Get recent metrics for a goal"""
-        # Implementation would fetch actual metrics
-        return {"avg_response_time": 25, "success_rate": 0.98}
+        """
+        Get recent metrics for a goal - STUB IMPLEMENTATION
+        
+        ⚠️ Returns fake metrics, should fetch from actual monitoring system
+        """
+        # TODO: Fetch actual metrics from monitoring system
+        logger.debug("⚠️ Using STUB _get_recent_metrics - returns fake data", goal_id=goal_id)
+        return {"avg_response_time": 25, "success_rate": 0.98}  # ⚠️ FAKE DATA
 
     async def _get_system_health(self) -> Dict[str, Any]:
-        """Get current system health metrics"""
-        # Implementation would fetch actual system health
-        return {"uptime": 0.999, "performance_score": 0.95}
+        """
+        Get current system health metrics - STUB IMPLEMENTATION
+        
+        ⚠️ Returns fake health data, should fetch from actual health monitoring
+        """
+        # TODO: Implement actual system health monitoring
+        logger.debug("⚠️ Using STUB _get_system_health - returns fake data")
+        return {"uptime": 0.999, "performance_score": 0.95}  # ⚠️ FAKE DATA
 
     async def _get_business_metrics(self) -> Dict[str, Any]:
-        """Get current business metrics"""
-        # Implementation would fetch actual business metrics
-        return {"revenue": 10000, "customer_satisfaction": 0.92}
+        """
+        Get current business metrics - STUB IMPLEMENTATION
+        
+        ⚠️ Returns fake business data, should fetch from analytics system
+        """
+        # TODO: Integrate with actual analytics/business intelligence system
+        logger.debug("⚠️ Using STUB _get_business_metrics - returns fake data")
+        return {"revenue": 10000, "customer_satisfaction": 0.92}  # ⚠️ FAKE DATA
 
     async def _get_security_metrics(self) -> Dict[str, Any]:
-        """Get current security metrics"""
-        # Implementation would fetch actual security metrics
-        return {"failed_logins": 2, "security_incidents": 0}
+        """
+        Get current security metrics - STUB IMPLEMENTATION
+        
+        ⚠️ Returns fake security data, should fetch from security monitoring
+        """
+        # TODO: Implement actual security metrics collection
+        logger.debug("⚠️ Using STUB _get_security_metrics - returns fake data")
+        return {"failed_logins": 2, "security_incidents": 0}  # ⚠️ FAKE DATA
 
     async def _get_performance_metrics(self) -> Dict[str, Any]:
-        """Get current performance metrics"""
-        # Implementation would fetch actual performance metrics
-        return {"response_time": 800, "throughput": 150}
+        """
+        Get current performance metrics - STUB IMPLEMENTATION
+        
+        ⚠️ Returns fake performance data, should fetch from APM system
+        """
+        # TODO: Integrate with APM (Application Performance Monitoring) system
+        logger.debug("⚠️ Using STUB _get_performance_metrics - returns fake data")
+        return {"response_time": 800, "throughput": 150}  # ⚠️ FAKE DATA
 
     async def get_metrics(self) -> GoalIntegrityMetrics:
         """Get current goal integrity metrics"""

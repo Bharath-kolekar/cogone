@@ -16,6 +16,11 @@ from ..services.self_modification_system import (
     ModificationStatus
 )
 from ..services.self_modification_enhanced_safety import enhanced_safety_system
+from ..services.self_validation_health_correction import (
+    self_vhc_system,
+    ValidationLevel,
+    HealthCheckType
+)
 from ..core.dependencies import AuthDependencies
 from ..models.user import User
 
@@ -75,6 +80,27 @@ class CoverageOptimizationRequest(BaseModel):
 class AutoRepairRequest(BaseModel):
     """Request to auto-repair issues"""
     issue_type: Optional[str] = Field(default=None, description="Type of issue")
+
+
+class SelfValidationRequest(BaseModel):
+    """Request to validate self"""
+    component: Optional[str] = Field(default=None, description="Specific component")
+    level: str = Field(default="COMPREHENSIVE", description="Validation level")
+
+
+class SelfHealthCheckRequest(BaseModel):
+    """Request to check self health"""
+    component: Optional[str] = Field(default=None, description="Specific component")
+
+
+class SelfCorrectionRequest(BaseModel):
+    """Request to auto-correct issues"""
+    component: Optional[str] = Field(default=None, description="Specific component")
+
+
+class FullSelfCheckRequest(BaseModel):
+    """Request for full self-check"""
+    component: Optional[str] = Field(default=None, description="Specific component")
 
 
 # ============================================================================
@@ -875,6 +901,471 @@ async def disable_enhanced_safety(
 
 
 # ============================================================================
+# Self-Validation Endpoints
+# ============================================================================
+
+@router.post("/self-validation/validate")
+async def validate_self(
+    request: SelfValidationRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Validate the system itself
+    
+    **Requires authentication**
+    
+    Performs comprehensive validation of code, logic, and functionality
+    
+    Returns:
+        Validation results with score and issues
+    """
+    try:
+        result = await self_vhc_system.self_validation.validate_self(
+            component=request.component,
+            level=ValidationLevel(request.level)
+        )
+        
+        logger.info("Self-validation performed", user_id=current_user.id,
+                   score=result.get("score"), passed=result.get("passed"))
+        
+        return {
+            "success": True,
+            **result
+        }
+        
+    except Exception as e:
+        logger.error("Self-validation failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@router.get("/self-validation/history")
+async def get_validation_history(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Get validation history
+    
+    **Requires authentication**
+    
+    Returns:
+        History of all validation checks
+    """
+    try:
+        history = self_vhc_system.self_validation.validation_history
+        
+        return {
+            "success": True,
+            "history": history,
+            "count": len(history)
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get validation history", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+# ============================================================================
+# Self Health Check Endpoints
+# ============================================================================
+
+@router.post("/self-health/check")
+async def check_self_health(
+    request: SelfHealthCheckRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Perform comprehensive self health check
+    
+    **Requires authentication**
+    
+    Checks syntax, logic, performance, security, and functionality
+    
+    Returns:
+        Health check results with score and recommendations
+    """
+    try:
+        result = await self_vhc_system.self_health.perform_health_check(
+            component=request.component
+        )
+        
+        logger.info("Self health check performed", user_id=current_user.id,
+                   healthy=result.get("overall_healthy"),
+                   score=result.get("overall_score"))
+        
+        return {
+            "success": True,
+            **result
+        }
+        
+    except Exception as e:
+        logger.error("Self health check failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@router.get("/self-health/history")
+async def get_health_history(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Get health check history
+    
+    **Requires authentication**
+    
+    Returns:
+        History of all health checks
+    """
+    try:
+        history = self_vhc_system.self_health.health_history
+        
+        return {
+            "success": True,
+            "history": history,
+            "count": len(history)
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get health history", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+# ============================================================================
+# Self-Correction Endpoints
+# ============================================================================
+
+@router.post("/self-correction/auto-correct")
+async def auto_correct_self(
+    request: SelfCorrectionRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Automatically detect and correct issues
+    
+    **Requires authentication**
+    
+    Finds issues through validation and health checks, then autonomously corrects them
+    
+    Returns:
+        Correction results
+    """
+    try:
+        result = await self_vhc_system.self_correction.auto_correct(
+            component=request.component
+        )
+        
+        logger.info("Auto-correction performed", user_id=current_user.id,
+                   issues_found=result.get("issues_found"),
+                   corrections_applied=result.get("corrections_applied"))
+        
+        return {
+            "success": True,
+            **result
+        }
+        
+    except Exception as e:
+        logger.error("Auto-correction failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@router.get("/self-correction/history")
+async def get_correction_history(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Get correction history
+    
+    **Requires authentication**
+    
+    Returns:
+        History of all auto-corrections
+    """
+    try:
+        history = self_vhc_system.self_correction.correction_history
+        
+        return {
+            "success": True,
+            "history": history,
+            "count": len(history)
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get correction history", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+# ============================================================================
+# Full Self-Check Endpoint
+# ============================================================================
+
+@router.post("/full-self-check")
+async def full_self_check(
+    request: FullSelfCheckRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Perform complete self-check (validation + health + correction)
+    
+    **Requires authentication**
+    
+    Comprehensive check that validates, monitors health, and corrects issues
+    
+    Returns:
+        Complete self-check results
+    """
+    try:
+        result = await self_vhc_system.full_self_check(
+            component=request.component
+        )
+        
+        logger.info("Full self-check performed", user_id=current_user.id,
+                   overall_score=result.get("overall_score"),
+                   status=result.get("status"))
+        
+        return {
+            "success": True,
+            **result
+        }
+        
+    except Exception as e:
+        logger.error("Full self-check failed", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+# ============================================================================
+# Continuous Monitoring Endpoints
+# ============================================================================
+
+@router.post("/monitoring/start")
+async def start_continuous_monitoring(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Start continuous self-monitoring
+    
+    **Requires authentication**
+    
+    Starts background monitoring that continuously validates, checks health,
+    and auto-corrects issues
+    
+    Returns:
+        Monitoring status
+    """
+    try:
+        result = await self_vhc_system.continuous_monitoring.start_continuous_monitoring()
+        
+        logger.info("Continuous monitoring started", user_id=current_user.id)
+        
+        return {
+            "success": True,
+            **result
+        }
+        
+    except Exception as e:
+        logger.error("Failed to start monitoring", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@router.post("/monitoring/stop")
+async def stop_continuous_monitoring(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Stop continuous self-monitoring
+    
+    **Requires authentication**
+    
+    Returns:
+        Monitoring statistics
+    """
+    try:
+        result = await self_vhc_system.continuous_monitoring.stop_continuous_monitoring()
+        
+        logger.info("Continuous monitoring stopped", user_id=current_user.id)
+        
+        return {
+            "success": True,
+            **result
+        }
+        
+    except Exception as e:
+        logger.error("Failed to stop monitoring", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@router.get("/monitoring/stats")
+async def get_monitoring_stats(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Get continuous monitoring statistics
+    
+    **Requires authentication**
+    
+    Returns:
+        Monitoring statistics and status
+    """
+    try:
+        result = await self_vhc_system.continuous_monitoring.get_monitoring_stats()
+        
+        return {
+            "success": True,
+            **result
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get monitoring stats", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+# ============================================================================
+# Zero-Breakage DNA Endpoints
+# ============================================================================
+
+@router.get("/zero-breakage-dna/status")
+async def get_zero_breakage_dna_status(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Get Zero-Breakage Consistency DNA status
+    
+    This shows how the Core DNA ensures 0% self-breakage through 100% consistency.
+    
+    **Requires authentication**
+    
+    Returns:
+        DNA status, enforcement statistics, and guarantee information
+    """
+    try:
+        from ..services.zero_breakage_consistency_dna import zero_breakage_dna
+        
+        dna_status = zero_breakage_dna.get_dna_status()
+        
+        return {
+            "success": True,
+            "dna_status": dna_status
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get DNA status", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@router.get("/zero-breakage-dna/guarantee-report")
+async def get_zero_breakage_guarantee_report(
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Get comprehensive Zero-Breakage Guarantee Report
+    
+    This report shows HOW the DNA system mathematically ensures 0% self-breakage
+    through 100% consistency enforcement.
+    
+    **Requires authentication**
+    
+    Returns:
+        Detailed guarantee report with mechanism, effectiveness, and proof
+    """
+    try:
+        from ..services.zero_breakage_consistency_dna import zero_breakage_dna
+        
+        guarantee_report = zero_breakage_dna.get_breakage_guarantee_report()
+        
+        return {
+            "success": True,
+            "guarantee_report": guarantee_report
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get guarantee report", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+class CodeConsistencyCheckRequest(BaseModel):
+    """Request to check code consistency"""
+    code: str = Field(..., description="Code to check")
+    file_path: str = Field(default="", description="File path (optional)")
+
+
+@router.post("/zero-breakage-dna/check-consistency")
+async def check_code_consistency(
+    request: CodeConsistencyCheckRequest,
+    current_user: User = Depends(AuthDependencies.get_current_user)
+):
+    """
+    Check if code passes Zero-Breakage DNA consistency validation
+    
+    This endpoint allows you to validate code against the Core DNA before
+    attempting to use it in modifications.
+    
+    **Requires authentication**
+    
+    Args:
+        request: Code and optional file path to check
+        
+    Returns:
+        Whether code passes DNA validation, consistency analysis, and breakage risk
+    """
+    try:
+        from ..services.zero_breakage_consistency_dna import zero_breakage_dna
+        
+        can_proceed, final_code, analysis = await zero_breakage_dna.enforce_zero_breakage(
+            request.code,
+            request.file_path,
+            {"source": "manual_check"}
+        )
+        
+        return {
+            "success": True,
+            "can_proceed": can_proceed,
+            "consistency_passed": can_proceed,
+            "analysis": analysis,
+            "final_code": final_code if can_proceed else None
+        }
+        
+    except Exception as e:
+        logger.error("Failed to check consistency", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+# ============================================================================
 # System Initialization
 # ============================================================================
 
@@ -883,7 +1374,7 @@ async def startup_event():
     """Initialize self-modification system on startup"""
     try:
         await self_modification_system.initialize()
-        logger.info("Self-modification system initialized with enhanced safety")
+        logger.info("🧬 Self-modification system initialized with Zero-Breakage DNA, enhanced safety, and self-awareness")
     except Exception as e:
         logger.error("Failed to initialize self-modification system", error=str(e))
 
