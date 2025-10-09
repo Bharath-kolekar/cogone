@@ -468,7 +468,7 @@ async def get_config(
         )
 
 
-@router.post("/health")
+@router.get("/health")
 async def health_check():
     """Health check for Agent Mode service"""
     try:
