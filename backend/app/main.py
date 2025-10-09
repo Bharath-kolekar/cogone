@@ -164,6 +164,19 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning("⚠️ Diagnostic skipped", reason=str(e))
     
+    # Start Continuous Self-Modification Helper
+    try:
+        from app.startup.continuous_self_modification import start_continuous_helper
+        await start_continuous_helper()
+        logger.info(
+            "🔄 Continuous Self-Modification Helper STARTED",
+            auto_fix="LOW severity bugs only",
+            check_interval="Every 1 hour",
+            dna_protected="YES"
+        )
+    except Exception as e:
+        logger.warning("⚠️ Continuous helper skipped", reason=str(e))
+    
     yield
     
     # Shutdown
@@ -176,6 +189,14 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Periodic diagnostic task stopped")
     except Exception as e:
         logger.warning("⚠️ Diagnostic cleanup skipped", reason=str(e))
+    
+    # Stop continuous self-modification helper
+    try:
+        from app.startup.continuous_self_modification import stop_continuous_helper
+        await stop_continuous_helper()
+        logger.info("✅ Continuous Self-Modification Helper stopped")
+    except Exception as e:
+        logger.warning("⚠️ Continuous helper cleanup skipped", reason=str(e))
     
     # Stop all async tasks
     await async_task_manager.stop_all_tasks()
