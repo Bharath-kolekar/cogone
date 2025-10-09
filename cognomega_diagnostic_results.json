@@ -1,0 +1,1131 @@
+{
+  "timestamp": "2025-10-10T04:10:18.382994",
+  "critical": [
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\reality_check_dna.py",
+      "severity": "CRITICAL",
+      "count": 2,
+      "reality_score": 0.20999999999999996,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.21). Found 2 critical, 1 high, 25 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\smart_coding_ai_advanced_intelligence.py",
+      "severity": "CRITICAL",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 1 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\smart_coding_ai_data_analytics.py",
+      "severity": "CRITICAL",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 1 critical, 0 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\smart_coding_ai_testing.py",
+      "severity": "CRITICAL",
+      "count": 2,
+      "reality_score": 0.79,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.79). Found 2 critical, 0 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\intelligence_engine.py",
+      "severity": "CRITICAL",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 1 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\generation\\testing_generator.py",
+      "severity": "CRITICAL",
+      "count": 2,
+      "reality_score": 0.79,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.79). Found 2 critical, 0 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\integration\\security_auth.py",
+      "severity": "CRITICAL",
+      "count": 1,
+      "reality_score": 0.78,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.78). Found 1 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "fake_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\intelligence\\analysis_engine.py",
+      "severity": "CRITICAL",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 1 critical, 0 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    }
+  ],
+  "high": [
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\accuracy_monitoring_system.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 0 critical, 1 high, 0 medium, 10 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\accuracy_validation_engine.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.83,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.83). Found 0 critical, 1 high, 0 medium, 12 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\admin_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 0 critical, 1 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\advanced_features_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 0 critical, 1 high, 0 medium, 10 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\ai_assistant_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 0 critical, 1 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\ai_component_orchestrator.py",
+      "severity": "HIGH",
+      "count": 2,
+      "reality_score": 0.77,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.77). Found 0 critical, 2 high, 0 medium, 13 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\ai_integration_types.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\ai_orchestration_layer.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.8200000000000001,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.82). Found 0 critical, 1 high, 0 medium, 13 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\ai_orchestrator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\ai_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\ai_service_zero_assumption_example.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.8200000000000001,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.82). Found 0 critical, 1 high, 6 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\app_generation_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\architecture_generator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.86,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.86). Found 0 critical, 1 high, 0 medium, 9 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\auto_save_service.py",
+      "severity": "HIGH",
+      "count": 3,
+      "reality_score": 0.81,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.81). Found 0 critical, 3 high, 0 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\billing_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 0 critical, 1 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\capability_factory.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\codebase_memory_system.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.88,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.88). Found 0 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\collaboration_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\consciousness_core.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.88,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.88). Found 0 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\consistency_monitoring_system.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 0 critical, 1 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\enhanced_governance_service.py",
+      "severity": "HIGH",
+      "count": 4,
+      "reality_score": 0.75,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.75). Found 0 critical, 4 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\enhanced_voice_to_app_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 0 critical, 1 high, 2 medium, 6 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\free_tier_monitoring.py",
+      "severity": "HIGH",
+      "count": 3,
+      "reality_score": 0.81,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.81). Found 0 critical, 3 high, 0 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\gamification_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\hierarchical_orchestration_manager.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.88,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.88). Found 0 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\marketing_seo_ai_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.91,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.91). Found 0 critical, 1 high, 0 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\meta_ai_orchestrator_unified.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.88,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.88). Found 0 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\nlp_enhancement_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 0 critical, 1 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\optimized_service_factory.py",
+      "severity": "HIGH",
+      "count": 3,
+      "reality_score": 0.69,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.69). Found 0 critical, 3 high, 0 medium, 16 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\optimized_user_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.88,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.88). Found 0 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\otp_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\payment_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\paypal_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.8200000000000001,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.82). Found 0 critical, 1 high, 6 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\paypal_service_production.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 1 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\precision_dna.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.89,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.89). Found 0 critical, 1 high, 1 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\proactive_consistency_manager.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\proactive_intelligence_core.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.89,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.89). Found 0 critical, 1 high, 0 medium, 6 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\profit_strategies_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.89,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.89). Found 0 critical, 1 high, 0 medium, 6 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\razorpay_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.84,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.84). Found 0 critical, 1 high, 5 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\reality_check_dna.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.20999999999999996,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.21). Found 2 critical, 1 high, 25 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\referral_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\self_modification_enhanced_safety.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.90). Found 0 critical, 1 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\self_modification_system.py",
+      "severity": "HIGH",
+      "count": 3,
+      "reality_score": 0.8,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.80). Found 0 critical, 3 high, 0 medium, 5 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\self_validation_health_correction.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.88,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.88). Found 0 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smarty_agent_integration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.8,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.80). Found 0 critical, 1 high, 0 medium, 15 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smarty_ai_orchestrator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.8200000000000001,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.82). Found 0 critical, 1 high, 0 medium, 13 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smarty_ethical_integration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.8,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.80). Found 0 critical, 1 high, 0 medium, 15 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_advanced_analysis.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_advanced_intelligence.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 1 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_analyzers.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_backend.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.95,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.95). Found 0 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_cache.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_capabilities.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_collaboration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_debugging.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_dependencies.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_documentation.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_frontend.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_helpers.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_models.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_native.py",
+      "severity": "HIGH",
+      "count": 2,
+      "reality_score": 0.89,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.89). Found 0 critical, 2 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_optimized.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.83,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.83). Found 0 critical, 1 high, 0 medium, 12 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_patterns.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.91,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.91). Found 0 critical, 1 high, 0 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_quality.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_queue.py",
+      "severity": "HIGH",
+      "count": 2,
+      "reality_score": 0.89,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.89). Found 0 critical, 2 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_quickwins.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_rbac.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_requirements.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_security.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.95,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.95). Found 0 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_session.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_state.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_telemetry.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_validation.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\sms_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\super_intelligent_optimizer.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.84,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.84). Found 0 critical, 1 high, 0 medium, 11 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\swarm_ai_orchestrator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.86,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.86). Found 0 critical, 1 high, 0 medium, 9 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\template_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\tool_integration_manager.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\totp_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\unified_ai_component_orchestrator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.75,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.75). Found 0 critical, 1 high, 0 medium, 20 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\unified_autonomous_dna_integration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\upi_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.84,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.84). Found 0 critical, 1 high, 5 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\voice_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\webhook_service.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\zero_assumption_ai_integration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\zero_assumption_dna.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\zero_assumption_dna_rules.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\zero_breakage_consistency_dna.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.91,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.91). Found 0 critical, 1 high, 0 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\zero_cost_super_intelligence.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.86,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.86). Found 0 critical, 1 high, 0 medium, 9 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\architecture_generator_ai\\core_generator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.86,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.86). Found 0 critical, 1 high, 0 medium, 9 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\architecture_generator_ai\\__init__.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.95,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.95). Found 0 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\advanced_orchestrators.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\chat_assistant.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\core.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.91,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.91). Found 0 critical, 1 high, 0 medium, 4 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\core_orchestrators.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\session_manager.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\specialized_orchestrators.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\task_orchestration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\voice_to_code.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai\\whatsapp_integration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\__init__.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.95,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.95). Found 0 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\analyzers.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\backend_engine.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.95,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.95). Found 0 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\core_engine.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.83,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.83). Found 0 critical, 1 high, 0 medium, 12 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\helpers.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\intelligence_engine.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 1 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\models.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\engine\\validation.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\generation\\code_generator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\generation\\documentation_generator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\generation\\frontend_generator.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\infrastructure\\dependencies.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\infrastructure\\state_management.py",
+      "severity": "HIGH",
+      "count": 2,
+      "reality_score": 0.87,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.87). Found 0 critical, 2 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\infrastructure\\telemetry.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.92,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.92). Found 0 critical, 1 high, 0 medium, 3 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\integration\\collaboration.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\integration\\native_integration.py",
+      "severity": "HIGH",
+      "count": 2,
+      "reality_score": 0.89,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.89). Found 0 critical, 2 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\integration\\security_auth.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.78,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.78). Found 1 critical, 1 high, 0 medium, 7 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\smart_coding_ai_core\\intelligence\\debugging_intelligence.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.94,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.94). Found 0 critical, 1 high, 0 medium, 1 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\voice_to_app_ai\\intent_extractor.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.9299999999999999,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.93). Found 0 critical, 1 high, 0 medium, 2 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\voice_to_app_ai\\voice_processor.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.85,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.85). Found 0 critical, 1 high, 2 medium, 6 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "suspicious_code",
+      "file": "backend\\app\\services\\voice_to_app_ai\\__init__.py",
+      "severity": "HIGH",
+      "count": 1,
+      "reality_score": 0.95,
+      "details": "\u26a0\ufe0f Code appears FAKE/DELUSIONAL (Reality Score: 0.95). Found 0 critical, 1 high, 0 medium, 0 low severity issues. This code may look perfect but likely doesn't actually work."
+    },
+    {
+      "type": "clustering_error",
+      "component": "advanced_analytics",
+      "severity": "ERROR",
+      "error": "Number of labels is 1. Valid values are 2 to n_samples - 1",
+      "details": "Clustering fails with insufficient distinct data points",
+      "impact": "Clustering model training fails periodically",
+      "status": "NEEDS FIX",
+      "recommendation": "Add minimum data point validation before clustering"
+    }
+  ],
+  "medium": [
+    {
+      "type": "coroutine_not_awaited",
+      "component": "ai_component_orchestrator",
+      "severity": "WARNING",
+      "error": "coroutine '_start_background_tasks' was never awaited",
+      "details": "Background tasks started without await",
+      "impact": "Background tasks may not initialize properly",
+      "status": "NEEDS FIX",
+      "recommendation": "Properly await background task initialization"
+    },
+    {
+      "type": "duplicate_operation_ids",
+      "component": "fastapi_routers",
+      "severity": "WARNING",
+      "details": "Multiple duplicate operation IDs in OpenAPI spec",
+      "examples": [
+        "health_check_api_v0_health_get",
+        "get_governance_compliance",
+        "create_payment_order"
+      ],
+      "impact": "OpenAPI documentation may be confusing",
+      "status": "NEEDS FIX",
+      "recommendation": "Make operation IDs unique across all routers"
+    }
+  ],
+  "low": [
+    {
+      "type": "incomplete_code",
+      "file": "backend\\app\\core\\database.py",
+      "details": "Contains TODO or FIXME markers"
+    },
+    {
+      "type": "pydantic_warning",
+      "component": "QueryOptimizationRequest",
+      "details": "Field 'schema' shadows BaseModel attribute",
+      "impact": "Non-critical - Pydantic configuration warning"
+    },
+    {
+      "type": "pydantic_warning",
+      "component": "DataValidationRequest",
+      "details": "Field 'schema' shadows BaseModel attribute",
+      "impact": "Non-critical - Pydantic configuration warning"
+    },
+    {
+      "type": "unfitted_scaler",
+      "component": "ai_optimization_engine",
+      "severity": "WARNING",
+      "error": "StandardScaler instance is not fitted yet",
+      "details": "Scaler not trained with data before predictions",
+      "impact": "Predictions fail until training data available",
+      "status": "HANDLED - Try-except in place",
+      "recommendation": "Pre-train scaler with synthetic data on startup"
+    },
+    {
+      "type": "performance_alert",
+      "component": "performance_monitor",
+      "severity": "WARNING",
+      "metric": "response_time",
+      "details": "Response time > 10,000ms threshold",
+      "impact": "Slow initial responses during startup",
+      "status": "EXPECTED - Initialization overhead",
+      "recommendation": "Consider warm-up phase or higher threshold"
+    },
+    {
+      "type": "stub_implementations",
+      "component": "payment_services",
+      "severity": "WARNING",
+      "services": [
+        "Razorpay",
+        "PayPal",
+        "UPI"
+      ],
+      "details": "Payment services using STUB implementations",
+      "impact": "Payment processing will not work in production",
+      "status": "DOCUMENTED",
+      "recommendation": "Replace with real payment integrations before production"
+    }
+  ],
+  "info": [],
+  "total_files_scanned": 152,
+  "total_issues_found": 138
+}
