@@ -29,7 +29,7 @@ class ContinuousSelfModificationHelper:
         self.check_interval = 3600  # 1 hour
         self.auto_fix_enabled = True
         self.auto_fix_threshold = "LOW"  # Only LOW severity bugs
-        self.confidence_threshold = 0.95  # 95% confidence required
+        self.confidence_threshold = 1.0  # 100% confidence required (ABSOLUTE CERTAINTY)
         self.modifications_this_session = 0
         self.max_modifications_per_session = 10
         self.last_check = None

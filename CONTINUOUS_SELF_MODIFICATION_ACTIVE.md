@@ -77,8 +77,8 @@ Every 1 hour:
 
 | Severity | Confidence | Location | Action |
 |----------|-----------|----------|--------|
-| LOW | ≥95% | Non-DNA files | ✅ Auto-fix |
-| LOW | <95% | Any | 📋 Review required |
+| LOW | **100%** | Non-DNA files | ✅ Auto-fix |
+| LOW | <100% | Any | 📋 Review required |
 | MEDIUM | Any | Any | 📋 Review required |
 | HIGH | Any | Any | 📋 Review required |
 | Any | Any | DNA systems | 🛡️ PROTECTED |
@@ -158,7 +158,7 @@ print(reason)   # "DNA systems cannot be modified. You don't modify the ruler."
     "check_interval": 3600,  # 1 hour
     "auto_fix_enabled": True,
     "auto_fix_threshold": "LOW",  # Only LOW severity
-    "confidence_threshold": 0.95,  # 95% required
+    "confidence_threshold": 1.0,  # 100% ABSOLUTE CERTAINTY required
     "max_modifications_per_session": 10,
     "max_fixes_per_check": 5,
     "dna_protection": "ABSOLUTE"
