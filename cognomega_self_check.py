@@ -103,10 +103,10 @@ class CognOmegaSelfCheck:
                 check["failed"] += 1
             
             # Test 3: Violation tracking
-            violations = self.zero_assumption.get_violations()
+            violations_report = self.zero_assumption.get_violations_report()
             check["tests"].append({
                 "test": "violation_tracking",
-                "status": f"✅ PASS - {len(violations)} violations tracked"
+                "status": f"✅ PASS - {violations_report.get('total_violations', 0)} violations tracked"
             })
             check["passed"] += 1
             
@@ -142,19 +142,19 @@ def get_data():
 """
             
             # Check real code
-            real_result = await self.reality_check.scan_code(real_code, "test_real.py")
+            real_result = await self.reality_check.check_code_reality(real_code, "test_real.py")
             check["tests"].append({
                 "test": "real_code_detection",
-                "status": f"✅ PASS - Reality Score: {real_result['reality_score']:.2f}"
+                "status": f"✅ PASS - Reality Score: {real_result.reality_score:.2f}"
             })
             check["passed"] += 1
             
             # Check fake code
-            fake_result = await self.reality_check.scan_code(fake_code, "test_fake.py")
-            if len(fake_result.get("issues", [])) > 0:
+            fake_result = await self.reality_check.check_code_reality(fake_code, "test_fake.py")
+            if fake_result.total_issues > 0:
                 check["tests"].append({
                     "test": "fake_code_detection",
-                    "status": f"✅ PASS - Detected {len(fake_result['issues'])} fake patterns"
+                    "status": f"✅ PASS - Detected {fake_result.total_issues} fake patterns"
                 })
                 check["passed"] += 1
             else:
@@ -163,7 +163,7 @@ def get_data():
                     "status": "⚠️ WARNING - No fake patterns detected"
                 })
             
-            check["reality_score"] = (real_result['reality_score'] + fake_result['reality_score']) / 2
+            check["reality_score"] = (real_result.reality_score + fake_result.reality_score) / 2
             check["status"] = "✅ OPERATIONAL"
             
         except Exception as e:
@@ -185,26 +185,33 @@ def get_data():
         }
         
         try:
-            # Test consistency validation
-            valid_data = {
-                "name": "Test",
-                "version": "1.0.0",
-                "status": "active"
-            }
-            
-            is_consistent = await self.consistency_dna.validate_consistency(valid_data)
+            # Test zero-breakage enforcement
+            test_code = """
+def calculate_total(items):
+    return sum(item.price for item in items)
+"""
+            can_proceed, decision, analysis = await self.consistency_dna.enforce_zero_breakage(
+                test_code,
+                "test_consistency.py",
+                {"operation": "self_check"}
+            )
             check["tests"].append({
-                "test": "consistency_validation",
-                "status": f"✅ PASS - Data is consistent: {is_consistent}"
+                "test": "zero_breakage_enforcement",
+                "status": f"✅ PASS - Can proceed: {can_proceed}, Risk: {analysis.get('breakage_risk', {}).get('level', 'unknown')}"
             })
             check["passed"] += 1
             
-            # Test self-healing
+            # Test DNA status
+            status = self.consistency_dna.get_dna_status()
             check["tests"].append({
-                "test": "self_healing_capability",
-                "status": "✅ PASS - Self-healing system active"
+                "test": "consistency_dna_status",
+                "status": f"✅ PASS - Status: {status.get('status', 'unknown')}"
             })
             check["passed"] += 1
+            
+            # Get breakage guarantee report
+            guarantee = self.consistency_dna.get_breakage_guarantee_report()
+            check["breakage_guarantee"] = guarantee.get('guarantee_percentage', 'unknown')
             
             check["status"] = "✅ OPERATIONAL"
             

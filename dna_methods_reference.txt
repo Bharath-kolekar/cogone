@@ -1,0 +1,25 @@
+COGNOMEGA DNA SYSTEMS - METHOD REFERENCE
+======================================================================
+
+1. ZERO ASSUMPTION DNA
+  • get_violations_report() -> Dict[str, Any]
+  • no_silent_failures(operation: str)
+  • require_explicit_confirmation(action: str, danger_level: str = 'medium') -> bool
+  • verify_exists(value: Any, name: str, allow_none: bool = False) -> Any
+  • verify_in_range(value: Union[int, float], name: str, min_val: Union[int, float, NoneType] = None, max_val: Union[int, float, NoneType] = None) -> Union[int, float]
+  • verify_key_exists(data: dict, key: str, dict_name: str = 'data') -> Any
+  • verify_not_empty(value: Union[str, list, dict, set], name: str) -> Any
+  • verify_operation_success(result: Any, operation: str, success_check: Callable[[Any], bool]) -> Any
+  • verify_type(value: Any, expected_type: type, name: str) -> Any
+
+2. REALITY CHECK DNA
+  • check_code_reality(code: str, file_path: str = 'unknown', check_imports: bool = True, check_external_calls: bool = True) -> app.services.reality_check_dna.RealityCheckResult
+  • check_directory(directory: str, extensions: List[str] = ['.py'], recursive: bool = True) -> Dict[str, app.services.reality_check_dna.RealityCheckResult]
+  • check_file(file_path: str) -> app.services.reality_check_dna.RealityCheckResult
+  • generate_report(results: Dict[str, app.services.reality_check_dna.RealityCheckResult], output_file: Optional[str] = None) -> str
+
+3. ZERO-BREAKAGE CONSISTENCY DNA
+  • enforce_zero_breakage(code: str, file_path: str = '', context: Dict[str, Any] = None) -> Tuple[bool, str, Dict[str, Any]]
+  • get_breakage_guarantee_report() -> Dict[str, Any]
+  • get_dna_status() -> Dict[str, Any]
+  • validate_modification_safety(modification_preview: Dict[str, Any]) -> Tuple[bool, List[str]]
