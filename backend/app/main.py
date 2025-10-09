@@ -134,6 +134,18 @@ async def lifespan(app: FastAPI):
     await async_task_manager.start_all_tasks()
     logger.info("All async tasks started")
     
+    # Run CognOmega DNA Self-Check
+    try:
+        from app.startup.self_check import run_startup_self_check
+        self_check_results = await run_startup_self_check()
+        logger.info(
+            "🧬 CognOmega DNA Self-Check Complete",
+            intelligence_score=f"{self_check_results.get('intelligence_score', 0):.1f}%",
+            status=self_check_results.get('overall_status', 'UNKNOWN')
+        )
+    except Exception as e:
+        logger.warning("⚠️ Self-check skipped", reason=str(e))
+    
     yield
     
     # Shutdown
