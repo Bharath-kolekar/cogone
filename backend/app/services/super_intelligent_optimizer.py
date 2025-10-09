@@ -19,7 +19,7 @@ from collections import defaultdict, Counter
 import random
 import math
 
-from app.core.database import get_database
+from app.core.database import get_supabase_client
 from app.core.redis import get_redis_client
 from app.core.config import get_settings
 

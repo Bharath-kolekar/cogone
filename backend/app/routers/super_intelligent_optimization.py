@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from datetime import datetime
 
-from app.core.auth import get_current_user
+from app.routers.auth import AuthDependencies
 from app.models.user import User
 from app.services.super_intelligent_optimizer import (
     SuperIntelligentOptimizer, 
