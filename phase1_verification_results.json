@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-10-09T17:47:27.915726",
+  "phase": 1,
+  "total_tested": 26,
+  "passed": 7,
+  "failed": 19,
+  "success_rate": "26.9%",
+  "breakdown": {
+    "health_endpoints": {
+      "passed": 6,
+      "failed": 15
+    },
+    "status_endpoints": {
+      "passed": 1,
+      "failed": 3
+    },
+    "method_fix": {
+      "passed": 0,
+      "failed": 1
+    }
+  }
+}
