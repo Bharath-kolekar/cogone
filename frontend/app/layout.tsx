@@ -6,17 +6,20 @@ import { Toaster } from '@/components/ui/toaster'
 
 import * as Sentry from "@sentry/nextjs";
 
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  integrations: [
-    new Sentry.BrowserTracing(),
-    new Sentry.Replay(),
-  ],
-  tracesSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
-  environment: process.env.NODE_ENV,
-});
+// Sentry initialization - disabled for now (BrowserTracing API changed)
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    integrations: [
+      // new Sentry.BrowserTracing(), // Removed - API changed in newer Sentry version
+      // new Sentry.Replay(),
+    ],
+    tracesSampleRate: 1.0,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+    environment: process.env.NODE_ENV,
+  });
+}
 
 const inter = Inter({ subsets: ['latin'] })
 

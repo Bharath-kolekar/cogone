@@ -12,7 +12,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { User, LogOut, Settings, Menu, X } from 'lucide-react'
 import { useAuthContext } from '@/contexts/AuthContext'
 import { motion, AnimatePresence } from 'framer-motion'
-import { VoiceDictationToggle } from '@/components/voice-dictation-toggle'
+// import { VoiceDictationToggle } from '@/components/voice-dictation-toggle' // Removed - file deleted (corrupted)
 import { useVoiceDictation } from '@/hooks/useVoiceDictation'
 import { initializeVoiceCommandMapper } from '@/services/voice-command-mapper'
 
@@ -305,17 +305,10 @@ export function Navigation() {
             className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
           >
             <div className="container mx-auto px-4 py-4">
-              <VoiceDictationToggle
-                onVoiceCommand={handleVoiceCommand}
-                onToggle={(enabled) => {
-                  if (enabled) {
-                    voiceDictation.startListening()
-                  } else {
-                    voiceDictation.stopListening()
-                  }
-                }}
-                showAdvanced={true}
-              />
+              <div className="text-center text-sm text-muted-foreground">
+                Voice Dictation Toggle temporarily disabled (component removed)
+              </div>
+              {/* <VoiceDictationToggle /> - Component deleted (corrupted) */}
             </div>
           </motion.div>
         )}
