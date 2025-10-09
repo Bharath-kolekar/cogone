@@ -1,10 +1,18 @@
 """
 Smart Coding AI Integration - Modular Architecture
 Phase 2: Dependency Reduction (40 → <10 per module)
+
+Public API Facade - Maintains backward compatibility
 """
 
-# This will be updated as we create modules
-# For now, maintain backward compatibility by importing from parent
+from .core import SmartCodingAIIntegration, smart_coding_ai_integration
+from app.services.ai_integration_types import AIIntegrationContext, IntegratedAIResponse
+
 __version__ = "2.0.0"
-__all__ = []
+__all__ = [
+    'SmartCodingAIIntegration',
+    'smart_coding_ai_integration',
+    'AIIntegrationContext',
+    'IntegratedAIResponse'
+]
 
