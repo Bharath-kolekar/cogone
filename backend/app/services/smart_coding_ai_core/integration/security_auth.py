@@ -126,7 +126,8 @@ import decoy_authentication_handler
 """
         fake_functions = """
 def _fake_decryption_key():
-    # Decoy function - does nothing
+    # 🎭 SECURITY HONEYPOT: Intentional fake key to trap attackers
+    # This is NOT a bug - it's a deliberate deception mechanism
     return "fake_key_" + secrets.token_hex(16)
 
 def _fake_authentication_bypass():
@@ -483,11 +484,12 @@ class SelfDefendingAISecurity:
         
         INTELLIGENCE: Mislead attackers
         """
-        # Create fake vulnerabilities
+        # 🎭 SECURITY HONEYPOT: Create intentional fake vulnerabilities to trap attackers
+        # This is NOT a bug - it's a deliberate deception mechanism
         fake_vuln = {
             "type": "fake_api_key_exposure",
             "location": "/fake/.env",
-            "key": f"fake_key_{secrets.token_hex(16)}"  # Logs anyone who uses it
+            "key": f"fake_key_{secrets.token_hex(16)}"  # Logs anyone who uses it (INTENTIONAL)
         }
         
         self.deception_traps.append(fake_vuln)
