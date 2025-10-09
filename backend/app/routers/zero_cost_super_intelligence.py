@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from datetime import datetime
 
-from app.core.auth import get_current_user
+from app.routers.auth import AuthDependencies
 from app.models.user import User
 from app.services.zero_cost_super_intelligence import (
     ZeroCostSuperIntelligence, 
@@ -58,7 +58,7 @@ class ZeroCostCapabilitiesResponse(BaseModel):
 @router.post("/optimize", response_model=ZeroCostOptimizationResponse)
 async def optimize_zero_cost_super_intelligence(
     request: ZeroCostOptimizationRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(AuthDependencies.get_current_user),
     background_tasks: BackgroundTasks = BackgroundTasks()
 ):
     """Optimize system using zero-cost super intelligent techniques"""
@@ -432,7 +432,7 @@ async def get_zero_cost_infrastructure_analysis():
 @router.get("/optimization-history")
 async def get_zero_cost_optimization_history(
     limit: int = Query(default=50, description="Number of optimization results to return"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(AuthDependencies.get_current_user)
 ):
     """Get zero-cost optimization history"""
     try:
