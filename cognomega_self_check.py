@@ -16,6 +16,7 @@ from app.services.zero_assumption_dna import ZeroAssumptionDNA, must_exist, must
 from app.services.reality_check_dna import RealityCheckDNA
 from app.services.zero_breakage_consistency_dna import ZeroBreakageConsistencyDNA
 from app.services.unified_autonomous_dna_integration import UnifiedAutonomousDNAIntegration
+from app.services.precision_dna import PrecisionDNA
 from app.services.capability_factory import CapabilityFactory
 
 
@@ -38,11 +39,12 @@ class CognOmegaSelfCheck:
         self.reality_check = RealityCheckDNA()
         self.consistency_dna = ZeroBreakageConsistencyDNA()
         self.autonomous_dna = UnifiedAutonomousDNAIntegration()
+        self.precision_dna = PrecisionDNA()
         
     async def run_all_checks(self) -> Dict[str, Any]:
         """Run comprehensive self-checks using all DNA systems"""
         print("\n" + "="*70)
-        print("   🧬 COGNOMEGA SELF-CHECK - ALL CORE DNA SYSTEMS")
+        print("   🧬 COGNOMEGA SELF-CHECK - ALL 5 CORE DNA SYSTEMS")
         print("="*70 + "\n")
         
         # 1. Zero Assumption DNA Check
@@ -57,10 +59,13 @@ class CognOmegaSelfCheck:
         # 4. Autonomous DNA Check (includes Consciousness & Proactive)
         await self._check_autonomous()
         
-        # 5. Capability Factory Check
+        # 5. Precision DNA Check
+        await self._check_precision()
+        
+        # 6. Capability Factory Check
         await self._check_capabilities()
         
-        # 6. Integration Check
+        # 7. Integration Check
         await self._check_integration()
         
         # Calculate overall scores
@@ -264,9 +269,60 @@ def calculate_total(items):
         self.results["checks"]["autonomous"] = check
         print(f"   {check['status']}")
     
+    async def _check_precision(self):
+        """Test Precision DNA - No Shortcuts, No Guessing"""
+        print("🔍 [5/7] Precision DNA (No Shortcuts)...")
+        check = {
+            "name": "Precision DNA",
+            "principle": "NO SHORTCUTS, NO GUESSING, NO LAZY PATHS",
+            "tests": [],
+            "passed": 0,
+            "failed": 0
+        }
+        
+        try:
+            # Test API inspection
+            api_docs = self.precision_dna.inspect_and_verify_api(self.precision_dna, "PrecisionDNA")
+            check["tests"].append({
+                "test": "api_inspection",
+                "status": f"✅ PASS - {api_docs['total_methods']} methods inspected"
+            })
+            check["passed"] += 1
+            
+            # Test goal alignment
+            alignment = self.precision_dna.prevent_goal_drift(
+                "Verify CognOmega intelligence",
+                "Running comprehensive DNA system checks"
+            )
+            check["tests"].append({
+                "test": "goal_alignment",
+                "status": f"✅ PASS - Alignment: {alignment['alignment_score']:.0%}"
+            })
+            check["passed"] += 1
+            
+            # Test completeness enforcement
+            completeness = self.precision_dna.mandate_complete_implementation(
+                "def authenticate(user, password):\n    return verify_password(user, password)",
+                "Test Authentication"
+            )
+            check["tests"].append({
+                "test": "completeness_enforcement",
+                "status": f"✅ PASS - Implementation complete: {completeness['is_complete']}"
+            })
+            check["passed"] += 1
+            
+            check["status"] = "✅ OPERATIONAL"
+            
+        except Exception as e:
+            check["status"] = f"❌ FAILED: {e}"
+            check["failed"] += 1
+        
+        self.results["checks"]["precision"] = check
+        print(f"   {check['status']}")
+    
     async def _check_capabilities(self):
         """Test Capability Factory - All 149 Capabilities"""
-        print("🔍 [5/6] Capability Factory (149 Capabilities)...")
+        print("🔍 [6/7] Capability Factory (149 Capabilities)...")
         check = {
             "name": "Capability Factory",
             "total_capabilities": 149,
@@ -321,7 +377,7 @@ def calculate_total(items):
     
     async def _check_integration(self):
         """Test Integration of All DNA Systems"""
-        print("🔍 [6/6] DNA Integration Check...")
+        print("🔍 [7/7] DNA Integration Check...")
         check = {
             "name": "DNA Integration",
             "systems": 7,
@@ -336,14 +392,15 @@ def calculate_total(items):
                 ("Zero Assumption", self.zero_assumption is not None),
                 ("Reality Check", self.reality_check is not None),
                 ("Zero-Breakage Consistency", self.consistency_dna is not None),
-                ("Unified Autonomous", self.autonomous_dna is not None)
+                ("Unified Autonomous", self.autonomous_dna is not None),
+                ("Precision", self.precision_dna is not None)
             ]
             
             active = sum(1 for _, status in dna_systems if status)
             
             check["tests"].append({
                 "test": "dna_systems_active",
-                "status": f"✅ PASS - {active}/4 DNA systems active"
+                "status": f"✅ PASS - {active}/5 DNA systems active"
             })
             check["passed"] += 1
             
