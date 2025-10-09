@@ -166,7 +166,8 @@ class AIComponentOrchestrator:
         self.context_cleanup_interval = 300  # seconds
         self._health_check_task = None
         self._cleanup_task = None
-        self._start_background_tasks()
+        # 🧬 CONSISTENCY DNA: Don't start async tasks in __init__ (causes coroutine warning)
+        # Background tasks are started via async initializer (line 877-879)
         
         # Initialize default components
         self._initialize_default_components()
