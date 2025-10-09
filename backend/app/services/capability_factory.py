@@ -340,7 +340,7 @@ class CapabilityFactory:
             "language_interoperability_manager": LanguageInteroperabilityManager(),  # Added back
             "feature_flag_implementer": FeatureFlagImplementer(),  # Added back
             "monitoring_integrator": MonitoringIntegrator(),  # Added back
-            "continuous_modernization_planner": ContinuousModernizationPlanner()
+            "continuous_modernization_planner": ContinuousModernizationPlanner(),
             
             # AI-Native (101-110)
             "intent_based_programmer": IntentBasedProgrammer(),
