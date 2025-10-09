@@ -293,8 +293,11 @@ class AuthenticationGenerator:
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+from ...core.config import get_settings
 
-SECRET_KEY = "your-secret-key-min-32-chars"  # Store in env
+# ✅ Use settings instead of hardcoded values
+settings = get_settings()
+SECRET_KEY = settings.SECRET_KEY  # From environment
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 15
 REFRESH_TOKEN_EXPIRE_DAYS = 7
