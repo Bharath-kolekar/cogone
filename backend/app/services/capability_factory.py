@@ -8,11 +8,12 @@ from typing import Dict, Any
 
 # Import all capability implementations
 from .smart_coding_ai_advanced_intelligence import (
-    AlgorithmImplementer,
-    APIIntegrationCodeGenerator,
+    AlgorithmImplementor,  # Fixed: was AlgorithmImplementer
+    APIIntegrator,  # Fixed: was APIIntegrationCodeGenerator
     DataStructureSelector,
     ErrorHandlingGenerator,
-    LoggingImplementer
+    LoggingImplementor,  # Fixed: was LoggingImplementer
+    ConfigurationManager
 )
 
 from .smart_coding_ai_advanced_analysis import (
@@ -226,11 +227,12 @@ class CapabilityFactory:
         
         capabilities = {
             # Code Intelligence (3, 4, 7-10)
-            "algorithm_implementer": AlgorithmImplementer(),
-            "api_integration_code_generator": APIIntegrationCodeGenerator(),
+            "algorithm_implementer": AlgorithmImplementor(),  # Fixed
+            "api_integration_code_generator": APIIntegrator(),  # Fixed
             "data_structure_selector": DataStructureSelector(),
             "error_handling_generator": ErrorHandlingGenerator(),
-            "logging_implementer": LoggingImplementer(),
+            "logging_implementer": LoggingImplementor(),  # Fixed
+            "configuration_manager": ConfigurationManager(),  # Added
             
             # Analysis (14-17)
             "complexity_analyzer": ComplexityAnalyzer(),
