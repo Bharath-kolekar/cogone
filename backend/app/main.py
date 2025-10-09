@@ -74,6 +74,7 @@ from app.routers import (
     code_processing,
     self_modification,
     unified_autonomous_dna_router,
+    reality_check_dna_router,
 )
 from app.trpc.app_router import get_trpc_router
 from app.middleware.rate_limiter import RateLimitMiddleware
@@ -228,6 +229,9 @@ app.include_router(self_modification.router, prefix="/api/v0", tags=["Self-Modif
 
 # Unified Autonomous DNA Integration - Complete Integrated AI System
 app.include_router(unified_autonomous_dna_router.router, prefix="/api/v0", tags=["Unified Autonomous DNA"])
+
+# Reality Check DNA - Anti-Hallucination System
+app.include_router(reality_check_dna_router.router, prefix="/api/v0", tags=["Reality Check DNA"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")
