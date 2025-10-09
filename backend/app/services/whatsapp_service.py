@@ -63,7 +63,7 @@ class WhatsAppService:
             user_id = f"whatsapp_{from_number}"
             
             # Process with Smart Coding AI
-            from app.services.smart_coding_ai_integration import AIIntegrationContext
+            from app.services.ai_integration_types import AIIntegrationContext
             context = AIIntegrationContext(
                 user_id=user_id,
                 project_id=f"whatsapp_project_{from_number}",
