@@ -270,9 +270,7 @@ async def get_unified_status(
 
 
 @router.get("/health")
-async def get_integration_health(
-    current_user: User = Depends(AuthDependencies.get_current_user)
-):
+async def get_integration_health():
     """
     Get health status of all integrations
     

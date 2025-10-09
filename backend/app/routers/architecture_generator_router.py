@@ -575,9 +575,7 @@ async def get_relationship_types(
 # ============================================================================
 
 @router.get("/health")
-async def health_check(
-    current_user: User = Depends(AuthDependencies.get_current_user)
-):
+async def health_check():
     """Health check for Architecture Generator"""
     return {
         "service": "Architecture Generator",
