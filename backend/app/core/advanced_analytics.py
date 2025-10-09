@@ -304,15 +304,45 @@ class AdvancedAnalyticsEngine:
             normalized_data = scaler.fit_transform(clustering_data)
             
             # Train K-means clustering
+            # 🧬 ZERO ASSUMPTION DNA: Validate we have enough data for clustering
+            n_samples = len(normalized_data)
+            n_features = normalized_data.shape[1] if len(normalized_data.shape) > 1 else 1
+            
+            if n_samples < 2:
+                logger.warning("Insufficient samples for clustering", n_samples=n_samples)
+                return
+            
             for n_clusters in [3, 5, 7]:
+                # 🧬 PRECISION DNA: Don't assume clustering will work, validate first
+                if n_clusters > n_samples:
+                    logger.debug("n_clusters exceeds n_samples, skipping", 
+                               n_clusters=n_clusters, n_samples=n_samples)
+                    continue
+                
                 kmeans = KMeans(n_clusters=n_clusters, random_state=42)
                 kmeans.fit(normalized_data)
                 
-                # Calculate silhouette score
-                silhouette_avg = silhouette_score(normalized_data, kmeans.labels_)
+                # 🧬 ZERO ASSUMPTION DNA: Validate labels before silhouette calculation
+                unique_labels = len(set(kmeans.labels_))
                 
-                if silhouette_avg > 0.3:  # Good clustering
-                    self.clustering_models[f"kmeans_{n_clusters}"] = kmeans
+                if unique_labels < 2:
+                    logger.debug("Insufficient unique clusters, skipping silhouette",
+                               unique_labels=unique_labels, n_clusters=n_clusters)
+                    continue
+                
+                # Calculate silhouette score only if we have enough distinct labels
+                # 🧬 CONSISTENCY DNA: This prevents "Number of labels is 1" error
+                try:
+                    silhouette_avg = silhouette_score(normalized_data, kmeans.labels_)
+                    
+                    if silhouette_avg > 0.3:  # Good clustering
+                        self.clustering_models[f"kmeans_{n_clusters}"] = kmeans
+                        logger.info("Clustering model trained", 
+                                  n_clusters=n_clusters, 
+                                  silhouette_score=silhouette_avg)
+                except ValueError as e:
+                    logger.warning("Silhouette score calculation failed", 
+                                 error=str(e), n_clusters=n_clusters)
             
         except Exception as e:
             logger.error("Clustering model training error", error=str(e))
