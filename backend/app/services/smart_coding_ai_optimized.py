@@ -1507,14 +1507,16 @@ class CodebaseMemorySystem:
                 "total_projects": len(self.memory_snapshots),
                 "total_patterns": total_patterns,
                 "total_dependencies": total_dependencies,
-                "total_configs": 0,  # TODO: Implement config counting
+                "total_configs": sum(
+                    len(snapshot.get("config", {})) for snapshot in self.memory_snapshots.values()
+                ),  # Count all configs across snapshots
                 "memory_usage": len(str(self.memory_snapshots)) / (1024 * 1024),  # Rough estimate in MB
                 "last_analysis": max(
                     (snapshot.get("last_updated", datetime.min) for snapshot in self.memory_snapshots.values()),
                     default=None
                 ),
-                "cache_hit_rate": 0.95,  # TODO: Implement actual cache hit tracking
-                "performance_score": 0.98,
+                "cache_hit_rate": self._calculate_cache_hit_rate(),  # Real cache hit rate calculation
+                "performance_score": self._calculate_performance_score(),  # Real performance score
                 "timestamp": datetime.now()
             }
             
@@ -6579,6 +6581,70 @@ async def get_item(item_id: int):
     async def create_notification_system(self, notification_types: List[str], channels: List[str] = None) -> Dict[str, Any]:
         """Capability #160: Notification system creation"""
         return await self.notification_system_creator.create_notification_system(notification_types, channels)
+    
+    def _calculate_cache_hit_rate(self) -> float:
+        """
+        Calculate actual cache hit rate from memory snapshots
+        Returns rate between 0.0 and 1.0
+        """
+        try:
+            total_requests = 0
+            total_hits = 0
+            
+            for snapshot in self.memory_snapshots.values():
+                cache_stats = snapshot.get("cache_stats", {})
+                total_requests += cache_stats.get("requests", 0)
+                total_hits += cache_stats.get("hits", 0)
+            
+            if total_requests == 0:
+                # No cache data yet, return neutral value
+                return 0.0
+            
+            return round(total_hits / total_requests, 4)
+        
+        except Exception as e:
+            logger.error(f"Error calculating cache hit rate: {e}")
+            return 0.0
+    
+    def _calculate_performance_score(self) -> float:
+        """
+        Calculate actual performance score based on system metrics
+        Returns score between 0.0 and 1.0
+        """
+        try:
+            if not self.memory_snapshots:
+                return 0.0
+            
+            total_score = 0.0
+            count = 0
+            
+            for snapshot in self.memory_snapshots.values():
+                perf_metrics = snapshot.get("performance_metrics", {})
+                
+                # Calculate score from various metrics
+                response_time = perf_metrics.get("avg_response_time", 1000)  # ms
+                error_rate = perf_metrics.get("error_rate", 0.05)  # percentage
+                
+                # Lower response time is better (score inversely proportional)
+                # Assume 100ms is perfect (1.0), 1000ms is poor (0.1)
+                response_score = max(0.1, min(1.0, 100 / response_time))
+                
+                # Lower error rate is better
+                error_score = max(0.0, 1.0 - error_rate)
+                
+                # Combined score (weighted average)
+                score = (response_score * 0.6) + (error_score * 0.4)
+                total_score += score
+                count += 1
+            
+            if count == 0:
+                return 0.0
+            
+            return round(total_score / count, 4)
+        
+        except Exception as e:
+            logger.error(f"Error calculating performance score: {e}")
+            return 0.0
 
 
 # Global optimized service instance
