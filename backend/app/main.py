@@ -253,7 +253,7 @@ app.include_router(hardware_optimization.router, prefix="/api/v0/hardware-optimi
 app.include_router(profiles.router, prefix="/api/v0/profiles", tags=["User Profiles"])
 app.include_router(smart_coding_ai_status.router, prefix="/api/v0/smart-coding-ai-status", tags=["Smart Coding AI Status"])
 app.include_router(super_intelligent_optimization.router, prefix="/api/v0/super-intelligent-optimization", tags=["Super Intelligent Optimization"])
-app.include_router(system_optimization_router.router, prefix="/api/v0/system-optimization", tags=["System Optimization"])
+app.include_router(system_optimization_router, prefix="/api/v0/system-optimization", tags=["System Optimization"])
 app.include_router(transcribe.router, prefix="/api/v0/transcribe", tags=["Transcription"])
 app.include_router(user_preferences.router, prefix="/api/v0/user-preferences", tags=["User Preferences"])
 app.include_router(zero_cost_super_intelligence.router, prefix="/api/v0/zero-cost-super-intelligence", tags=["Zero Cost Super Intelligence"])
