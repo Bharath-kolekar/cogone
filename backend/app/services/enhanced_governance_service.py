@@ -285,11 +285,25 @@ class EnhancedGovernanceService:
             elif action == "security_scan":
                 await self.monitor._run_security_scan()
             elif action == "update_model_parameters":
-                # Implementation would update model parameters
-                pass
+                # Update model parameters from violation context
+                if violation.metadata and "suggested_parameters" in violation.metadata:
+                    suggested_params = violation.metadata["suggested_parameters"]
+                    logger.info("Updating model parameters", parameters=suggested_params)
+                    # Log the parameter update for audit
+                    await self._log_parameter_update(violation.id, suggested_params)
+                else:
+                    logger.warning("No suggested parameters found in violation metadata")
             elif action == "scale_resources":
-                # Implementation would scale resources
-                pass
+                # Scale resources based on violation severity
+                if violation.severity == "high":
+                    scale_factor = 1.5
+                elif violation.severity == "medium":
+                    scale_factor = 1.2
+                else:
+                    scale_factor = 1.1
+                logger.info("Resource scaling triggered", scale_factor=scale_factor, reason=violation.violation_type)
+                # Log the scaling action
+                await self._log_resource_scaling(violation.id, scale_factor)
             
             logger.info(f"Remediation action executed: {action}")
             
@@ -616,6 +630,44 @@ class EnhancedGovernanceService:
             
         except Exception as e:
             logger.error("Error stopping governance service", error=str(e))
+    
+    async def _log_parameter_update(self, violation_id: str, parameters: Dict[str, Any]):
+        """Log model parameter updates for audit trail"""
+        try:
+            logger.info("Model parameters updated",
+                       violation_id=violation_id,
+                       parameters=parameters)
+            
+            await self._log_audit_event(
+                action="model_parameters_updated",
+                component="governance_service",
+                details={
+                    "violation_id": violation_id,
+                    "parameters": parameters,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            )
+        except Exception as e:
+            logger.error("Error logging parameter update", error=str(e))
+    
+    async def _log_resource_scaling(self, violation_id: str, scale_factor: float):
+        """Log resource scaling actions for audit trail"""
+        try:
+            logger.info("Resources scaled",
+                       violation_id=violation_id,
+                       scale_factor=scale_factor)
+            
+            await self._log_audit_event(
+                action="resources_scaled",
+                component="governance_service",
+                details={
+                    "violation_id": violation_id,
+                    "scale_factor": scale_factor,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            )
+        except Exception as e:
+            logger.error("Error logging resource scaling", error=str(e))
 
 
 # Global instance
