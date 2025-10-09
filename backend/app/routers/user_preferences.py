@@ -194,19 +194,19 @@ async def get_user_preferences(user_id: UUID) -> Dict[str, Any]:
     try:
         # Get user preferences from database
         db = get_supabase_client()
-            # This would typically query a user_preferences table
-            # For now, return default preferences
-            default_preferences = {
-                "user_id": str(user_id),
-                "threshold_type": "optimized",
-                "billing_option": "monthly",
-                "auto_optimize": True,
-                "notifications": True,
-                "created_at": time.time(),
-                "updated_at": time.time()
-            }
-            
-            return {
+        # This would typically query a user_preferences table
+        # For now, return default preferences
+        default_preferences = {
+            "user_id": str(user_id),
+            "threshold_type": "optimized",
+            "billing_option": "monthly",
+            "auto_optimize": True,
+            "notifications": True,
+            "created_at": time.time(),
+            "updated_at": time.time()
+        }
+        
+        return {
                 "preferences": default_preferences,
                 "status": "success"
             }
