@@ -31,6 +31,47 @@ async def startup_event():
 
 
 # ============================================================================
+# HEALTH CHECK ENDPOINT
+# ============================================================================
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for Smart Coding AI Integration
+    Returns service status and availability of integrated components
+    """
+    try:
+        # Get component availability from integration service
+        components = smart_coding_ai_integration.get_integrated_components_status()
+        
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "status": "healthy",
+                "service": "smart_coding_ai_integration",
+                "version": "2.0.0",
+                "timestamp": datetime.now().isoformat(),
+                "components": components,
+                "modules": {
+                    "whatsapp": True,
+                    "session_manager": True,
+                    "voice_to_code": True
+                }
+            }
+        )
+    except Exception as e:
+        logger.error("Health check failed", error=str(e))
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={
+                "status": "unhealthy",
+                "error": str(e),
+                "timestamp": datetime.now().isoformat()
+            }
+        )
+
+
+# ============================================================================
 # SESSION MANAGEMENT ENDPOINTS
 # ============================================================================
 

@@ -596,6 +596,67 @@ class SmartCodingAIIntegration:
             logger.error("Failed to initialize Smart Coding AI Integration", error=str(e))
             # Don't raise - allow partial initialization
     
+    def get_integrated_components_status(self) -> Dict[str, bool]:
+        """
+        Get status of all integrated components
+        Production-grade: Real-time component availability check
+        
+        Returns:
+            Dict mapping component names to availability status
+        """
+        return {
+            # Core Components
+            "ai_assistant": AI_ASSISTANT_AVAILABLE,
+            "voice_service": VOICE_SERVICE_AVAILABLE,
+            "meta_orchestrator": META_ORCHESTRATOR_AVAILABLE,
+            "goal_integrity": GOAL_INTEGRITY_AVAILABLE,
+            "whatsapp": WHATSAPP_AVAILABLE,
+            # Core AI Orchestrators
+            "ai_orchestrator": AI_ORCHESTRATOR_AVAILABLE,
+            "ai_orchestration_layer": AI_ORCHESTRATION_LAYER_AVAILABLE,
+            "ai_component_orchestrator": AI_COMPONENT_ORCHESTRATOR_AVAILABLE,
+            "unified_ai_component_orchestrator": UNIFIED_AI_COMPONENT_ORCHESTRATOR_AVAILABLE,
+            # Advanced AI Systems
+            "consciousness_core": CONSCIOUSNESS_CORE_AVAILABLE,
+            "proactive_intelligence": PROACTIVE_INTELLIGENCE_AVAILABLE,
+            "super_intelligent_optimizer": SUPER_INTELLIGENT_OPTIMIZER_AVAILABLE,
+            "zero_cost_super_intelligence": ZERO_COST_SUPER_INTELLIGENCE_AVAILABLE,
+            "swarm_ai_orchestrator": SWARM_AI_ORCHESTRATOR_AVAILABLE,
+            "accuracy_monitoring": ACCURACY_MONITORING_AVAILABLE,
+            "consistency_monitoring": CONSISTENCY_MONITORING_AVAILABLE,
+            "proactive_consistency": PROACTIVE_CONSISTENCY_AVAILABLE,
+            # Specialized AI Services
+            "accuracy_validation": ACCURACY_VALIDATION_AVAILABLE,
+            "nlp_enhancement": NLP_ENHANCEMENT_AVAILABLE,
+            "hierarchical_orchestration": HIERARCHICAL_ORCHESTRATION_AVAILABLE,
+            "agent_mode": AGENT_MODE_AVAILABLE,
+            "ai_agent_consolidated": AI_AGENT_CONSOLIDATED_AVAILABLE,
+            # Smarty AI Systems
+            "smarty_ai_orchestrator": SMARTY_AI_ORCHESTRATOR_AVAILABLE,
+            "smarty_agent_integration": SMARTY_AGENT_INTEGRATION_AVAILABLE,
+            "smarty_ethical_integration": SMARTY_ETHICAL_INTEGRATION_AVAILABLE,
+            # Business AI Systems
+            "marketing_seo": MARKETING_SEO_AVAILABLE,
+            "profit_strategies": PROFIT_STRATEGIES_AVAILABLE,
+            "gamification": GAMIFICATION_AVAILABLE,
+            # System Optimization
+            "system_optimization": SYSTEM_OPTIMIZATION_AVAILABLE,
+            "hardware_optimization": HARDWARE_OPTIMIZATION_AVAILABLE,
+            "quality_optimization": QUALITY_OPTIMIZATION_AVAILABLE,
+            "zero_cost_infrastructure": ZERO_COST_INFRASTRUCTURE_AVAILABLE,
+            # Production & Deployment
+            "production_deployment": PRODUCTION_DEPLOYMENT_AVAILABLE,
+            # Communication Systems
+            "transcribe_service": TRANSCRIBE_AVAILABLE,
+            # Admin & Management
+            "admin_service": ADMIN_SERVICE_AVAILABLE,
+            "optimized_user_service": OPTIMIZED_USER_AVAILABLE,
+            # Tool Integration
+            "tool_integration": TOOL_INTEGRATION_AVAILABLE,
+            # Auto-Save & Collaboration
+            "auto_save_service": AUTO_SAVE_AVAILABLE
+        }
+    
     # ============================================================================
     # VOICE-TO-CODE INTEGRATION
     # ============================================================================
