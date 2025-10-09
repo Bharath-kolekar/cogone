@@ -1,0 +1,2618 @@
+================================================================================
+REALITY CHECK DNA - Anti-Hallucination Report
+================================================================================
+
+Files Analyzed: 103
+
+Real Implementations:  16 (15.5%)
+Fake/Suspicious:       87 (84.5%)
+Total Issues Found:    639
+Average Reality Score: 0.88
+
+================================================================================
+
+File: backend\app\services\accuracy_monitoring_system.py
+Reality Score: 0.85
+Status: ⚠️ SUSPICIOUS
+Issues: 11 (0 critical, 1 high)
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'redis.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'sqlalchemy.ext.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'collections' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 18: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 6 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\accuracy_validation_engine.py
+Reality Score: 0.83
+Status: ⚠️ SUSPICIOUS
+Issues: 13 (0 critical, 1 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'hashlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 16: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'aiohttp' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'redis.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 18: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'sqlalchemy.ext.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 8 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\admin_service.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 6 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'aiohttp' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.models.admin' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 1 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\advanced_features_service.py
+Reality Score: 0.85
+Status: ⚠️ SUSPICIOUS
+Issues: 11 (0 critical, 1 high)
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'hashlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 6 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\agent_mode.py
+Reality Score: 0.94
+Status: ✅ OK
+Issues: 6 (0 critical, 0 high)
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'hashlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 18: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 20: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'importlib.util' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 22: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 1 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\ai_agent_consolidated_service.py
+Reality Score: 0.83
+Status: ✅ OK
+Issues: 17 (0 critical, 0 high)
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'gc' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'aiohttp' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 18: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'redis.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'sqlalchemy.ext.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 12 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\ai_assistant_service.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 6 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 1 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\ai_component_orchestrator.py
+Reality Score: 0.77
+Status: ⚠️ SUSPICIOUS
+Issues: 15 (0 critical, 2 high)
+
+  Line 605: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'traceback' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 10 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\ai_orchestration_layer.py
+Reality Score: 0.82
+Status: ⚠️ SUSPICIOUS
+Issues: 14 (0 critical, 1 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'hashlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'tempfile' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'aiohttp' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 20: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'redis.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 21: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'sqlalchemy.ext.asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 9 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\ai_orchestrator.py
+Reality Score: 0.93
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\ai_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\app_generation_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\architecture_generator.py
+Reality Score: 0.86
+Status: ⚠️ SUSPICIOUS
+Issues: 10 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 5 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\auth_service.py
+Reality Score: 0.93
+Status: ✅ OK
+Issues: 7 (0 critical, 0 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'passlib.context' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.database' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.models.user' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 2 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\auto_save_service.py
+Reality Score: 0.81
+Status: ⚠️ SUSPICIOUS
+Issues: 7 (0 critical, 3 high)
+
+  Line 301: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 334: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 2 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\billing_service.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 6 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'decimal' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.models.billing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 16: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 1 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\capability_factory.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\codebase_memory_system.py
+Reality Score: 0.88
+Status: ⚠️ SUSPICIOUS
+Issues: 8 (0 critical, 1 high)
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'hashlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'importlib.util' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 20: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 3 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\collaboration_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 2: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\consciousness_core.py
+Reality Score: 0.88
+Status: ⚠️ SUSPICIOUS
+Issues: 8 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 3 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\consistency_monitoring_system.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 6 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 1 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\database_service.py
+Reality Score: 0.97
+Status: ✅ OK
+Issues: 3 (0 critical, 0 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.database' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.models.user' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\enhanced_governance_service.py
+Reality Score: 0.65
+Status: ⚠️ SUSPICIOUS
+Issues: 11 (0 critical, 6 high)
+
+  Line 288: comment_instead_of_code
+    Severity: high
+    Explanation: Comment says what WOULD be done, not what IS done
+    Suggestion: Implement the actual functionality
+
+  Line 291: comment_instead_of_code
+    Severity: high
+    Explanation: Comment says what WOULD be done, not what IS done
+    Suggestion: Implement the actual functionality
+
+  Line 436: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 457: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 499: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  ... and 6 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\enhanced_payment_service.py
+Reality Score: 0.95
+Status: ✅ OK
+Issues: 5 (0 critical, 0 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 16: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 22: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 23: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.database' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\enhanced_voice_to_app_service.py
+Reality Score: 0.85
+Status: ⚠️ SUSPICIOUS
+Issues: 9 (0 critical, 1 high)
+
+  Line 186: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 209: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'base64' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 4 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\free_tier_monitoring.py
+Reality Score: 0.81
+Status: ⚠️ SUSPICIOUS
+Issues: 7 (0 critical, 3 high)
+
+  Line 216: comment_instead_of_code
+    Severity: high
+    Explanation: Comment says what WOULD be done, not what IS done
+    Suggestion: Implement the actual functionality
+
+  Line 233: comment_instead_of_code
+    Severity: high
+    Explanation: Comment says what WOULD be done, not what IS done
+    Suggestion: Implement the actual functionality
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'aiohttp' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 2 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\gamification_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 2: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\goal_integrity_service.py
+Reality Score: 0.58
+Status: ⚠️ SUSPICIOUS
+Issues: 16 (0 critical, 5 high)
+
+  Line 678: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+  Line 698: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+  Line 718: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+  Line 674: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 684: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  ... and 11 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\hierarchical_orchestration_manager.py
+Reality Score: 0.88
+Status: ⚠️ SUSPICIOUS
+Issues: 8 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'decimal' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 3 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\marketing_seo_ai_service.py
+Reality Score: 0.91
+Status: ⚠️ SUSPICIOUS
+Issues: 5 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\meta_ai_orchestrator_unified.py
+Reality Score: 0.88
+Status: ⚠️ SUSPICIOUS
+Issues: 8 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 3 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\nlp_enhancement_service.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 6 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 1 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\optimized_service_factory.py
+Reality Score: 0.60
+Status: ⚠️ SUSPICIOUS
+Issues: 19 (1 critical, 3 high)
+
+  Line 163: hardcoded_values
+    Severity: critical
+    Explanation: Hardcoded credential/secret - should use environment variable
+    Suggestion: Use settings.{NAME} or os.getenv('{NAME}')
+
+  Line 87: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 91: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'abc' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 14 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\optimized_user_service.py
+Reality Score: 0.88
+Status: ⚠️ SUSPICIOUS
+Issues: 8 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'uuid' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.interfaces.service_interfaces' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.repositories.user_repository' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.observers.observer_pattern' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 3 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\otp_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\payment_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.services.enhanced_payment_service' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\paypal_service.py
+Reality Score: 0.84
+Status: ⚠️ SUSPICIOUS
+Issues: 7 (0 critical, 1 high)
+
+  Line 3: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 23: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 43: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 59: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 71: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  ... and 2 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\paypal_service_production.py
+Reality Score: 0.92
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (0 critical, 1 high)
+
+  Line 6: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\proactive_consistency_manager.py
+Reality Score: 0.93
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (0 critical, 1 high)
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\proactive_intelligence_core.py
+Reality Score: 0.89
+Status: ⚠️ SUSPICIOUS
+Issues: 7 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 2 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\production_deployment_service.py
+Reality Score: 0.91
+Status: ✅ OK
+Issues: 9 (0 critical, 0 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'subprocess' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 16: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'yaml' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 4 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\profit_strategies_service.py
+Reality Score: 0.89
+Status: ⚠️ SUSPICIOUS
+Issues: 7 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'uuid' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'decimal' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 2 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\razorpay_service.py
+Reality Score: 0.84
+Status: ⚠️ SUSPICIOUS
+Issues: 7 (0 critical, 1 high)
+
+  Line 3: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 23: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 41: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 55: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 68: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  ... and 2 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\razorpay_service_production.py
+Reality Score: 0.97
+Status: ✅ OK
+Issues: 2 (0 critical, 0 high)
+
+  Line 6: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\reality_check_dna.py
+Reality Score: 0.21
+Status: ⚠️ SUSPICIOUS
+Issues: 32 (2 critical, 1 high)
+
+  Line 108: fake_hash_as_id
+    Severity: critical
+    Explanation: Returns fake ID using hash() - no real database/API call
+    Suggestion: Use actual database insert or API call to get real ID
+
+  Line 108: fake_data_return
+    Severity: critical
+    Explanation: Returns data explicitly marked as fake/mock/stub
+    Suggestion: Implement real functionality or mark as STUB with warnings
+
+  Line 45: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 110: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  Line 111: stub_without_warning
+    Severity: medium
+    Explanation: Stub implementation without proper warning/logging
+    Suggestion: Add logger.warning() or mark clearly as STUB in docstring
+
+  ... and 27 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\referral_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 2: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\self_modification_enhanced_safety.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 6 (0 critical, 1 high)
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 21: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 23: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 24: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 25: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 1 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\self_modification_system.py
+Reality Score: 0.80
+Status: ⚠️ SUSPICIOUS
+Issues: 8 (0 critical, 3 high)
+
+  Line 740: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+  Line 745: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 23: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 24: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 26: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 3 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\self_validation_health_correction.py
+Reality Score: 0.88
+Status: ⚠️ SUSPICIOUS
+Issues: 8 (0 critical, 1 high)
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'traceback' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 20: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 22: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 23: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 25: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 3 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smarty_agent_integration.py
+Reality Score: 0.80
+Status: ⚠️ SUSPICIOUS
+Issues: 16 (0 critical, 1 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 16: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 25: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.models.ai_agent' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 11 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smarty_ai_orchestrator.py
+Reality Score: 0.82
+Status: ⚠️ SUSPICIOUS
+Issues: 14 (0 critical, 1 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 25: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.ethical_ai_core' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 26: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.tool_integration_manager' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 9 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smarty_ethical_integration.py
+Reality Score: 0.80
+Status: ⚠️ SUSPICIOUS
+Issues: 16 (0 critical, 1 high)
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.ethical_ai_core' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 11 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_advanced_analysis.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_advanced_intelligence.py
+Reality Score: 0.85
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (1 critical, 1 high)
+
+  Line 459: hardcoded_values
+    Severity: critical
+    Explanation: Hardcoded credential/secret - should use environment variable
+    Suggestion: Use settings.{NAME} or os.getenv('{NAME}')
+
+  Line 264: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_analyzers.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_backend.py
+Reality Score: 0.95
+Status: ⚠️ SUSPICIOUS
+Issues: 1 (0 critical, 1 high)
+
+  Line 394: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_cache.py
+Reality Score: 0.92
+Status: ⚠️ SUSPICIOUS
+Issues: 4 (0 critical, 1 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'uuid' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'collections' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_capabilities.py
+Reality Score: 0.92
+Status: ⚠️ SUSPICIOUS
+Issues: 4 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_collaboration.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_data_analytics.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 1 (1 critical, 0 high)
+
+  Line 738: hardcoded_values
+    Severity: critical
+    Explanation: Hardcoded credential/secret - should use environment variable
+    Suggestion: Use settings.{NAME} or os.getenv('{NAME}')
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_debugging.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_dependencies.py
+Reality Score: 0.92
+Status: ⚠️ SUSPICIOUS
+Issues: 4 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'ast' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_devops.py
+Reality Score: 0.99
+Status: ✅ OK
+Issues: 1 (0 critical, 0 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_documentation.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_enums.py
+Reality Score: 0.99
+Status: ✅ OK
+Issues: 1 (0 critical, 0 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_frontend.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_helpers.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_integration.py
+Reality Score: 0.54
+Status: ⚠️ SUSPICIOUS
+Issues: 42 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.services.smart_coding_ai_optimized' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.services.codebase_memory_system' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 18: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.services.ai_assistant_service' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 37 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_legacy_modernization.py
+Reality Score: 0.99
+Status: ✅ OK
+Issues: 1 (0 critical, 0 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_models.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_native.py
+Reality Score: 0.89
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (0 critical, 2 high)
+
+  Line 198: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_oauth.py
+Reality Score: 0.97
+Status: ✅ OK
+Issues: 3 (0 critical, 0 high)
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'base64' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'urllib.parse' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_optimized.py
+Reality Score: 0.73
+Status: ⚠️ SUSPICIOUS
+Issues: 15 (0 critical, 3 high)
+
+  Line 1510: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+  Line 1516: comment_instead_of_code
+    Severity: high
+    Explanation: TODO comment - feature not implemented
+    Suggestion: Implement the actual functionality
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 46: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.architecture_compliance' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 10 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_patterns.py
+Reality Score: 0.91
+Status: ⚠️ SUSPICIOUS
+Issues: 5 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'ast' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'os' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pathlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_quality.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_queue.py
+Reality Score: 0.89
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (0 critical, 2 high)
+
+  Line 190: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_quickwins.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_rbac.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_requirements.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_security.py
+Reality Score: 0.90
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 2 high)
+
+  Line 297: literal_placeholder
+    Severity: high
+    Explanation: Contains literal placeholder value (dev-, test-, your-)
+    Suggestion: Replace with actual value or load from configuration
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_session.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_state.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_telemetry.py
+Reality Score: 0.93
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'uuid' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_testing.py
+Reality Score: 0.79
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (2 critical, 0 high)
+
+  Line 680: fake_data_return
+    Severity: critical
+    Explanation: Returns data explicitly marked as fake/mock/stub
+    Suggestion: Implement real functionality or mark as STUB with warnings
+
+  Line 768: fake_data_return
+    Severity: critical
+    Explanation: Returns data explicitly marked as fake/mock/stub
+    Suggestion: Implement real functionality or mark as STUB with warnings
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\smart_coding_ai_validation.py
+Reality Score: 0.93
+Status: ⚠️ SUSPICIOUS
+Issues: 3 (0 critical, 1 high)
+
+  Line 3: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'pydantic' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 4: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\sms_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\super_intelligent_optimizer.py
+Reality Score: 0.84
+Status: ⚠️ SUSPICIOUS
+Issues: 12 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 7 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\swarm_ai_orchestrator.py
+Reality Score: 0.86
+Status: ⚠️ SUSPICIOUS
+Issues: 10 (0 critical, 1 high)
+
+  Line 8: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'uuid' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 5 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\template_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 2: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\tool_integration_manager.py
+Reality Score: 0.92
+Status: ⚠️ SUSPICIOUS
+Issues: 4 (0 critical, 1 high)
+
+  Line 261: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\totp_service.py
+Reality Score: 0.92
+Status: ⚠️ SUSPICIOUS
+Issues: 4 (0 critical, 1 high)
+
+  Line 133: always_returns_true
+    Severity: high
+    Explanation: Function always returns True without any validation
+    Suggestion: Add actual validation logic or error handling
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.database' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\unified_ai_component_orchestrator.py
+Reality Score: 0.75
+Status: ⚠️ SUSPICIOUS
+Issues: 21 (0 critical, 1 high)
+
+  Line 10: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'hashlib' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 14: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'tempfile' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 16: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 18: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 21: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.async_task_manager' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 16 more issues
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\unified_autonomous_dna_integration.py
+Reality Score: 0.92
+Status: ⚠️ SUSPICIOUS
+Issues: 4 (0 critical, 1 high)
+
+  Line 16: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\upi_service.py
+Reality Score: 0.84
+Status: ⚠️ SUSPICIOUS
+Issues: 4 (0 critical, 3 high)
+
+  Line 11: literal_placeholder
+    Severity: high
+    Explanation: Contains literal placeholder value (dev-, test-, your-)
+    Suggestion: Replace with actual value or load from configuration
+
+  Line 12: literal_placeholder
+    Severity: high
+    Explanation: Contains literal placeholder value (dev-, test-, your-)
+    Suggestion: Replace with actual value or load from configuration
+
+  Line 2: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\voice_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.services.enhanced_voice_to_app_service' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\webhook_service.py
+Reality Score: 0.94
+Status: ⚠️ SUSPICIOUS
+Issues: 2 (0 critical, 1 high)
+
+  Line 2: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\whatsapp_service.py
+Reality Score: 0.96
+Status: ✅ OK
+Issues: 4 (0 critical, 0 high)
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 12: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'base64' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\zero_breakage_consistency_dna.py
+Reality Score: 0.91
+Status: ⚠️ SUSPICIOUS
+Issues: 5 (0 critical, 1 high)
+
+  Line 17: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 18: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 20: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 21: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 1: mock_without_real_api
+    Severity: high
+    Explanation: Code mentions external operations (API, database) but makes no actual calls
+    Suggestion: Implement actual API/database calls or mark as mock/stub
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\zero_cost_infrastructure_service.py
+Reality Score: 0.96
+Status: ✅ OK
+Issues: 4 (0 critical, 0 high)
+
+  Line 9: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'enum' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 19: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'app.core.config' is never used
+    Suggestion: Remove unused import or actually use it
+
+--------------------------------------------------------------------------------
+
+File: backend\app\services\zero_cost_super_intelligence.py
+Reality Score: 0.86
+Status: ⚠️ SUSPICIOUS
+Issues: 10 (0 critical, 1 high)
+
+  Line 6: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'asyncio' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 7: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'json' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 11: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'numpy' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 13: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'typing' is never used
+    Suggestion: Remove unused import or actually use it
+
+  Line 15: perfect_structure_no_impl
+    Severity: low
+    Explanation: Import 'dataclasses' is never used
+    Suggestion: Remove unused import or actually use it
+
+  ... and 5 more issues
+
+--------------------------------------------------------------------------------
