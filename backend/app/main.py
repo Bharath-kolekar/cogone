@@ -146,10 +146,36 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning("⚠️ Self-check skipped", reason=str(e))
     
+    # Run CognOmega Full Diagnostic
+    try:
+        from app.startup.full_diagnostic import run_startup_diagnostic, start_periodic_diagnostic
+        diagnostic_results = await run_startup_diagnostic()
+        logger.info(
+            "🔍 CognOmega Full Diagnostic Complete",
+            issues_found=diagnostic_results.get('total_issues_found', 0),
+            critical=len(diagnostic_results.get('critical', [])),
+            high=len(diagnostic_results.get('high', []))
+        )
+        
+        # Start periodic diagnostic task (runs every 2 hours)
+        await start_periodic_diagnostic()
+        logger.info("✅ Periodic diagnostic scheduled (every 2 hours)")
+        
+    except Exception as e:
+        logger.warning("⚠️ Diagnostic skipped", reason=str(e))
+    
     yield
     
     # Shutdown
     logger.info("Shutting down Voice-to-App SaaS Platform")
+    
+    # Stop periodic diagnostic task
+    try:
+        from app.startup.full_diagnostic import stop_periodic_diagnostic
+        await stop_periodic_diagnostic()
+        logger.info("✅ Periodic diagnostic task stopped")
+    except Exception as e:
+        logger.warning("⚠️ Diagnostic cleanup skipped", reason=str(e))
     
     # Stop all async tasks
     await async_task_manager.stop_all_tasks()
