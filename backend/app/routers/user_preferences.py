@@ -253,29 +253,29 @@ async def save_user_preferences(
         
         # Save preferences to database
         db = get_supabase_client()
-            # This would typically save to a user_preferences table
-            # For now, simulate saving
-            saved_preferences = {
-                "user_id": preferences.get("user_id", str(uuid4())),
-                "threshold_type": preferences["threshold_type"],
-                "billing_option": preferences["billing_option"],
-                "auto_optimize": preferences.get("auto_optimize", True),
-                "notifications": preferences.get("notifications", True),
-                "created_at": time.time(),
-                "updated_at": time.time()
-            }
-            
-            # Background task for analytics
-            background_tasks.add_task(
-                _log_preference_change,
-                saved_preferences
-            )
-            
-            return {
-                "preferences": saved_preferences,
-                "status": "success",
-                "message": "Preferences saved successfully"
-            }
+        # This would typically save to a user_preferences table
+        # For now, simulate saving
+        saved_preferences = {
+            "user_id": preferences.get("user_id", str(uuid4())),
+            "threshold_type": preferences["threshold_type"],
+            "billing_option": preferences["billing_option"],
+            "auto_optimize": preferences.get("auto_optimize", True),
+            "notifications": preferences.get("notifications", True),
+            "created_at": time.time(),
+            "updated_at": time.time()
+        }
+        
+        # Background task for analytics
+        background_tasks.add_task(
+            _log_preference_change,
+            saved_preferences
+        )
+        
+        return {
+            "preferences": saved_preferences,
+            "status": "success",
+            "message": "Preferences saved successfully"
+        }
             
     except HTTPException:
         raise
