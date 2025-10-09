@@ -250,7 +250,7 @@ class AIOptimizationEngine:
         try:
             # Get performance metrics from monitoring systems
             cache_stats = await advanced_cache.get_cache_stats()
-            cpu_metrics = await cpu_optimizer.get_cpu_metrics()
+            cpu_metrics = cpu_optimizer.get_cpu_metrics()
             performance_summary = await performance_monitor.get_performance_summary()
             
             # Extract relevant metrics
@@ -413,7 +413,12 @@ class AIOptimizationEngine:
                 current_data.system_load
             ]])
             
-            features_scaled = self.scalers['input'].transform(features)
+            # Check if scaler is fitted, if not return empty predictions
+            try:
+                features_scaled = self.scalers['input'].transform(features)
+            except Exception as scaler_error:
+                logger.warning("Scaler not fitted yet, cannot make predictions", error=str(scaler_error))
+                return []
             
             # Predict current performance
             predicted_response_time = self.models['response_time'].predict(features_scaled)[0]
@@ -637,7 +642,12 @@ class AIOptimizationEngine:
                 current_data.system_load
             ]])
             
-            features_scaled = self.scalers['input'].transform(features)
+            # Check if scaler is fitted
+            try:
+                features_scaled = self.scalers['input'].transform(features)
+            except Exception as scaler_error:
+                logger.warning("Scaler not fitted yet, returning empty predictions", error=str(scaler_error))
+                return {}
             
             # Make predictions
             predicted_response_time = self.models['response_time'].predict(features_scaled)[0]

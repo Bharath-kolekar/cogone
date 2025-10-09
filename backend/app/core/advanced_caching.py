@@ -60,6 +60,11 @@ class CacheMetrics:
     avg_response_time: float = 0.0
     memory_usage: float = 0.0
     redis_usage: float = 0.0
+    get_count: int = 0
+    get_time_total: float = 0.0
+    set_count: int = 0
+    set_time_total: float = 0.0
+    memory_saved: float = 0.0
 
 
 class MultiTierCaching:
@@ -390,7 +395,8 @@ class MultiTierCaching:
             # Get Redis info
             redis_info = {}
             try:
-                redis_info = await self.l2_cache.info('memory')
+                if self.l2_cache is not None:
+                    redis_info = await self.l2_cache.info('memory')
             except Exception as e:
                 logger.warning("Redis info error", error=str(e))
             

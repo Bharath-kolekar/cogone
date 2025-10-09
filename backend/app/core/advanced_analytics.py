@@ -177,8 +177,8 @@ class AdvancedAnalyticsEngine:
         """Collect comprehensive performance data"""
         try:
             # Get data from all monitoring systems
-            cache_stats = await advanced_cache.get_cache_metrics()
-            cpu_metrics = await cpu_optimizer.get_cpu_metrics()
+            cache_stats = advanced_cache.get_cache_metrics()
+            cpu_metrics = cpu_optimizer.get_cpu_metrics()
             performance_metrics = await performance_monitor.get_current_metrics()
             ai_metrics = await ai_optimization_engine.get_optimization_recommendations()
             scaling_metrics = await predictive_scaling_engine.get_scaling_recommendations()

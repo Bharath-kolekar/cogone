@@ -507,43 +507,6 @@ class CPUOptimizer:
             logger.error(f"CPU optimization metrics retrieval failed", error=str(e))
             raise
 
-    async def cleanup(self):
-        """Cleanup resources"""
-        try:
-            self.io_pool.shutdown(wait=True)
-            self.cpu_pool.shutdown(wait=True)
-            self.background_pool.shutdown(wait=True)
-            logger.info("CPU Optimizer cleanup completed")
-        except Exception as e:
-            logger.error(f"CPU Optimizer cleanup failed", error=str(e))
-
-# Global CPU optimizer instance
-cpu_optimizer = CPUOptimizer()
-
-async def get_cpu_performance() -> Dict[str, Any]:
-    """Get current CPU performance metrics"""
-    try:
-        cpu_usage = await cpu_optimizer.monitor_cpu_usage()
-        optimization_metrics = await cpu_optimizer.get_cpu_optimization_metrics()
-        
-        return {
-            "cpu_usage": {
-                "total_usage": cpu_usage.total_usage,
-                "per_core_usage": cpu_usage.per_core_usage,
-                "load_average": cpu_usage.load_average,
-                "temperature": cpu_usage.temperature,
-                "frequency": cpu_usage.frequency
-            },
-            "optimization_metrics": optimization_metrics,
-            "timestamp": datetime.now().isoformat()
-        }
-    except Exception as e:
-        logger.error(f"Failed to get CPU performance metrics", error=str(e))
-        return {
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
-        }
-    
     def get_cpu_metrics(self) -> Dict[str, Any]:
         """
         Get current CPU metrics - REAL IMPLEMENTATION
@@ -608,3 +571,53 @@ async def get_cpu_performance() -> Dict[str, Any]:
                 "total_cores": self.total_cores,
                 "error": str(e)
             }
+
+    def _resize_thread_pool(self, new_size: int):
+        """
+        Resize thread pool for dynamic scaling
+        Note: ThreadPoolExecutor doesn't support dynamic resizing,
+        so we log the request for monitoring purposes
+        """
+        logger.info("Thread pool resize requested", 
+                   current_size=self.max_workers, 
+                   requested_size=new_size,
+                   note="ThreadPoolExecutor does not support dynamic resizing")
+        # In production, you would need to implement pool recreation
+        # or use a custom thread pool implementation that supports resizing
+
+    async def cleanup(self):
+        """Cleanup resources"""
+        try:
+            self.io_pool.shutdown(wait=True)
+            self.cpu_pool.shutdown(wait=True)
+            self.background_pool.shutdown(wait=True)
+            logger.info("CPU Optimizer cleanup completed")
+        except Exception as e:
+            logger.error(f"CPU Optimizer cleanup failed", error=str(e))
+
+# Global CPU optimizer instance
+cpu_optimizer = CPUOptimizer()
+
+async def get_cpu_performance() -> Dict[str, Any]:
+    """Get current CPU performance metrics"""
+    try:
+        cpu_usage = await cpu_optimizer.monitor_cpu_usage()
+        optimization_metrics = await cpu_optimizer.get_cpu_optimization_metrics()
+        
+        return {
+            "cpu_usage": {
+                "total_usage": cpu_usage.total_usage,
+                "per_core_usage": cpu_usage.per_core_usage,
+                "load_average": cpu_usage.load_average,
+                "temperature": cpu_usage.temperature,
+                "frequency": cpu_usage.frequency
+            },
+            "optimization_metrics": optimization_metrics,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Failed to get CPU performance metrics", error=str(e))
+        return {
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }

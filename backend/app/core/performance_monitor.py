@@ -207,7 +207,7 @@ class PerformanceMonitor:
                 await self._record_metric(MetricType.CACHE_HIT_RATE, hit_rate, "cache")
             
             # CPU optimizer metrics
-            cpu_metrics = await cpu_optimizer.get_cpu_metrics()
+            cpu_metrics = cpu_optimizer.get_cpu_metrics()
             if cpu_metrics and "task_metrics" in cpu_metrics:
                 task_metrics = cpu_metrics["task_metrics"]
                 avg_execution_time = task_metrics.get("avg_execution_time", 0) * 1000  # Convert to ms
@@ -396,6 +396,38 @@ class PerformanceMonitor:
     def add_alert_callback(self, callback: Callable):
         """Add alert callback function"""
         self.alert_callbacks.append(callback)
+    
+    async def get_current_metrics(self) -> Dict[str, Any]:
+        """
+        Get current performance metrics - REAL IMPLEMENTATION
+        Returns real-time metrics from the monitoring system
+        """
+        await self._ensure_monitoring_started()
+        try:
+            # Get the most recent metrics
+            recent_metrics = self._get_recent_metrics(60)  # Last 1 minute
+            
+            # Calculate current averages
+            current_response_time = (
+                sum(self.response_times[-10:]) / len(self.response_times[-10:])
+                if self.response_times else 0
+            )
+            
+            return {
+                "timestamp": datetime.now().isoformat(),
+                "response_time_ms": current_response_time,
+                "active_alerts": len([a for a in self.active_alerts if not a.resolved]),
+                "metrics_collected": len(recent_metrics),
+                "monitoring_active": self._monitoring_task is not None and not self._monitoring_task.done(),
+                "recent_metrics": recent_metrics[:10] if recent_metrics else []  # Last 10 metrics
+            }
+        except Exception as e:
+            logger.error("Error getting current metrics", error=str(e))
+            return {
+                "timestamp": datetime.now().isoformat(),
+                "error": str(e),
+                "monitoring_active": False
+            }
     
     async def get_performance_summary(self) -> Dict[str, Any]:
         """Get comprehensive performance summary"""

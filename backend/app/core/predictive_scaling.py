@@ -218,7 +218,7 @@ class PredictiveScalingEngine:
         try:
             # Get current metrics
             cache_stats = await advanced_cache.get_cache_stats()
-            cpu_metrics = await cpu_optimizer.get_cpu_metrics()
+            cpu_metrics = cpu_optimizer.get_cpu_metrics()
             performance_summary = await performance_monitor.get_performance_summary()
             
             # Extract metrics
@@ -501,9 +501,9 @@ class PredictiveScalingEngine:
             scaling_factor = parameters.get("scaling_factor", self.cpu_scaling_factor)
             
             # Increase thread pool sizes
-            current_threads = cpu_optimizer.thread_pool._max_workers
+            current_threads = cpu_optimizer.max_workers
             new_size = min(current_threads + int(current_threads * scaling_factor), 
-                          cpu_optimizer.cpu_count * 3)
+                          cpu_optimizer.total_cores * 3)
             
             cpu_optimizer._resize_thread_pool(new_size)
             
@@ -520,9 +520,9 @@ class PredictiveScalingEngine:
             scaling_factor = parameters.get("scaling_factor", self.cpu_scaling_factor)
             
             # Decrease thread pool sizes
-            current_threads = cpu_optimizer.thread_pool._max_workers
+            current_threads = cpu_optimizer.max_workers
             new_size = max(int(current_threads * (1 - scaling_factor)), 
-                          cpu_optimizer.cpu_count // 2)
+                          cpu_optimizer.total_cores // 2)
             
             cpu_optimizer._resize_thread_pool(new_size)
             
