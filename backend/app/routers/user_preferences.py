@@ -10,7 +10,7 @@ import json
 import time
 import logging
 
-from app.core.database import get_database
+from app.core.database import get_supabase_client
 from app.core.redis import get_redis_client
 from app.models.user import User
 from app.models.ai_agent import AgentDefinition, AgentType
@@ -193,7 +193,7 @@ async def get_user_preferences(user_id: UUID) -> Dict[str, Any]:
     """Get user preferences for threshold and billing"""
     try:
         # Get user preferences from database
-        async with get_database() as db:
+        db = get_supabase_client()
             # This would typically query a user_preferences table
             # For now, return default preferences
             default_preferences = {
@@ -252,7 +252,7 @@ async def save_user_preferences(
             )
         
         # Save preferences to database
-        async with get_database() as db:
+        db = get_supabase_client()
             # This would typically save to a user_preferences table
             # For now, simulate saving
             saved_preferences = {
