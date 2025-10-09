@@ -104,12 +104,14 @@ from .smart_coding_ai_devops import (
 from .smart_coding_ai_collaboration import (
     CodeReviewAutomator,
     PairProgrammingAssistant,
-    ConflictResolver,  # Added: exists in file
+    ConflictResolver,
     CodeStandardizationEnforcer,
     TeamPerformanceAnalyzer,
     SkillGapIdentifier,
     OnboardingAutomator,
-    # Removed: KnowledgeSharingAutomator, BestPracticeDisseminator, CrossTeamCoordinator (don't exist)
+    KnowledgeSharingAutomator,  # Added back
+    BestPracticeDisseminator,  # Added back
+    CrossTeamCoordinator  # Added back
 )
 
 from .smart_coding_ai_quality import (
@@ -165,20 +167,19 @@ from .smart_coding_ai_frontend import (
 )
 
 from .smart_coding_ai_legacy_modernization import (
-    LegacyCodeAnalyzer,  # Fixed: was CodeTranslator
-    MonolithRefactorer,  # Fixed: was FrameworkMigrator
-    # ArchitectureModernizer - doesn't exist
-    DatabaseMigrator,  # Fixed: was DatabaseMigrationPlanner
+    LegacyCodeAnalyzer,
+    MonolithRefactorer,
+    DatabaseMigrator,
     APIModernizer,
-    # DependencyUpgrader - doesn't exist
-    # PlatformMigrator - doesn't exist
-    # LanguageInteroperabilityManager - doesn't exist
-    # FeatureFlagImplementer - doesn't exist
-    # MonitoringIntegrator - doesn't exist
-    FrontendModernizer,  # Added: exists
-    SecurityHardener,  # Added: exists  
-    PerformanceOptimizer,  # Added: exists
-    DocumentationGenerator,  # Added: exists
+    DependencyUpgrader,  # Added back
+    PlatformMigrator,  # Added back
+    LanguageInteroperabilityManager,  # Added back
+    FeatureFlagImplementer,  # Added back
+    MonitoringIntegrator,  # Added back
+    FrontendModernizer,
+    SecurityHardener,
+    PerformanceOptimizer,
+    DocumentationGenerator,
     TestingFrameworkModernizer,  # Added: exists
     ContinuousModernizationPlanner  # Added: exists
 )
@@ -192,7 +193,8 @@ from .smart_coding_ai_native import (
     AutomatedCodeReviewLearner,
     CrossPlatformOptimizer,
     AutomatedPatentResearcher,
-    RegulatoryComplianceChecker
+    RegulatoryComplianceChecker,
+    SelfDocumentingCodeGenerator  # Added back
 )
 
 from .smart_coding_ai_requirements import (
@@ -319,23 +321,26 @@ class CapabilityFactory:
             # Collaboration (81-90)
             "code_review_automator": CodeReviewAutomator(),
             "pair_programming_assistant": PairProgrammingAssistant(),
-            "conflict_resolver": ConflictResolver(),  # Added: exists
+            "conflict_resolver": ConflictResolver(),
             "code_standardization_enforcer": CodeStandardizationEnforcer(),
             "team_performance_analyzer": TeamPerformanceAnalyzer(),
             "skill_gap_identifier": SkillGapIdentifier(),
             "onboarding_automator": OnboardingAutomator(),
+            "knowledge_sharing_automator": KnowledgeSharingAutomator(),  # Added back
+            "best_practice_disseminator": BestPracticeDisseminator(),  # Added back
+            "cross_team_coordinator": CrossTeamCoordinator(),  # Added back
             
             # Legacy Modernization (91-100)
-            "legacy_code_analyzer": LegacyCodeAnalyzer(),  # Fixed: was code_translator
-            "monolith_refactorer": MonolithRefactorer(),  # Fixed: was framework_migrator
-            "database_migrator": DatabaseMigrator(),  # Fixed: was database_migration_planner
+            "legacy_code_analyzer": LegacyCodeAnalyzer(),
+            "monolith_refactorer": MonolithRefactorer(),
+            "database_migrator": DatabaseMigrator(),
             "api_modernizer": APIModernizer(),
-            "frontend_modernizer": FrontendModernizer(),  # Added: exists
-            "security_hardener": SecurityHardener(),  # Note: duplicate from security module
-            "performance_optimizer": PerformanceOptimizer(),  # Added: exists
-            "documentation_generator": DocumentationGenerator(),  # Added: exists
-            "testing_framework_modernizer": TestingFrameworkModernizer(),  # Added: exists
-            "continuous_modernization_planner": ContinuousModernizationPlanner(),  # Added: exists
+            "dependency_upgrader": DependencyUpgrader(),  # Added back
+            "platform_migrator": PlatformMigrator(),  # Added back
+            "language_interoperability_manager": LanguageInteroperabilityManager(),  # Added back
+            "feature_flag_implementer": FeatureFlagImplementer(),  # Added back
+            "monitoring_integrator": MonitoringIntegrator(),  # Added back
+            "continuous_modernization_planner": ContinuousModernizationPlanner()
             
             # AI-Native (101-110)
             "intent_based_programmer": IntentBasedProgrammer(),
@@ -347,6 +352,7 @@ class CapabilityFactory:
             "cross_platform_optimizer": CrossPlatformOptimizer(),
             "automated_patent_researcher": AutomatedPatentResearcher(),
             "regulatory_compliance_checker": RegulatoryComplianceChecker(),
+            "self_documenting_code_generator": SelfDocumentingCodeGenerator(),  # Added back
             
             # Requirements & Planning (111-120)
             "requirements_analyzer": RequirementsAnalyzer(),
