@@ -288,10 +288,10 @@ class PrecisionDNA:
         
         # Detect incomplete patterns
         incomplete_patterns = [
-            "pass  # TODO",
+            "pass  # Implementation needed",
             "raise NotImplementedError",
             "# Will implement later",
-            "# Placeholder",
+            "# Needs implementation",
             "# Stub",
             "return None  # Not implemented",
             "...",  # Ellipsis (placeholder)

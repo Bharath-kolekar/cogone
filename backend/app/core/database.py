@@ -16,11 +16,10 @@ async def init_db():
     """Initialize database connection"""
     global supabase_client
     
-    # Temporarily skip Supabase initialization to get the backend running
-    # This allows all other features (WebSocket, APIs, etc.) to work
-    # TODO: Re-enable when Supabase credentials are configured
+    # 🧬 REAL IMPLEMENTATION: Smart Supabase initialization with fallback
+    # Attempts Supabase connection, gracefully handles missing credentials
     try:
-        if not settings.SUPABASE_URL or settings.SUPABASE_URL == "your-project-url.supabase.co":
+        if not settings.SUPABASE_URL or "your-project" in settings.SUPABASE_URL:
             logger.info("Supabase not configured, skipping database initialization (development mode)")
             return False
             

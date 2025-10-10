@@ -144,7 +144,25 @@ class Test{func_name.replace("_", " ").title().replace(" ", "")}:
         for param in params:
             if param in ['self', 'cls']:
                 continue
-            setup_lines.append(f"{param} = None  # TODO: Provide test data")
+            # 🧬 REAL IMPLEMENTATION: Generate actual test data based on param name
+            if 'id' in param.lower():
+                setup_lines.append(f'{param} = "test_id_" + str(uuid.uuid4())')
+            elif 'name' in param.lower():
+                setup_lines.append(f'{param} = "test_name_" + str(random.randint(1, 1000))')
+            elif 'email' in param.lower():
+                setup_lines.append(f'{param} = f"test_{{random.randint(1,9999)}}@example.com"')
+            elif 'count' in param.lower() or 'num' in param.lower():
+                setup_lines.append(f'{param} = random.randint(1, 100)')
+            elif 'price' in param.lower() or 'amount' in param.lower():
+                setup_lines.append(f'{param} = round(random.uniform(1.0, 1000.0), 2)')
+            elif 'flag' in param.lower() or 'is_' in param.lower():
+                setup_lines.append(f'{param} = random.choice([True, False])')
+            elif 'list' in param.lower() or 'items' in param.lower():
+                setup_lines.append(f'{param} = []')
+            elif 'dict' in param.lower() or 'data' in param.lower():
+                setup_lines.append(f'{param} = {{}}')
+            else:
+                setup_lines.append(f'{param} = "test_{param}_value"')
         
         return "\n        ".join(setup_lines) if setup_lines else "pass"
     
