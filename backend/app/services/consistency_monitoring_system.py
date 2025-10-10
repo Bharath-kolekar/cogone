@@ -184,13 +184,41 @@ class RealTimeConsistencyMonitor:
             logger.error(f"Error checking variable naming consistency: {e}")
     
     async def _check_api_endpoint_consistency(self):
-        """Check API endpoint consistency"""
+        """
+        Check API endpoint consistency
+        
+        🧬 REAL IMPLEMENTATION: Scans router files for endpoint patterns
+        """
         try:
-            # This would check API endpoints for consistency
-            # For now, assume 95% consistency
+            import os
+            
+            # 🧬 REAL: Scan router files
+            routers_dir = "backend/app/routers"
+            consistency_score = 100.0
+            
+            if os.path.exists(routers_dir):
+                router_files = [f for f in os.listdir(routers_dir) if f.endswith('.py')]
+                
+                for filename in router_files:
+                    filepath = os.path.join(routers_dir, filename)
+                    try:
+                        with open(filepath, 'r', encoding='utf-8') as f:
+                            content = f.read()
+                            
+                            # Check patterns
+                            if '@router.' in content:
+                                if 'try:' not in content:
+                                    consistency_score -= 2.0
+                                if 'HTTPException' not in content:
+                                    consistency_score -= 2.0
+                    except:
+                        pass
+            
+            consistency_score = max(0.0, min(100.0, consistency_score))
+            
             await self._record_metric(
                 ConsistencyMetric.API_ENDPOINTS,
-                95.0,
+                consistency_score,
                 self.thresholds[ConsistencyMetric.API_ENDPOINTS]
             )
             
@@ -198,13 +226,32 @@ class RealTimeConsistencyMonitor:
             logger.error(f"Error checking API endpoint consistency: {e}")
     
     async def _check_database_schema_consistency(self):
-        """Check database schema consistency"""
+        """
+        Check database schema consistency
+        
+        🧬 REAL IMPLEMENTATION: Checks migration files
+        """
         try:
-            # This would check database schemas for consistency
-            # For now, assume 100% consistency
+            import os
+            
+            # 🧬 REAL: Check migrations
+            migrations_dir = "supabase/migrations"
+            consistency_score = 100.0
+            
+            if os.path.exists(migrations_dir):
+                migration_files = [f for f in os.listdir(migrations_dir) if f.endswith('.sql')]
+                
+                # Check naming consistency
+                import re
+                for filename in migration_files:
+                    if not re.match(r'\d{14}_.*\.sql', filename):
+                        consistency_score -= 10.0
+            
+            consistency_score = max(0.0, min(100.0, consistency_score))
+            
             await self._record_metric(
                 ConsistencyMetric.DATABASE_SCHEMA,
-                100.0,
+                consistency_score,
                 self.thresholds[ConsistencyMetric.DATABASE_SCHEMA]
             )
             
@@ -269,13 +316,46 @@ class RealTimeConsistencyMonitor:
             logger.error(f"Error checking config consistency: {e}")
     
     async def _check_import_order_consistency(self):
-        """Check import order consistency"""
+        """
+        Check import order consistency
+        
+        🧬 REAL IMPLEMENTATION: Checks Python file import ordering
+        """
         try:
-            # This would check Python files for import order consistency
-            # For now, assume 90% consistency
+            import os
+            
+            # 🧬 REAL: Scan Python files for import order
+            backend_dir = "backend/app"
+            consistency_score = 100.0
+            files_checked = 0
+            
+            if os.path.exists(backend_dir):
+                for root, dirs, files in os.walk(backend_dir):
+                    for filename in files:
+                        if filename.endswith('.py'):
+                            filepath = os.path.join(root, filename)
+                            try:
+                                with open(filepath, 'r', encoding='utf-8') as f:
+                                    lines = f.readlines()
+                                    
+                                    # Check if imports are grouped
+                                    import_lines = [l for l in lines if l.strip().startswith('import ') or l.strip().startswith('from ')]
+                                    if len(import_lines) > 5:
+                                        files_checked += 1
+                                        # Simple check: are they grouped?
+                                        last_import_idx = max([i for i, l in enumerate(lines) if l.strip().startswith(('import ', 'from '))] or [0])
+                                        first_code_idx = next((i for i, l in enumerate(lines) if l.strip() and not l.strip().startswith('#') and not l.strip().startswith(('import ', 'from ', '"""', "'''"))), len(lines))
+                                        
+                                        if first_code_idx - last_import_idx > 10:
+                                            consistency_score -= 1.0
+                            except:
+                                pass
+            
+            consistency_score = max(0.0, min(100.0, consistency_score))
+            
             await self._record_metric(
                 ConsistencyMetric.IMPORT_ORDER,
-                90.0,
+                consistency_score,
                 self.thresholds[ConsistencyMetric.IMPORT_ORDER]
             )
             
@@ -283,13 +363,47 @@ class RealTimeConsistencyMonitor:
             logger.error(f"Error checking import order consistency: {e}")
     
     async def _check_error_handling_consistency(self):
-        """Check error handling consistency"""
+        """
+        Check error handling consistency
+        
+        🧬 REAL IMPLEMENTATION: Scans for try/except patterns
+        """
         try:
-            # This would check code for consistent error handling
-            # For now, assume 95% consistency
+            import os
+            
+            # 🧬 REAL: Scan for error handling patterns
+            backend_dir = "backend/app"
+            consistency_score = 100.0
+            functions_checked = 0
+            functions_with_error_handling = 0
+            
+            if os.path.exists(backend_dir):
+                for root, dirs, files in os.walk(backend_dir):
+                    for filename in files:
+                        if filename.endswith('.py'):
+                            filepath = os.path.join(root, filename)
+                            try:
+                                with open(filepath, 'r', encoding='utf-8') as f:
+                                    content = f.read()
+                                    
+                                    # Count functions
+                                    func_count = content.count('def ')
+                                    try_count = content.count('try:')
+                                    
+                                    if func_count > 0:
+                                        functions_checked += func_count
+                                        functions_with_error_handling += min(try_count, func_count)
+                            except:
+                                pass
+            
+            if functions_checked > 0:
+                consistency_score = (functions_with_error_handling / functions_checked) * 100
+            
+            consistency_score = max(0.0, min(100.0, consistency_score))
+            
             await self._record_metric(
                 ConsistencyMetric.ERROR_HANDLING,
-                95.0,
+                consistency_score,
                 self.thresholds[ConsistencyMetric.ERROR_HANDLING]
             )
             
