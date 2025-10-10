@@ -420,14 +420,89 @@ class ToolIntegrationManager:
             raise
     
     async def _execute_openai_service(self, tool: ToolIntegration, request: ToolExecutionRequest) -> Any:
-        """Execute OpenAI service"""
-        # Implementation for OpenAI service
-        raise NotImplementedError("OpenAI service not implemented yet")
+        """
+        Execute OpenAI service
+        
+        🧬 REAL IMPLEMENTATION: OpenAI Chat Completions API
+        """
+        try:
+            # Get configuration
+            config = {c.name: c.value for c in tool.configuration}
+            api_key = config.get('api_key', '')
+            
+            # Prepare request
+            payload = {
+                "model": config.get("model", "gpt-3.5-turbo"),
+                "messages": [
+                    {"role": "user", "content": request.parameters.get("prompt", "")}
+                ],
+                "max_tokens": config.get("max_tokens", 2000),
+                "temperature": config.get("temperature", 0.7)
+            }
+            
+            # Make request to OpenAI API
+            response = await self.http_client.post(
+                f"{config.get('base_url', 'https://api.openai.com/v1')}/chat/completions",
+                json=payload,
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                },
+                timeout=config.get("timeout", 30)
+            )
+            
+            response.raise_for_status()
+            result = response.json()
+            
+            # Extract response
+            return result['choices'][0]['message']['content']
+            
+        except Exception as e:
+            logger.error(f"OpenAI service execution failed: {str(e)}")
+            raise
     
     async def _execute_anthropic_service(self, tool: ToolIntegration, request: ToolExecutionRequest) -> Any:
-        """Execute Anthropic service"""
-        # Implementation for Anthropic service
-        raise NotImplementedError("Anthropic service not implemented yet")
+        """
+        Execute Anthropic service
+        
+        🧬 REAL IMPLEMENTATION: Anthropic Messages API
+        """
+        try:
+            # Get configuration
+            config = {c.name: c.value for c in tool.configuration}
+            api_key = config.get('api_key', '')
+            
+            # Prepare request
+            payload = {
+                "model": config.get("model", "claude-3-sonnet-20240229"),
+                "messages": [
+                    {"role": "user", "content": request.parameters.get("prompt", "")}
+                ],
+                "max_tokens": config.get("max_tokens", 4096),
+                "temperature": config.get("temperature", 0.7)
+            }
+            
+            # Make request to Anthropic API
+            response = await self.http_client.post(
+                f"{config.get('base_url', 'https://api.anthropic.com/v1')}/messages",
+                json=payload,
+                headers={
+                    "x-api-key": api_key,
+                    "anthropic-version": "2023-06-01",
+                    "Content-Type": "application/json"
+                },
+                timeout=config.get("timeout", 30)
+            )
+            
+            response.raise_for_status()
+            result = response.json()
+            
+            # Extract response
+            return result['content'][0]['text']
+            
+        except Exception as e:
+            logger.error(f"Anthropic service execution failed: {str(e)}")
+            raise
     
     async def _execute_ollama_service(self, tool: ToolIntegration, request: ToolExecutionRequest) -> Any:
         """Execute Ollama local service"""
@@ -462,9 +537,64 @@ class ToolIntegrationManager:
             raise
     
     async def _execute_generic_tool(self, tool: ToolIntegration, request: ToolExecutionRequest) -> Any:
-        """Execute generic tool"""
-        # Implementation for generic tools
-        raise NotImplementedError("Generic tool execution not implemented yet")
+        """
+        Execute generic tool
+        
+        🧬 REAL IMPLEMENTATION: Generic HTTP tool executor
+        """
+        try:
+            # Get configuration
+            config = {c.name: c.value for c in tool.configuration}
+            
+            # Get endpoint
+            endpoint = tool.endpoints[0] if tool.endpoints else None
+            if not endpoint:
+                raise ValueError("No endpoint configured for generic tool")
+            
+            # Prepare headers
+            headers = {}
+            if tool.authentication:
+                auth = tool.authentication
+                if auth.auth_type == AuthenticationType.BEARER_TOKEN:
+                    headers["Authorization"] = f"Bearer {auth.credentials.get('token', '')}"
+                elif auth.auth_type == AuthenticationType.API_KEY:
+                    key_name = auth.credentials.get('key_name', 'X-API-Key')
+                    headers[key_name] = auth.credentials.get('api_key', '')
+                elif auth.auth_type == AuthenticationType.BASIC:
+                    import base64
+                    username = auth.credentials.get('username', '')
+                    password = auth.credentials.get('password', '')
+                    credentials = base64.b64encode(f"{username}:{password}".encode()).decode()
+                    headers["Authorization"] = f"Basic {credentials}"
+            
+            # Prepare request
+            method = endpoint.method.upper()
+            url = endpoint.url
+            
+            # Make request
+            if method == "GET":
+                response = await self.http_client.get(url, headers=headers, params=request.parameters)
+            elif method == "POST":
+                response = await self.http_client.post(url, headers=headers, json=request.parameters)
+            elif method == "PUT":
+                response = await self.http_client.put(url, headers=headers, json=request.parameters)
+            elif method == "DELETE":
+                response = await self.http_client.delete(url, headers=headers, params=request.parameters)
+            else:
+                raise ValueError(f"Unsupported HTTP method: {method}")
+            
+            response.raise_for_status()
+            
+            # Return response based on content type
+            content_type = response.headers.get('content-type', '')
+            if 'application/json' in content_type:
+                return response.json()
+            else:
+                return response.text
+            
+        except Exception as e:
+            logger.error(f"Generic tool execution failed: {str(e)}")
+            raise
     
     async def _validate_tool_configuration(self, tool: ToolIntegration) -> bool:
         """Validate tool configuration"""
