@@ -1275,9 +1275,9 @@ class CodebaseMemorySystem:
                 "project_structure": structure,
                 "coding_patterns": patterns,
                 "dependencies": dependencies,
-                "configs": [],  # TODO: Add config analysis
+                "configs": self._analyze_configs(session_id),  # 🧬 REAL: Config analysis
                 "session_context": None,
-                "memory_size": 0,  # TODO: Calculate actual size
+                "memory_size": self._calculate_memory_size(structure, patterns, dependencies),  # 🧬 REAL: Actual size
                 "last_updated": datetime.now(),
                 "version": "1.0"
             }
