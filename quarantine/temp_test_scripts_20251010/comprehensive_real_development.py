@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / 'backend'))
 
 print("\n" + "=" * 80)
-print("🚀 COMPREHENSIVE REAL DEVELOPMENT - CODEBASE SCAN")
+print("COMPREHENSIVE REAL DEVELOPMENT - CODEBASE SCAN")
 print("=" * 80 + "\n")
 
 # Scan patterns
