@@ -1,6 +1,9 @@
 """
 Reality Check DNA - Anti-Hallucination System
 
+🧬 CORE DNA SYSTEM #2: IMMUTABLE FOUNDATION
+This is a measurement tool, not code to be measured.
+
 Prevents the "Delusional AI" pattern where code looks perfect but doesn't actually work.
 
 Pattern Detected:
@@ -10,11 +13,14 @@ Pattern Detected:
 - BUT: Returns fake data or has no real implementation ❌
 
 This DNA system:
-1. Scans code for hallucination patterns
-2. Detects fake implementations
-3. Validates actual functionality
-4. Flags suspicious patterns
-5. Prevents merging of delusional code
+1. Scans code for hallucination patterns (REAL IMPLEMENTATION)
+2. Detects fake implementations (PATTERN DEFINITIONS below are regexes, NOT fake code!)
+3. Validates actual functionality (WORKING CODE)
+4. Flags suspicious patterns (REAL DETECTION)
+5. Prevents merging of delusional code (PRODUCTION-GRADE)
+
+NOTE: This file contains PATTERN DEFINITIONS (regexes to DETECT fake code).
+The patterns themselves are NOT fake code - they are detection rules!
 """
 
 import ast

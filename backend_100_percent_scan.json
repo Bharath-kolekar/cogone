@@ -1,0 +1,114 @@
+{
+  "total_scanned": 16,
+  "perfect_1_00": 2,
+  "a_plus_plus_95_99": 8,
+  "a_plus_90_94": 6,
+  "below_90": 0,
+  "percentage_a_pp_or_better": 62.5,
+  "average_score": 0.958,
+  "files": {
+    "perfect_1_00": [
+      {
+        "file": "backend\\create_remaining_routers.py",
+        "score": 1.0,
+        "issues": 0,
+        "critical": 0
+      },
+      {
+        "file": "backend\\test_all_features.py",
+        "score": 1.0,
+        "issues": 0,
+        "critical": 0
+      }
+    ],
+    "a_plus_plus_95_99": [
+      {
+        "file": "backend\\comprehensive_validation.py",
+        "score": 0.98,
+        "issues": 2,
+        "critical": 0
+      },
+      {
+        "file": "backend\\deep_analysis.py",
+        "score": 0.95,
+        "issues": 1,
+        "critical": 0
+      },
+      {
+        "file": "backend\\refactoring_analysis.py",
+        "score": 0.95,
+        "issues": 1,
+        "critical": 0
+      },
+      {
+        "file": "backend\\remaining_analysis.py",
+        "score": 0.99,
+        "issues": 1,
+        "critical": 0
+      },
+      {
+        "file": "backend\\simple_status.py",
+        "score": 0.99,
+        "issues": 1,
+        "critical": 0
+      },
+      {
+        "file": "backend\\strategic_next_steps.py",
+        "score": 0.95,
+        "issues": 1,
+        "critical": 0
+      },
+      {
+        "file": "backend\\test_baseline_imports.py",
+        "score": 0.98,
+        "issues": 2,
+        "critical": 0
+      },
+      {
+        "file": "backend\\test_comprehensive_integration.py",
+        "score": 0.95,
+        "issues": 1,
+        "critical": 0
+      }
+    ],
+    "a_plus_90_94": [
+      {
+        "file": "backend\\category_options.py",
+        "score": 0.94,
+        "issues": 2,
+        "critical": 0
+      },
+      {
+        "file": "backend\\check_ai_native.py",
+        "score": 0.94,
+        "issues": 2,
+        "critical": 0
+      },
+      {
+        "file": "backend\\check_status.py",
+        "score": 0.94,
+        "issues": 2,
+        "critical": 0
+      },
+      {
+        "file": "backend\\test_all_core_dna.py",
+        "score": 0.9,
+        "issues": 2,
+        "critical": 0
+      },
+      {
+        "file": "backend\\test_capabilities.py",
+        "score": 0.94,
+        "issues": 2,
+        "critical": 0
+      },
+      {
+        "file": "backend\\test_smart_coding_server.py",
+        "score": 0.9299999999999999,
+        "issues": 3,
+        "critical": 0
+      }
+    ],
+    "below_90": []
+  }
+}

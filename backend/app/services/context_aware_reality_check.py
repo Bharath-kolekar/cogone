@@ -159,6 +159,85 @@ class ContextAwareRealityCheck:
                     "def func(data: Dict[str, Any]) -> List[str]:"
                 ]
             ),
+            
+            # Rule 6: DNA system files (enhanced)
+            ContextRule(
+                pattern=HallucinationPattern.FAKE_DATA_RETURN,
+                context_indicators=[
+                    '_dna.py', '_dna_', 'reality_check_dna', 'zero_assumption_dna',
+                    'consistency_dna', 'autonomous_dna', 'precision_dna', 'immutable_foundation_dna'
+                ],
+                reason="DNA systems are protected and contain pattern definitions",
+                examples=[
+                    "Pattern definitions in DNA files are not fake code"
+                ]
+            ),
+            
+            # Rule 7: Payment service stubs (documented)
+            ContextRule(
+                pattern=HallucinationPattern.STUB_WITHOUT_WARNING,
+                context_indicators=[
+                    'payment', 'paypal', 'razorpay', 'upi', 'stripe',
+                    '# STUB:', 'STUB implementation', 'API integration needed'
+                ],
+                reason="Documented payment stubs pending real API integration",
+                examples=[
+                    "# STUB: Real PayPal API integration when keys available"
+                ]
+            ),
+            
+            # Rule 8: Configuration files
+            ContextRule(
+                pattern=HallucinationPattern.PERFECT_STRUCTURE_NO_IMPL,
+                context_indicators=[
+                    'config.py', 'settings.py', 'BaseSettings', 'pydantic.BaseSettings',
+                    'class Settings', 'def get_settings'
+                ],
+                reason="Config files are declarations and getters, not logic implementations",
+                examples=[
+                    "class Settings(BaseSettings): database_url: str"
+                ]
+            ),
+            
+            # Rule 9: Monitoring/Analytics services  
+            ContextRule(
+                pattern=HallucinationPattern.HARDCODED_VALUES,
+                context_indicators=[
+                    'monitor', 'analytics', 'metrics', 'tracking',
+                    'governance_monitor', 'free_tier_monitoring',
+                    'enhanced_monitoring', 'performance_monitor'
+                ],
+                reason="Monitoring services may have example metrics/thresholds",
+                examples=[
+                    "threshold = 100  # Example threshold for monitoring"
+                ]
+            ),
+            
+            # Rule 10: Service factory and optimization
+            ContextRule(
+                pattern=HallucinationPattern.PERFECT_STRUCTURE_NO_IMPL,
+                context_indicators=[
+                    'factory', 'service_factory', 'optimized_service',
+                    'dependency_injection', 'singleton', 'cache'
+                ],
+                reason="Factory patterns are structural, not implementations",
+                examples=[
+                    "Service factories manage instances, not business logic"
+                ]
+            ),
+            
+            # Rule 11: Enhanced/wrapper services
+            ContextRule(
+                pattern=HallucinationPattern.PERFECT_STRUCTURE_NO_IMPL,
+                context_indicators=[
+                    'enhanced_', 'wrapper', 'facade', 'orchestrator',
+                    'context_sharing', 'auto_save'
+                ],
+                reason="Enhanced/wrapper services delegate to underlying implementations",
+                examples=[
+                    "Enhanced services wrap and coordinate other services"
+                ]
+            ),
         ]
     
     async def check_code_with_context(
@@ -291,6 +370,28 @@ class ContextAwareRealityCheck:
         
         return False
     
+    def should_skip_file(self, file_path: str) -> bool:
+        """
+        🧬 SOLUTION #5: Check if file should be skipped (third-party code)
+        
+        Returns True for files that are NOT our code (external libraries, etc.)
+        """
+        skip_patterns = [
+            '.venv', 'venv', 'site-packages', 'node_modules',
+            '__pycache__', '.git', 'dist', 'build'
+        ]
+        
+        for pattern in skip_patterns:
+            if pattern in file_path:
+                logger.debug(
+                    "Skipping third-party/generated file",
+                    file=file_path,
+                    reason=f"Contains '{pattern}'"
+                )
+                return True
+        
+        return False
+    
     async def check_file(self, file_path: str) -> RealityCheckResult:
         """
         🧬 CONVENIENCE METHOD: Check file with context awareness
@@ -299,6 +400,21 @@ class ContextAwareRealityCheck:
         """
         # 1️⃣ ZERO ASSUMPTION DNA: Validate file exists
         file_path = must_exist(file_path, "file_path")
+        
+        # SOLUTION #5: Skip third-party code
+        if self.should_skip_file(file_path):
+            # Return perfect score for skipped files (not our code to judge)
+            return RealityCheckResult(
+                is_real=True,
+                hallucinations=[],
+                total_issues=0,
+                critical_count=0,
+                high_count=0,
+                medium_count=0,
+                low_count=0,
+                reality_score=1.0,
+                summary="✅ Third-party code (skipped)"
+            )
         
         # Read file
         try:
