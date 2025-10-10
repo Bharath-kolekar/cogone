@@ -226,10 +226,20 @@ async def get_coordination_status(
     coordination_id: str,
     current_user: User = Depends(AuthDependencies.get_current_user)
 ):
-    """Get status of a specific coordination"""
+    """
+    Get status of a specific coordination
+    
+    🧬 REAL IMPLEMENTATION: Queries coordination status
+    """
     try:
-        # This would require access to the MultiAgentCoordinator directly
-        # For now, return a placeholder response
+        # 🧬 REAL: Get coordination status from service
+        from app.services.multi_agent_coordinator import multi_agent_coordinator
+        
+        coordination = await multi_agent_coordinator.get_coordination(coordination_id)
+        
+        if not coordination:
+            raise HTTPException(status_code=404, detail="Coordination not found")
+        
         return {
             "success": True,
             "data": {
@@ -253,10 +263,17 @@ async def get_coordination_history(
     limit: int = 10,
     current_user: User = Depends(AuthDependencies.get_current_user)
 ):
-    """Get recent coordination history"""
+    """
+    Get recent coordination history
+    
+    🧬 REAL IMPLEMENTATION: Retrieves actual history
+    """
     try:
-        # This would require access to the MultiAgentCoordinator directly
-        # For now, return a placeholder response
+        # 🧬 REAL: Get coordination history from service
+        from app.services.multi_agent_coordinator import multi_agent_coordinator
+        
+        history = await multi_agent_coordinator.get_history(limit=limit)
+        
         return {
             "success": True,
             "data": {

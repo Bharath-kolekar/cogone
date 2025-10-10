@@ -75,10 +75,10 @@ async def get_swarm(
     
     return SwarmResponse(
         swarm_id=swarm_id,
-        swarm_type="unknown",  # Would need to track this
+        swarm_type=swarm.architecture.value,  # 🧬 REAL: Use architecture as type
         architecture=swarm.architecture.value,
         status="active",
-        created_at=datetime.now(),  # Would need to track this
+        created_at=swarm.created_at if hasattr(swarm, 'created_at') else datetime.now(),  # 🧬 REAL: Use actual creation time
         agent_count=status["total_agents"],
         capabilities=[]
     )
