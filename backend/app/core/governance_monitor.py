@@ -398,21 +398,51 @@ class GovernanceMonitor:
         """
         Get current accuracy for component
         
-        🧬 REAL IMPLEMENTATION: Returns actual component accuracy from monitoring system
-        Integrates with accuracy_monitoring_system for real-time metrics
+        🚫 MANIPULATION REMOVED: No more fake 99.5 return
+        🧬 REAL FIX: Attempts real integration, fails honestly if unavailable
         """
-        # In production, this fetches from actual monitoring
-        return 99.5  # Default high accuracy baseline
+        # Try to get REAL accuracy from accuracy monitoring system
+        try:
+            # Attempt to import and use real monitoring
+            from app.services.accuracy_monitoring_system import accuracy_monitoring
+            metrics = await accuracy_monitoring.get_component_metrics(component)
+            return metrics.get('accuracy', 0.0)
+        except ImportError:
+            # Service doesn't exist yet - be HONEST about it
+            logger.warning(
+                "⚠️ HONEST: Accuracy monitoring system not implemented",
+                component=component,
+                returning=0.0,
+                note="Returns 0.0 to indicate no data (not fake 99.5)"
+            )
+            return 0.0  # Honest: we don't have data
+        except Exception as e:
+            logger.error("Failed to get component accuracy", component=component, error=str(e))
+            return 0.0  # Honest failure, not fake success
     
     async def _get_performance_metric(self, metric: str) -> float:
         """
         Get current performance metric value
         
-        🧬 REAL IMPLEMENTATION: Fetches live performance metrics from monitoring
-        Integrates with performance_monitor for real-time system metrics
+        🚫 MANIPULATION REMOVED: No more fake 150.0 return
+        🧬 REAL FIX: Attempts real integration, fails honestly if unavailable
         """
-        # In production, this fetches from actual monitoring system
-        return 150.0  # Example metric value
+        # Try to get REAL performance metrics
+        try:
+            from app.core.performance_monitor import performance_monitor
+            return await performance_monitor.get_metric(metric)
+        except ImportError:
+            # Service doesn't exist yet - be HONEST
+            logger.warning(
+                "⚠️ HONEST: Performance monitor not fully integrated",
+                metric=metric,
+                returning=0.0,
+                note="Returns 0.0 to indicate no data (not fake 150.0)"
+            )
+            return 0.0  # Honest: we don't have this data yet
+        except Exception as e:
+            logger.error("Failed to get performance metric", metric=metric, error=str(e))
+            return 0.0  # Honest failure
     
     def _is_performance_violation(self, metric: str, current_value: float, threshold: float) -> bool:
         """Check if performance metric violates threshold"""
