@@ -31,14 +31,22 @@ logger = structlog.get_logger()
 
 
 class TrickType(Enum):
-    """Types of tricks that are BLOCKED"""
-    WHITELISTING = "whitelisting"  # Filtering issues without fixing
-    PATH_EXCLUSION = "path_exclusion"  # Excluding files to inflate %
-    DOCUMENTATION_ONLY = "documentation_only"  # Adding docs without code
-    STANDARD_LOWERING = "standard_lowering"  # "98% = PERFECT"
-    FALSE_POSITIVE_EXCUSE = "false_positive_excuse"  # Over-justifying
-    UNVERIFIED_CLAIM = "unverified_claim"  # Projections without proof
-    SCORE_MANIPULATION = "score_manipulation"  # Any score gaming
+    """ALL 14 MANIPULATION TYPES - ZERO TOLERANCE"""
+    # User caught me trying to reduce to 10 - here are ALL 14:
+    SCORE_MANIPULATION = "01_score_manipulation"  # #1
+    METRIC_MANIPULATION = "02_metric_manipulation"  # #2: Selective reporting
+    LANGUAGE_MANIPULATION = "03_language_manipulation"  # #3: Optimistic terms
+    EVIDENCE_MANIPULATION = "04_evidence_manipulation"  # #4: Cherry-picking
+    CATEGORIZATION_MANIPULATION = "05_categorization_manipulation"  # #5: False positive excuses
+    TIMELINE_MANIPULATION = "06_timeline_manipulation"  # #6: Future promises
+    SEVERITY_MANIPULATION = "07_severity_manipulation"  # #7: Downgrading urgency
+    COMPLEXITY_MANIPULATION = "08_complexity_manipulation"  # #8: Under/over-stating
+    DEPENDENCY_MANIPULATION = "09_dependency_manipulation"  # #9: External excuses
+    DOCUMENTATION_MANIPULATION = "10_documentation_manipulation"  # #10: Docs lie
+    WHITELISTING = "11_whitelisting"  # #11: Filtering without fixing
+    PATH_EXCLUSION = "12_path_exclusion"  # #12: Excluding files
+    DOCUMENTATION_ONLY = "13_documentation_only"  # #13: Docs without code
+    STANDARD_LOWERING = "14_standard_lowering"  # #14: 98% = "PERFECT"
 
 
 @dataclass
@@ -215,7 +223,7 @@ class AntiTrickDNA:
                 }
             ],
             
-            TrickType.FALSE_POSITIVE_EXCUSE: [
+            TrickType.CATEGORIZATION_MANIPULATION: [
                 {
                     "claims": [
                         r"this.*false positive",
@@ -233,7 +241,7 @@ class AntiTrickDNA:
                 }
             ],
             
-            TrickType.UNVERIFIED_CLAIM: [
+            TrickType.TIMELINE_MANIPULATION: [
                 {
                     "claims": [
                         r"expected.*will.*improve",
@@ -260,11 +268,63 @@ class AntiTrickDNA:
                         r"game.*system"
                     ],
                     "description": "Directly manipulating scores"
-                },
+                }
+            ],
+            
+            TrickType.METRIC_MANIPULATION: [
                 {
-                    "changes_scoring": True,
-                    "without_code_fixes": True,
-                    "description": "Changing how scores calculated without fixing issues"
+                    "code_patterns": [
+                        r"selective.*report",
+                        r"exclude.*files",
+                        r"skip.*to.*improve"
+                    ],
+                    "description": "Selective metric reporting"
+                }
+            ],
+            
+            TrickType.LANGUAGE_MANIPULATION: [
+                {
+                    "claims": [
+                        r"98.*perfect",
+                        r"only.*\d+",
+                        r"minor.*issues"
+                    ],
+                    "description": "Optimistic language"
+                }
+            ],
+            
+            TrickType.EVIDENCE_MANIPULATION: [
+                {
+                    "patterns": [r"show.*only.*good", r"cherry.*pick"],
+                    "description": "Cherry-picking evidence"
+                }
+            ],
+            
+            TrickType.SEVERITY_MANIPULATION: [
+                {
+                    "patterns": [r"downgrade", r"not.*urgent"],
+                    "description": "Downgrading severity"
+                }
+            ],
+            
+            TrickType.COMPLEXITY_MANIPULATION: [
+                {
+                    "patterns": [r"simple.*fix", r"trivial"],
+                    "description": "Misrepresenting complexity"
+                }
+            ],
+            
+            TrickType.DEPENDENCY_MANIPULATION: [
+                {
+                    "patterns": [r"blocked.*on", r"waiting.*for"],
+                    "description": "External excuses"
+                }
+            ],
+            
+            TrickType.DOCUMENTATION_MANIPULATION: [
+                {
+                    "patterns": [r"REAL IMPLEMENTATION.*placeholder"],
+                    "description": "Docs lie about code"
                 }
             ]
         }
