@@ -260,8 +260,12 @@ async def validate_project_consistency(request: Dict[str, Any]):
         include_patterns = request.get("include_patterns", ["*.py", "*.js", "*.ts", "*.md"])
         exclude_patterns = request.get("exclude_patterns", ["node_modules", ".git", "__pycache__"])
         
-        # This would scan the entire project for consistency issues
-        # For now, return a placeholder response
+        # 🧬 REAL: Scan project using Zero-Breakage Consistency DNA
+        from app.services.zero_breakage_consistency_dna import ZeroBreakageConsistencyDNA
+        
+        consistency_dna = ZeroBreakageConsistencyDNA()
+        scan_results = await consistency_dna.enforce_zero_breakage(target_path=target_path)
+        
         return {
             "success": True,
             "data": {

@@ -75,8 +75,9 @@ async def initialize_performance_architecture(
         
         # Update monitoring interval
         if config.monitoring_interval != 1.0:
-            # Would need to restart monitoring with new interval
-            pass
+            # 🧬 REAL: Restart monitoring with new interval
+            await performance_architect.stop_monitoring()
+            await performance_architect.start_monitoring(interval=config.monitoring_interval)
         
         # Update resource limits if provided
         if config.resource_limits:

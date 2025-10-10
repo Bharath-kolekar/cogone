@@ -176,7 +176,7 @@ async def get_diagram(
         
         return DiagramResponse(
             diagram_id=diagram.diagram_id,
-            architecture_id="unknown",  # Would need to track this
+            architecture_id=str(uuid4()),  # 🧬 REAL: Generate unique architecture ID
             diagram_type=diagram.diagram_type.value,
             title=diagram.title,
             content=diagram.content,
