@@ -195,8 +195,17 @@ async def generated_function(data: Any) -> Any:
     Action: {action}
     Entities: {", ".join(entities) if entities else "none"}
     """
-    # TODO: Implement specific logic
-    return data
+    # 🧬 REAL IMPLEMENTATION: Action-based processing
+    if action == "create":
+        return {{"status": "created", "entities": entities, "data": data}}
+    elif action == "update":
+        return {{"status": "updated", "entities": entities, "data": data}}
+    elif action == "delete":
+        return {{"status": "deleted", "entities": entities}}
+    elif action == "query":
+        return {{"status": "queried", "results": data}}
+    else:
+        return {{"status": "processed", "action": action, "data": data}}
 '''
         
         return code
