@@ -1363,12 +1363,22 @@ class ArchitectureGeneratorService:
         return []
     
     def _check_naming_conventions(self, diagram_content: str) -> float:
-        """Check naming convention compliance"""
-        return 0.8  # Placeholder implementation
+        """
+        Check naming convention compliance
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Naming convention check not implemented")
+        return 0.0  # Honest: no real checking
     
     def _check_diagram_structure(self, diagram_content: str, diagram_type: DiagramType) -> float:
-        """Check diagram structure compliance"""
-        return 0.8  # Placeholder implementation
+        """
+        Check diagram structure compliance
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Diagram structure check not implemented", diagram_type=diagram_type.value)
+        return 0.0  # Honest: no real checking
     
     def _check_readability(self, diagram_content: str) -> float:
         """Check diagram readability"""

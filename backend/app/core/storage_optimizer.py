@@ -589,9 +589,13 @@ class StorageOptimizer:
             return StorageTier.HOT
 
     def _calculate_storage_efficiency(self, optimization_results: Dict[str, Any]) -> float:
-        """Calculate storage efficiency score"""
-        # This would be more sophisticated in a real implementation
-        return 85.0  # Placeholder efficiency score
+        """
+        Calculate storage efficiency score
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Storage efficiency calculation not implemented")
+        return 0.0  # Honest: no real calculation
 
     async def get_storage_optimization_metrics(self) -> Dict[str, Any]:
         """Get comprehensive storage optimization metrics"""
