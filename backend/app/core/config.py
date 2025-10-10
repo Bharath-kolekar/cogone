@@ -3,32 +3,81 @@ Configuration management for Voice-to-App SaaS Platform
 """
 
 from pydantic_settings import BaseSettings
+from pydantic import Field, validator
 from typing import List, Optional
 import os
 import structlog
 
 
 class Settings(BaseSettings):
-    """Application settings"""
+    """Application settings with production-grade validation"""
     
     # Application
     APP_NAME: str = "Voice-to-App SaaS Platform"
     VERSION: str = "1.0.0"
-    DEBUG: bool = True  # ✅ Enable debug mode for development (enables API docs at /docs)
-    ENVIRONMENT: str = "development"
+    DEBUG: bool = True
+    ENVIRONMENT: str = Field(default="development", pattern="^(development|staging|production)$")
     
-    # Security
-    SECRET_KEY: str = "dev-secret-key-change-in-production-min-32-chars"
-    JWT_SECRET: str = "dev-jwt-secret-change-in-production-min-32-chars"
-    ENCRYPTION_KEY: str = "dev-encryption-key-change-in-production-min-32-chars"
+    # Security - NO DEFAULT VALUES for sensitive keys (must be provided)
+    SECRET_KEY: str = Field(
+        default="",
+        min_length=32,
+        description="Secret key - MUST be set in production"
+    )
+    JWT_SECRET: str = Field(
+        default="",
+        min_length=32,
+        description="JWT secret - MUST be set in production"
+    )
+    ENCRYPTION_KEY: str = Field(
+        default="",
+        min_length=32,
+        description="Encryption key - MUST be set in production"
+    )
+    
+    @validator('SECRET_KEY', 'JWT_SECRET', 'ENCRYPTION_KEY')
+    def validate_production_keys(cls, v):
+        """🧬 REAL VALIDATION: Prevent placeholder values in production"""
+        if not v:
+            # Allow empty in development
+            env = os.getenv('ENVIRONMENT', 'development')
+            if env == 'production':
+                raise ValueError("Must be set in production")
+            return v or "dev-secret-key-change-in-production-min-32-chars"
+        
+        # Block obvious placeholders
+        placeholders = ['dev-', 'test-', 'your-', 'change-in-production', 'placeholder']
+        if any(p in v.lower() for p in placeholders):
+            raise ValueError("Contains placeholder value - set real production value")
+        
+        # Validate length
+        if len(v) < 32:
+            raise ValueError("Must be at least 32 characters")
+        
+        return v
     ALLOWED_HOSTS: List[str] = ["localhost", "127.0.0.1"]
     CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
     
-    # Database
-    SUPABASE_URL: str = "https://your-project.supabase.co"
-    SUPABASE_ANON_KEY: str = "your-anon-key"
-    SUPABASE_SERVICE_KEY: str = "your-service-key"
-    DATABASE_URL: str = "postgresql://user:password@localhost:5432/cogone"
+    # Database - Use Field for validation
+    SUPABASE_URL: str = Field(default="", description="Supabase project URL")
+    SUPABASE_ANON_KEY: str = Field(default="", description="Supabase anon key")
+    SUPABASE_SERVICE_KEY: str = Field(default="", description="Supabase service key")
+    DATABASE_URL: str = Field(default="", description="PostgreSQL connection string")
+    
+    @validator('SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_KEY')
+    def validate_supabase_keys(cls, v):
+        """🧬 REAL VALIDATION: Prevent placeholder Supabase values"""
+        if not v:
+            env = os.getenv('ENVIRONMENT', 'development')
+            if env == 'production':
+                raise ValueError("Must be set in production")
+            return ""
+        
+        # Block placeholders
+        if 'your-' in v or 'placeholder' in v or v == 'your-anon-key' or v == 'your-service-key':
+            raise ValueError("Contains placeholder - set real value")
+        
+        return v
     
     # Redis
     REDIS_URL: Optional[str] = None
@@ -36,27 +85,52 @@ class Settings(BaseSettings):
     UPSTASH_REDIS_REST_URL: Optional[str] = None
     UPSTASH_REDIS_REST_TOKEN: Optional[str] = None
     
-    # Payment Providers
-    RAZORPAY_KEY_ID: str = "dev-razorpay-key-id"
-    RAZORPAY_KEY_SECRET: str = "dev-razorpay-key-secret"
-    RAZORPAY_API_KEY: str = "dev-razorpay-api-key"
-    RAZORPAY_API_SECRET: str = "dev-razorpay-api-secret"
-    RAZORPAY_WEBHOOK_SECRET: str = "dev-razorpay-webhook-secret"
+    # Payment Providers - Use Field with Optional for optional keys
+    RAZORPAY_KEY_ID: Optional[str] = Field(default=None, description="Razorpay Key ID")
+    RAZORPAY_KEY_SECRET: Optional[str] = Field(default=None, description="Razorpay Key Secret")
+    RAZORPAY_API_KEY: Optional[str] = Field(default=None, description="Razorpay API Key")
+    RAZORPAY_API_SECRET: Optional[str] = Field(default=None, description="Razorpay API Secret")
+    RAZORPAY_WEBHOOK_SECRET: Optional[str] = Field(default=None, description="Razorpay Webhook Secret")
     
-    PAYPAL_CLIENT_ID: str = "dev-paypal-client-id"
-    PAYPAL_CLIENT_SECRET: str = "dev-paypal-client-secret"
-    PAYPAL_WEBHOOK_ID: str = "dev-paypal-webhook-id"
+    PAYPAL_CLIENT_ID: Optional[str] = Field(default=None, description="PayPal Client ID")
+    PAYPAL_CLIENT_SECRET: Optional[str] = Field(default=None, description="PayPal Client Secret")
+    PAYPAL_WEBHOOK_ID: Optional[str] = Field(default=None, description="PayPal Webhook ID")
     PAYPAL_SANDBOX: str = "true"
     
-    GOOGLE_PAY_MERCHANT_ID: str = "dev-google-pay-merchant-id"
-    GOOGLE_PAY_API_KEY: str = "dev-google-pay-api-key"
-    UPI_MERCHANT_ID: str = "dev-upi-merchant-id"
-    UPI_MERCHANT_NAME: str = "dev-upi-merchant-name"
+    GOOGLE_PAY_MERCHANT_ID: Optional[str] = Field(default=None, description="Google Pay Merchant ID")
+    GOOGLE_PAY_API_KEY: Optional[str] = Field(default=None, description="Google Pay API Key")
+    UPI_MERCHANT_ID: Optional[str] = Field(default=None, description="UPI Merchant ID")
+    UPI_MERCHANT_NAME: Optional[str] = Field(default=None, description="UPI Merchant Name")
+    
+    @validator('RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'RAZORPAY_API_KEY', 'RAZORPAY_API_SECRET', 
+               'PAYPAL_CLIENT_ID', 'PAYPAL_CLIENT_SECRET', 'GOOGLE_PAY_MERCHANT_ID', 'GOOGLE_PAY_API_KEY',
+               'UPI_MERCHANT_ID')
+    def validate_payment_keys(cls, v):
+        """🧬 REAL VALIDATION: Block placeholder payment keys"""
+        if v is None:
+            return None  # Optional keys can be None
+        
+        # Block dev placeholders
+        if v.startswith('dev-') or 'your-' in v or 'placeholder' in v:
+            raise ValueError("Contains placeholder - set real API key or leave empty")
+        
+        return v
     BASE_URL: str = "http://localhost:8000"
-    NEON_API_KEY: str = "dev-neon-api-key"
-    NEON_PROJECT_ID: str = "dev-neon-project-id"
-    TWILIO_ACCOUNT_SID: str = "dev-twilio-account-sid"
-    TWILIO_AUTH_TOKEN: str = "dev-twilio-auth-token"
+    NEON_API_KEY: Optional[str] = Field(default=None, description="Neon Database API Key")
+    NEON_PROJECT_ID: Optional[str] = Field(default=None, description="Neon Project ID")
+    TWILIO_ACCOUNT_SID: Optional[str] = Field(default=None, description="Twilio Account SID")
+    TWILIO_AUTH_TOKEN: Optional[str] = Field(default=None, description="Twilio Auth Token")
+    
+    @validator('NEON_API_KEY', 'NEON_PROJECT_ID', 'TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN')
+    def validate_service_keys(cls, v):
+        """🧬 REAL VALIDATION: Block placeholder service keys"""
+        if v is None:
+            return None
+        
+        if v.startswith('dev-') or 'your-' in v or 'placeholder' in v:
+            raise ValueError("Contains placeholder - set real key or leave empty")
+        
+        return v
     
     # AI Providers (Zero-Cost Configuration)
     # Primary: Groq (FREE for developers)
