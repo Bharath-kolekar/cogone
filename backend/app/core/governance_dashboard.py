@@ -309,9 +309,13 @@ class GovernanceDashboard:
     
     # Data retrieval methods
     async def _get_overall_governance_score(self) -> float:
-        """Get overall governance score"""
-        # This would integrate with actual governance monitoring
-        return 95.5  # Placeholder
+        """
+        Get overall governance score
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Governance score calculation not implemented")
+        return 0.0  # Honest: no real calculation yet
     
     async def _get_governance_trend(self) -> str:
         """Get governance trend"""
@@ -319,9 +323,13 @@ class GovernanceDashboard:
         return 'improving'  # Placeholder
     
     async def _get_compliance_rate(self) -> float:
-        """Get compliance rate"""
-        # This would integrate with compliance engine
-        return 97.2  # Placeholder
+        """
+        Get compliance rate
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Compliance rate calculation not implemented")
+        return 0.0  # Honest: no real calculation yet
     
     async def _get_violation_summary(self) -> Dict[str, int]:
         """Get violation summary"""

@@ -589,16 +589,31 @@ class ComplianceEngine:
     
     # Performance metrics methods
     async def _get_response_time(self, operation: str, context: Dict[str, Any]) -> float:
-        """Get response time for operation"""
-        return 150.0  # Placeholder
+        """
+        Get response time for operation
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Response time monitoring not implemented", operation=operation)
+        return 0.0  # Honest: no data available
     
     async def _get_throughput(self, operation: str, context: Dict[str, Any]) -> float:
-        """Get throughput for operation"""
-        return 1200.0  # Placeholder
+        """
+        Get throughput for operation
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Throughput monitoring not implemented", operation=operation)
+        return 0.0  # Honest: no data available
     
     async def _get_cpu_usage(self, operation: str, context: Dict[str, Any]) -> float:
-        """Get CPU usage for operation"""
-        return 65.0  # Placeholder
+        """
+        Get CPU usage for operation
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: CPU monitoring not implemented", operation=operation)
+        return 0.0  # Honest: no data available
     
     async def _get_memory_usage(self, operation: str, context: Dict[str, Any]) -> float:
         """Get memory usage for operation"""

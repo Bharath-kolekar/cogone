@@ -351,8 +351,13 @@ class ContextAwarenessManager:
         return violations
     
     async def _calculate_context_score(self, code: str, context: Dict[str, Any]) -> float:
-        """Calculate context compliance score"""
-        return 0.9  # Placeholder
+        """
+        Calculate context compliance score
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Context score calculation not implemented")
+        return 0.0  # Honest: no real scoring logic
 
 
 class ConsistencyEnforcer:
