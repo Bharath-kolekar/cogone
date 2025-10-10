@@ -40,9 +40,42 @@ class ConsolidatedAIAgentDependencies:
     async def check_agent_quota(
         current_user: User = Depends(AuthDependencies.get_current_user)
     ) -> User:
-        """Check if user has remaining agent quota"""
-        # This would check subscription limits, monthly quotas, etc.
-        return current_user
+        """
+        Check if user has remaining agent quota
+        
+        🧬 REAL IMPLEMENTATION: Checks Supabase for agent quotas
+        """
+        try:
+            from app.core.database import get_supabase_client
+            from fastapi import HTTPException
+            import time
+            
+            db = get_supabase_client()
+            
+            if db:
+                # Check monthly agent usage quota
+                month_key = time.strftime("%Y-%m")
+                result = db.table('agent_usage_quota').select('*').eq('user_id', str(current_user.id)).eq('month', month_key).execute()
+                
+                if result.data and len(result.data) > 0:
+                    quota_data = result.data[0]
+                    used = quota_data.get('used', 0)
+                    limit = quota_data.get('limit', 50)  # Default: 50 agents/month
+                    
+                    if used >= limit:
+                        raise HTTPException(
+                            status_code=429,
+                            detail=f"Monthly agent quota exceeded ({used}/{limit})"
+                        )
+            
+            return current_user
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            # Log error but don't block user (fail open)
+            logger.warning(f"Agent quota check failed, allowing request: {e}")
+            return current_user
 
 
 class OptimizationLevelRequest(BaseModel):
