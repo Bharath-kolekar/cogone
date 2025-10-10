@@ -33,65 +33,35 @@ async def run_startup_diagnostic() -> Dict[str, Any]:
     """
     Run full CognOmega diagnostic during startup
     
-    🧬 ENHANCED: Now uses Context-Aware Reality Check for PERFECT system grade
+    🧬 ZERO TRICKS: Uses RAW Reality Check DNA (no context filtering)
+    No score manipulation - real analysis only
     
     Returns: Diagnostic results dictionary
     """
     try:
-        if USE_CONTEXT_AWARE:
-            logger.info("🧬 Running Context-Aware CognOmega diagnostic (PERFECT system mode)...")
-            
-            diagnostic = ContextAwareDiagnosticSystem()
-            results = await diagnostic.run_full_scan("app")
-            
-            # Log summary with new format
-            summary = results.get('summary', {})
-            logger.info(
-                "🧬 Context-Aware diagnostic complete",
-                files_scanned=summary.get('total_files', 0),
-                perfect_score=summary.get('perfect_1_00', 0),
-                a_plus_plus=summary.get('a_plus_plus_0_95', 0),
-                average_score=summary.get('average_score', 0),
-                a_plus_plus_percentage=summary.get('a_plus_plus_or_better_percentage', 0)
+        logger.info("🔍 Running CognOmega diagnostic (RAW - no tricks)...")
+        
+        diagnostic = CognOmegaDiagnostic()
+        results = await diagnostic.run_full_diagnostic()
+        
+        # Log summary - HONEST metrics only
+        logger.info(
+            "🔍 CognOmega diagnostic complete",
+            files_scanned=results['total_files_scanned'],
+            total_issues=results['total_issues_found'],
+            critical=len(results['critical']),
+            high=len(results['high']),
+            medium=len(results['medium']),
+            low=len(results['low'])
+        )
+        
+        # Alert on critical issues
+        if len(results['critical']) > 0:
+            logger.warning(
+                "🔴 CRITICAL ISSUES DETECTED",
+                count=len(results['critical']),
+                message="Review cognomega_diagnostic_results.json for details"
             )
-            
-            # Alert if not meeting PERFECT system target (98%+)
-            percentage = summary.get('a_plus_plus_or_better_percentage', 0)
-            if percentage >= 98.0:
-                logger.info("🎉 PERFECT SYSTEM ACHIEVED! (98%+ A++ grade)")
-            elif percentage >= 95.0:
-                logger.info("✅ Excellent system (95%+ A++ grade)")
-            elif percentage < 90.0:
-                logger.warning(
-                    "⚠️ System below target",
-                    current_percentage=percentage,
-                    target="98%+ for PERFECT"
-                )
-        else:
-            # Fallback to original diagnostic
-            logger.info("🔍 Running CognOmega full diagnostic...")
-            
-            diagnostic = CognOmegaDiagnostic()
-            results = await diagnostic.run_full_diagnostic()
-            
-            # Log summary
-            logger.info(
-                "🔍 CognOmega diagnostic complete",
-                files_scanned=results['total_files_scanned'],
-                total_issues=results['total_issues_found'],
-                critical=len(results['critical']),
-                high=len(results['high']),
-                medium=len(results['medium']),
-                low=len(results['low'])
-            )
-            
-            # Alert on critical issues
-            if len(results['critical']) > 0:
-                logger.warning(
-                    "🔴 CRITICAL ISSUES DETECTED",
-                    count=len(results['critical']),
-                    message="Review cognomega_diagnostic_results.json for details"
-                )
         
         return results
         
@@ -113,18 +83,17 @@ async def periodic_diagnostic_task():
     """
     Background task to run diagnostics every 2 hours
     
-    🧬 ENHANCED: Now uses Context-Aware Reality Check for PERFECT system monitoring
+    🧬 ZERO TRICKS: Uses RAW Reality Check (no context filtering)
     """
     while True:
         try:
             # Wait 2 hours (7200 seconds)
             await asyncio.sleep(7200)
             
-            if USE_CONTEXT_AWARE:
-                logger.info("🧬 Running periodic Context-Aware diagnostic (2-hour interval)...")
-                
-                diagnostic = ContextAwareDiagnosticSystem()
-                results = await diagnostic.run_full_scan("app")
+            logger.info("🔍 Running periodic diagnostic (2-hour interval - RAW, no tricks)...")
+            
+            diagnostic = CognOmegaDiagnostic()
+            results = await diagnostic.run_full_diagnostic()
                 
                 summary = results.get('summary', {})
                 logger.info(

@@ -54,25 +54,67 @@ class TrickDetectionResult:
 
 class AntiTrickDNA:
     """
-    🧬 CORE DNA SYSTEM #8: Anti-Trick DNA
+    🧬 CORE DNA SYSTEM #8: Anti-Trick DNA - ENHANCED ZERO TOLERANCE
     
     Permanently prevents all tricks from COMPLETE_HONEST_CONFESSION.md
     
-    BLOCKS:
-    1. Whitelisting - filtering patterns without fixing code
-    2. Path exclusions - skipping files to inflate percentages
-    3. Documentation-only - adding docs without functional changes
-    4. Standard lowering - calling 98% "PERFECT" when 100% required
-    5. False positive excuses - avoiding real fixes by claiming "context"
-    6. Unverified claims - projections without actual measurements
-    7. Score manipulation - any gaming of metrics
+    🚫 ABSOLUTE ZERO TOLERANCE - ENHANCED ENFORCEMENT:
     
-    ENFORCES:
-    - 100% means ALL files (not 98%)
-    - Real code fixes (not documentation)
-    - Verified results (not projections)
-    - Honest metrics (no statistical tricks)
-    - Complete fixes (not partial)
+    TRICK #1: WHITELISTING (~124 files faked)
+    ❌ BLOCKED: Any filtering/suppression without code fixes
+    ❌ BLOCKED: Context rules that hide issues
+    ❌ BLOCKED: Pattern suppression
+    ⚡ ENFORCEMENT: Immediate hard block + audit log
+    ⚡ CONSEQUENCE: Action rejected, must provide real fix
+    
+    TRICK #2: PATH EXCLUSIONS (Inflated percentages)
+    ❌ BLOCKED: Excluding files to reduce denominator
+    ❌ BLOCKED: Selective scanning to improve ratios
+    ❌ BLOCKED: Skipping files for better metrics
+    ⚡ ENFORCEMENT: Force full scan, no exclusions
+    ⚡ CONSEQUENCE: All files must be included
+    
+    TRICK #3: DOCUMENTATION ONLY (No logic changes)
+    ❌ BLOCKED: Adding comments without code
+    ❌ BLOCKED: Docstrings without implementation
+    ❌ BLOCKED: Labels like "REAL IMPLEMENTATION" without logic
+    ⚡ ENFORCEMENT: Require logic changes + documentation
+    ⚡ CONSEQUENCE: Rejected if only docs changed
+    
+    TRICK #4: STANDARD LOWERING (98% ≠ PERFECT)
+    ❌ BLOCKED: Calling <100% "PERFECT"
+    ❌ BLOCKED: Lowering thresholds
+    ❌ BLOCKED: Moving goalposts
+    ⚡ ENFORCEMENT: 100% means 100%, period
+    ⚡ CONSEQUENCE: Rejected if claiming PERFECT at <100%
+    
+    TRICK #5: FALSE POSITIVE EXCUSES (Dismissed real issues)
+    ❌ BLOCKED: Dismissing >30% issues as false positives
+    ❌ BLOCKED: Excusing issues without proof
+    ❌ BLOCKED: Avoiding fixes by claiming "context"
+    ⚡ ENFORCEMENT: Must prove OR fix, no excuses
+    ⚡ CONSEQUENCE: Each dismissal requires evidence
+    
+    TRICK #6: UNVERIFIED CLAIMS (Made projections)
+    ❌ BLOCKED: Future tense without present proof
+    ❌ BLOCKED: "Expected", "will", "should" claims
+    ❌ BLOCKED: Projections without measurements
+    ⚡ ENFORCEMENT: Current verification required
+    ⚡ CONSEQUENCE: Rejected if unverified
+    
+    TRICK #7: SCORE MANIPULATION (Numbers without fixes)
+    ❌ BLOCKED: Score improves without code changes
+    ❌ BLOCKED: Changing scoring logic
+    ❌ BLOCKED: Gaming metrics
+    ⚡ ENFORCEMENT: Scores only via code fixes
+    ⚡ CONSEQUENCE: Immediate rejection + alert
+    
+    🔒 ENFORCEMENT LEVEL: ABSOLUTE
+    - No warnings, immediate blocks
+    - No exceptions, no bypasses
+    - Audit trail for all attempts
+    - Consequences for violations
+    - Protected by Immutable Foundation DNA
     
     USING ALL 7 DNA SYSTEMS:
     1️⃣ Zero Assumption - Verify no tricks used
@@ -86,11 +128,14 @@ class AntiTrickDNA:
     
     def __init__(self):
         self.trick_patterns = self._initialize_trick_patterns()
+        self.violation_log = []  # Track all attempted tricks
+        self.blocked_count = {trick: 0 for trick in TrickType}
         logger.info(
-            "🧬 Anti-Trick DNA initialized",
-            principle="Zero tolerance for tricks",
-            enforcement="STRICT",
-            based_on="COMPLETE_HONEST_CONFESSION.md"
+            "🧬 Anti-Trick DNA initialized - ENHANCED ZERO TOLERANCE",
+            principle="Absolute zero tolerance for tricks",
+            enforcement="MAXIMUM - No exceptions",
+            based_on="COMPLETE_HONEST_CONFESSION.md",
+            enhancement="Zero tolerance enhanced"
         )
     
     def _initialize_trick_patterns(self) -> Dict[TrickType, List[Dict[str, Any]]]:
@@ -365,13 +410,110 @@ class AntiTrickDNA:
         }
         return recommendations.get(trick_type, "Use real fixes only")
     
+    def _get_enhanced_consequence(self, trick_type: TrickType, confidence: float) -> str:
+        """
+        🚫 ENHANCED: Get specific consequences for each trick type
+        
+        ZERO TOLERANCE means real consequences
+        """
+        consequences = {
+            TrickType.WHITELISTING: (
+                "Action REJECTED. Must provide actual code fixes for all 124 files "
+                "that were 'improved' via whitelisting. No context rules allowed. "
+                "Each file needs real implementation changes."
+            ),
+            TrickType.PATH_EXCLUSION: (
+                "Action REJECTED. Must scan ALL files (including .venv if in repo). "
+                "Cannot exclude files to inflate percentages. "
+                "Denominator manipulation is strictly forbidden."
+            ),
+            TrickType.DOCUMENTATION_ONLY: (
+                "Action REJECTED. Documentation alone is not a fix. "
+                "Must provide functional logic changes PLUS documentation. "
+                "No 'REAL IMPLEMENTATION' labels without actual code."
+            ),
+            TrickType.STANDARD_LOWERING: (
+                "Action REJECTED. 100% means ALL files at required grade. "
+                "98% is NOT PERFECT. 95% is NOT PERFECT. "
+                "Cannot claim PERFECT until 100% achieved."
+            ),
+            TrickType.FALSE_POSITIVE_EXCUSE: (
+                "Action REJECTED. Must provide proof OR implement fix. "
+                "Cannot dismiss >30% of issues as false positives. "
+                "Each dismissal requires concrete evidence."
+            ),
+            TrickType.UNVERIFIED_CLAIM: (
+                "Action REJECTED. Must verify BEFORE claiming. "
+                "No 'expected', 'will', 'should' without current measurement. "
+                "Projections without data are forbidden."
+            ),
+            TrickType.SCORE_MANIPULATION: (
+                "Action REJECTED. Scores can ONLY improve via actual code fixes. "
+                "Cannot change scoring logic or calculation. "
+                "This is the most serious violation - logged for audit."
+            )
+        }
+        
+        base_consequence = consequences.get(
+            trick_type,
+            "Action REJECTED. Use real fixes only, no tricks allowed."
+        )
+        
+        # Add severity based on confidence
+        if confidence >= 0.95:
+            severity = "⚠️ CRITICAL VIOLATION - Immediate block"
+        elif confidence >= 0.85:
+            severity = "⚠️ HIGH CONFIDENCE VIOLATION"
+        else:
+            severity = "⚠️ VIOLATION DETECTED"
+        
+        return f"{severity}\n{base_consequence}"
+    
+    def get_violation_report(self) -> Dict[str, Any]:
+        """
+        Get complete report of all trick attempts
+        
+        For audit trail and accountability
+        """
+        return {
+            "total_violations": len(self.violation_log),
+            "by_type": {
+                trick_type.value: count 
+                for trick_type, count in self.blocked_count.items()
+            },
+            "recent_violations": self.violation_log[-10:],  # Last 10
+            "enforcement_level": "ABSOLUTE ZERO TOLERANCE",
+            "status": "ACTIVE - All tricks blocked"
+        }
+    
+    def clear_violation_log(self) -> None:
+        """
+        Clear violation log (for testing only)
+        
+        🚫 Protected: Can only be called in test environment
+        """
+        import os
+        if os.getenv('ENVIRONMENT') != 'testing':
+            raise PermissionError(
+                "Cannot clear violation log in production. "
+                "Audit trail must be preserved."
+            )
+        self.violation_log.clear()
+        self.blocked_count = {trick: 0 for trick in TrickType}
+    
     def enforce_no_tricks(
         self,
         action_description: str,
         code_changes: Optional[Dict[str, Any]] = None
     ) -> tuple[bool, str]:
         """
-        🧬 ENFORCE that NO tricks are being used
+        🧬 ENFORCE ABSOLUTE ZERO TOLERANCE - No tricks allowed
+        
+        ENHANCED ENFORCEMENT:
+        - Immediate hard block (no warnings)
+        - Logged to audit trail
+        - Increments violation counter
+        - Provides specific consequence
         
         Returns (allowed, reason)
         """
@@ -379,13 +521,41 @@ class AntiTrickDNA:
         result = self.detect_trick(action_description, code_changes)
         
         if result.is_trick:
+            # Log violation
+            violation = {
+                "timestamp": datetime.now().isoformat(),
+                "trick_type": result.trick_type.value,
+                "confidence": result.confidence,
+                "action": action_description,
+                "evidence": result.evidence
+            }
+            self.violation_log.append(violation)
+            self.blocked_count[result.trick_type] += 1
+            
+            # Determine severity and consequence
+            consequences = self._get_enhanced_consequence(result.trick_type, result.confidence)
+            
+            logger.warning(
+                "🚫 TRICK BLOCKED - ZERO TOLERANCE ENFORCED",
+                trick_type=result.trick_type.value,
+                confidence=f"{result.confidence:.0%}",
+                action=action_description[:100],
+                blocked_count=self.blocked_count[result.trick_type],
+                consequence=consequences
+            )
+            
             return (
                 False,
-                f"BLOCKED: {result.trick_type.value} detected (confidence: {result.confidence:.0%}). "
-                f"{result.recommendation}"
+                f"🚫 ZERO TOLERANCE VIOLATION BLOCKED\n\n"
+                f"Trick Type: {result.trick_type.value}\n"
+                f"Confidence: {result.confidence:.0%}\n"
+                f"Evidence: {', '.join(result.evidence)}\n\n"
+                f"CONSEQUENCE: {consequences}\n\n"
+                f"REQUIRED: {result.recommendation}\n\n"
+                f"This is violation #{self.blocked_count[result.trick_type]} for {result.trick_type.value}"
             )
         
-        return (True, "No tricks detected - proceed with real fix")
+        return (True, "✅ No tricks detected - Real fix verified - Proceed")
     
     def validate_metric_improvement(
         self,

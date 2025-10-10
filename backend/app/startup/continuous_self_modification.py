@@ -86,22 +86,18 @@ class ContinuousSelfModificationHelper:
         try:
             from app.services.self_modification_system import SelfModificationSystem
             from app.services.immutable_foundation_dna import immutable_foundation_dna
-            from app.services.context_aware_reality_check import ContextAwareRealityCheck
             
             system = SelfModificationSystem()
-            context_aware_checker = ContextAwareRealityCheck()
             
             # Step 1: Run health check
             health = await system.self_management.monitor_health()
             logger.info("Health check complete", status=health.get("overall_status"))
             
-            # Step 2: Detect bugs using CONTEXT-AWARE checking
-            # 🧬 This eliminates false positives and focuses on real issues
+            # Step 2: Detect bugs using RAW detection (no context filtering)
+            # 🧬 ZERO TRICKS: No whitelisting, real bug detection only
             bugs = await system.self_debugging.detect_bugs()
             
-            # Step 2.5: Use Context-Aware Reality Check to filter false positives
-            # This is the PERMANENT SOLUTION #1 applied system-wide!
-            logger.info("🧬 Applying Context-Aware Reality Check to filter false positives...")
+            logger.info("🧬 Using RAW bug detection (no context filtering - zero tricks)")
             
             if not bugs or "bugs" not in bugs:
                 logger.info("✅ No bugs detected (context-aware analysis)")
