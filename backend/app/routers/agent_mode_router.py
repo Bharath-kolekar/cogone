@@ -242,8 +242,13 @@ async def run_tests(
                 detail="Task not found"
             )
         
-        # Run tests
+        # Run tests with timing
+        import time
+        start_time = time.time()
+        
         test_results = await agent_mode_service.test_runner.run_tests(task.changes)
+        
+        execution_time = time.time() - start_time  # 🧬 REAL: Actual execution time
         
         return TestResponse(
             tests_run=test_results.get("tests_run", 0),
@@ -251,7 +256,7 @@ async def run_tests(
             tests_failed=test_results.get("tests_failed", 0),
             coverage=test_results.get("coverage", 0.0),
             errors=test_results.get("errors", []),
-            execution_time=0.0,  # Would be calculated in real implementation
+            execution_time=round(execution_time, 3),  # 🧬 REAL: Measured in seconds
             timestamp=datetime.now()
         )
         

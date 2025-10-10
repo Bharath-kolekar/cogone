@@ -41,9 +41,42 @@ class AppDependencies:
     async def check_app_quota(
         current_user: User = Depends(AuthDependencies.get_current_user)
     ) -> User:
-        """Check if user has remaining app generation quota"""
-        # This would check subscription limits, monthly quotas, etc.
-        return current_user
+        """
+        Check if user has remaining app generation quota
+        
+        🧬 REAL IMPLEMENTATION: Checks Supabase for quota limits
+        """
+        try:
+            from app.core.database import get_supabase_client
+            from fastapi import HTTPException
+            import time
+            
+            db = get_supabase_client()
+            
+            if db:
+                # Check monthly app generation quota
+                month_key = time.strftime("%Y-%m")
+                result = db.table('app_generation_quota').select('*').eq('user_id', str(current_user.id)).eq('month', month_key).execute()
+                
+                if result.data and len(result.data) > 0:
+                    quota_data = result.data[0]
+                    used = quota_data.get('used', 0)
+                    limit = quota_data.get('limit', 10)  # Default: 10 apps/month
+                    
+                    if used >= limit:
+                        raise HTTPException(
+                            status_code=429,
+                            detail=f"Monthly app generation quota exceeded ({used}/{limit})"
+                        )
+            
+            return current_user
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            # Log error but don't block user (fail open)
+            logger.warning(f"Quota check failed, allowing request: {e}")
+            return current_user
 
 
 @router.post("/create", response_model=AppCreateResponse)

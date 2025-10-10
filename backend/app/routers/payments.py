@@ -38,9 +38,46 @@ class PaymentDependencies:
     async def check_payment_quota(
         current_user: User = Depends(AuthDependencies.get_current_user)
     ) -> User:
-        """Check if user can make payments"""
-        # This would check subscription status, payment limits, etc.
-        return current_user
+        """
+        Check if user can make payments
+        
+        🧬 REAL IMPLEMENTATION: Validates subscription and payment status
+        """
+        try:
+            from app.core.database import get_supabase_client
+            from fastapi import HTTPException
+            
+            db = get_supabase_client()
+            
+            if db:
+                # Check user's payment status
+                result = db.table('user_payment_status').select('*').eq('user_id', str(current_user.id)).execute()
+                
+                if result.data and len(result.data) > 0:
+                    status_data = result.data[0]
+                    is_blocked = status_data.get('is_blocked', False)
+                    has_failed_payments = status_data.get('failed_payment_count', 0) > 3
+                    
+                    if is_blocked:
+                        raise HTTPException(
+                            status_code=403,
+                            detail="Payment capability is blocked. Please contact support."
+                        )
+                    
+                    if has_failed_payments:
+                        raise HTTPException(
+                            status_code=402,
+                            detail="Multiple failed payments detected. Please update payment method."
+                        )
+            
+            return current_user
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            # Log error but don't block user (fail open for payments)
+            logger.warning(f"Payment eligibility check failed, allowing request: {e}")
+            return current_user
 
 
 @router.post("/create-order", response_model=PaymentCreateResponse)
