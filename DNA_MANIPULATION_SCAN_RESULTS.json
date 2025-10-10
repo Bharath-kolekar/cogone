@@ -1,0 +1,33 @@
+{
+  "scan_info": {
+    "timestamp": "2025-10-10T18:19:34.596285",
+    "root_path": "C:\\cogone",
+    "dna_systems_used": 9,
+    "scanner": "DNAPoweredManipulationScanner"
+  },
+  "summary": {
+    "files_scanned": 295,
+    "files_with_violations": 0,
+    "total_violations": 0,
+    "manipulation_rate": 0.0
+  },
+  "detailed_results": {
+    "files_scanned": 295,
+    "files_with_violations": 0,
+    "total_violations": 0,
+    "manipulation_files": [],
+    "critical_files": [],
+    "by_dna_system": {
+      "immutable": [],
+      "zero_assumption": [],
+      "precision": [],
+      "reality_check": [],
+      "reality_focused": [],
+      "anti_trick": [],
+      "anti_manipulation": [],
+      "consistency": [],
+      "autonomous": []
+    },
+    "by_violation_type": {}
+  }
+}
