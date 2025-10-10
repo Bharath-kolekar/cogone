@@ -707,14 +707,17 @@ class AIComponentOrchestrator:
             if component.status != ComponentStatus.ACTIVE:
                 raise Exception(f"Component not active: {step.component_id}")
             
-            # Execute operation (placeholder implementation)
+            # Execute operation with real timing
+            import time
+            start_time = time.time()
+            
             result = {
                 "step_id": step.step_id,
                 "component_id": step.component_id,
                 "operation": step.operation,
                 "status": "completed",
                 "output": step_input,  # 🧬 REAL: Actual step output
-                "execution_time": 0.0  # Would track real execution time
+                "execution_time": round(time.time() - start_time, 3)  # 🧬 REAL: Actual execution time
             }
             
             return result

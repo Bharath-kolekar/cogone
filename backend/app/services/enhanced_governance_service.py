@@ -228,10 +228,58 @@ class EnhancedGovernanceService:
             logger.error(f"Error evaluating rule {rule.name}", error=str(e))
     
     async def _check_rule_conditions(self, rule: GovernanceRule) -> bool:
-        """Check if rule conditions are violated"""
-        # This would integrate with actual system monitoring
-        # For now, return False (no violations)
-        return False
+        """
+        Check if rule conditions are violated
+        
+        🧬 REAL IMPLEMENTATION: Integrates with governance monitor
+        """
+        try:
+            # Get current metrics from governance monitor
+            metrics = await self.monitor.get_current_metrics()
+            
+            # Check rule type and conditions
+            if 'accuracy' in rule.name.lower():
+                # Check accuracy rules
+                if metrics.accuracy_rate is not None:
+                    min_accuracy = rule.conditions.get('min_accuracy', 95.0)
+                    if metrics.accuracy_rate < min_accuracy:
+                        logger.warning(
+                            f"Rule violation: {rule.name}",
+                            current=metrics.accuracy_rate,
+                            required=min_accuracy
+                        )
+                        return True
+            
+            elif 'performance' in rule.name.lower():
+                # Check performance rules
+                max_response_time = rule.conditions.get('max_response_time', 200)
+                if metrics.response_time is not None and metrics.response_time > max_response_time:
+                    return True
+                
+                min_throughput = rule.conditions.get('min_throughput', 1000)
+                if metrics.throughput is not None and metrics.throughput < min_throughput:
+                    return True
+            
+            elif 'compliance' in rule.name.lower():
+                # Check compliance rules
+                if metrics.compliance_rate is not None:
+                    min_compliance = rule.conditions.get('min_compliance', 100.0)
+                    if metrics.compliance_rate < min_compliance:
+                        return True
+            
+            elif 'security' in rule.name.lower():
+                # Check security rules
+                if metrics.security_score is not None:
+                    min_security = rule.conditions.get('min_security', 95.0)
+                    if metrics.security_score < min_security:
+                        return True
+            
+            # No violations detected
+            return False
+            
+        except Exception as e:
+            logger.error(f"Error checking rule conditions for {rule.name}", error=str(e))
+            return False  # Fail open (don't create false violations)
     
     async def _create_governance_violation(self, rule: GovernanceRule) -> GovernanceViolation:
         """Create a governance violation"""
