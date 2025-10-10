@@ -1,19 +1,32 @@
 """
 🧬 Unified Core DNA System - All DNA Systems Working Together
 
-This system integrates all 9 Core DNA systems into a unified orchestrator.
+This system integrates all 14 Core DNA systems into a unified orchestrator.
 When ONE DNA system is called, ALL DNA systems automatically activate.
 
-DNA Systems Integrated:
-1. Zero Assumption DNA
-2. Reality Check DNA
-3. Precision DNA
-4. Autonomous DNA
-5. Consistency DNA
-6. Immutable DNA
-7. Reality-Focused DNA
-8. Anti-Trick DNA
-9. Anti-Manipulation DNA (NEW)
+DNA Systems Integrated (14 Total):
+
+Foundation & Standards (4):
+1. Zero Assumption DNA - Verify everything
+2. Reality Check DNA - No hallucinations
+3. Precision DNA - No shortcuts
+4. Immutable Foundation DNA - Unchanging standards
+
+Protection & Prevention (3):
+5. Reality-Focused DNA - Real fixes only
+6. Anti-Trick DNA - 14 manipulation types
+7. Anti-Manipulation DNA - 7 tricks blocked
+
+Consistency & Quality (2):
+8. Zero-Breakage Consistency DNA - 0% breakage
+9. Consistency DNA - Pattern enforcement
+
+Intelligence & Awareness (5):
+10. Autonomous DNA - Self-improvement
+11. Consciousness DNA - Self-awareness
+12. Proactive DNA - Adaptive intelligence
+13. Gita DNA - Ethical principles
+14. Soul-Aware DNA - Empathetic coding
 
 Created: 2025-10-10
 Purpose: Unified DNA enforcement - activate one, activate all
@@ -29,16 +42,28 @@ logger = structlog.get_logger()
 
 
 class DNASystem(Enum):
-    """All 9 Core DNA Systems"""
+    """All 14 Core DNA Systems"""
+    # Foundation & Standards (4)
     ZERO_ASSUMPTION = "zero_assumption_dna"
     REALITY_CHECK = "reality_check_dna"
     PRECISION = "precision_dna"
-    AUTONOMOUS = "autonomous_dna"
-    CONSISTENCY = "consistency_dna"
     IMMUTABLE = "immutable_dna"
+    
+    # Protection & Prevention (3)
     REALITY_FOCUSED = "reality_focused_dna"
     ANTI_TRICK = "anti_trick_dna"
     ANTI_MANIPULATION = "anti_manipulation_dna"
+    
+    # Consistency & Quality (2)
+    ZERO_BREAKAGE_CONSISTENCY = "zero_breakage_consistency_dna"
+    CONSISTENCY = "consistency_dna"
+    
+    # Intelligence & Awareness (5)
+    AUTONOMOUS = "autonomous_dna"
+    CONSCIOUSNESS = "consciousness_dna"
+    PROACTIVE = "proactive_dna"
+    GITA = "gita_dna"
+    SOUL_AWARE = "soul_aware_dna"
 
 
 @dataclass
@@ -82,7 +107,7 @@ class UnifiedCoreDNASystem:
         self._activation_count = {dna: 0 for dna in DNASystem}
         self._last_validation_result: Optional[DNAValidationResult] = None
         
-        logger.info("🧬 Unified Core DNA System initializing")
+        logger.info("🧬 Unified Core DNA System initializing - ALL 14 SYSTEMS")
         
         # Initialize in dependency order
         self._initialize_all_dna_systems()
@@ -90,14 +115,16 @@ class UnifiedCoreDNASystem:
         logger.info(
             "🧬 Unified Core DNA System ready",
             systems_loaded=len(self._dna_systems),
+            target=14,
             order=self._initialization_order
         )
     
     def _initialize_all_dna_systems(self):
-        """Initialize all DNA systems in correct order"""
+        """Initialize all 14 DNA systems in correct dependency order"""
         
         # Order matters: systems with no dependencies first
         
+        # FOUNDATION & STANDARDS (4 systems)
         # 1. Immutable DNA (no dependencies - core principles)
         self._load_immutable_dna()
         
@@ -110,6 +137,7 @@ class UnifiedCoreDNASystem:
         # 4. Reality Check DNA (uses Zero Assumption)
         self._load_reality_check_dna()
         
+        # PROTECTION & PREVENTION (3 systems)
         # 5. Reality-Focused DNA (uses Reality Check)
         self._load_reality_focused_dna()
         
@@ -119,11 +147,28 @@ class UnifiedCoreDNASystem:
         # 7. Anti-Manipulation DNA (uses Reality Check, Anti-Trick)
         self._load_anti_manipulation_dna()
         
-        # 8. Consistency DNA (uses all above)
+        # CONSISTENCY & QUALITY (2 systems)
+        # 8. Zero-Breakage Consistency DNA (uses all above)
+        self._load_zero_breakage_consistency_dna()
+        
+        # 9. Consistency DNA (uses all above)
         self._load_consistency_dna()
         
-        # 9. Autonomous DNA (uses all above)
+        # INTELLIGENCE & AWARENESS (5 systems)
+        # 10. Autonomous DNA (uses all above)
         self._load_autonomous_dna()
+        
+        # 11. Consciousness DNA (uses all above)
+        self._load_consciousness_dna()
+        
+        # 12. Proactive DNA (uses Consciousness, Autonomous)
+        self._load_proactive_dna()
+        
+        # 13. Gita DNA (uses Consciousness)
+        self._load_gita_dna()
+        
+        # 14. Soul-Aware DNA (uses Consciousness, Gita)
+        self._load_soul_aware_dna()
     
     def _load_immutable_dna(self):
         """Load Immutable DNA - Core principles that cannot change"""
@@ -243,8 +288,8 @@ class UnifiedCoreDNASystem:
     def _load_consistency_dna(self):
         """Load Consistency DNA"""
         try:
-            from app.services.consistency_dna import ConsistencyDNA
-            self._dna_systems[DNASystem.CONSISTENCY] = ConsistencyDNA()
+            from app.services.proactive_consistency_manager import ProactiveConsistencyManager
+            self._dna_systems[DNASystem.CONSISTENCY] = ProactiveConsistencyManager()
             self._initialization_order.append(DNASystem.CONSISTENCY)
             logger.info("✅ Consistency DNA loaded")
         except ImportError as e:
@@ -257,8 +302,8 @@ class UnifiedCoreDNASystem:
     def _load_autonomous_dna(self):
         """Load Autonomous DNA"""
         try:
-            from app.services.autonomous_dna import AutonomousDNA
-            self._dna_systems[DNASystem.AUTONOMOUS] = AutonomousDNA()
+            from app.services.unified_autonomous_dna_integration import UnifiedAutonomousDNA
+            self._dna_systems[DNASystem.AUTONOMOUS] = UnifiedAutonomousDNA()
             self._initialization_order.append(DNASystem.AUTONOMOUS)
             logger.info("✅ Autonomous DNA loaded")
         except ImportError as e:
@@ -267,6 +312,76 @@ class UnifiedCoreDNASystem:
         except Exception as e:
             logger.error("Failed to load Autonomous DNA", error=str(e))
             self._dna_systems[DNASystem.AUTONOMOUS] = None
+    
+    def _load_zero_breakage_consistency_dna(self):
+        """Load Zero-Breakage Consistency DNA"""
+        try:
+            from app.services.zero_breakage_consistency_dna import ZeroBreakageConsistencyDNA
+            self._dna_systems[DNASystem.ZERO_BREAKAGE_CONSISTENCY] = ZeroBreakageConsistencyDNA()
+            self._initialization_order.append(DNASystem.ZERO_BREAKAGE_CONSISTENCY)
+            logger.info("✅ Zero-Breakage Consistency DNA loaded")
+        except ImportError as e:
+            logger.warning(f"Zero-Breakage Consistency DNA not found: {e}")
+            self._dna_systems[DNASystem.ZERO_BREAKAGE_CONSISTENCY] = None
+        except Exception as e:
+            logger.error("Failed to load Zero-Breakage Consistency DNA", error=str(e))
+            self._dna_systems[DNASystem.ZERO_BREAKAGE_CONSISTENCY] = None
+    
+    def _load_consciousness_dna(self):
+        """Load Consciousness DNA"""
+        try:
+            from app.services.consciousness_core import ConsciousnessCore
+            self._dna_systems[DNASystem.CONSCIOUSNESS] = ConsciousnessCore()
+            self._initialization_order.append(DNASystem.CONSCIOUSNESS)
+            logger.info("✅ Consciousness DNA loaded")
+        except ImportError as e:
+            logger.warning(f"Consciousness DNA not found: {e}")
+            self._dna_systems[DNASystem.CONSCIOUSNESS] = None
+        except Exception as e:
+            logger.error("Failed to load Consciousness DNA", error=str(e))
+            self._dna_systems[DNASystem.CONSCIOUSNESS] = None
+    
+    def _load_proactive_dna(self):
+        """Load Proactive DNA"""
+        try:
+            from app.services.proactive_intelligence_core import ProactiveIntelligenceCore
+            self._dna_systems[DNASystem.PROACTIVE] = ProactiveIntelligenceCore()
+            self._initialization_order.append(DNASystem.PROACTIVE)
+            logger.info("✅ Proactive DNA loaded")
+        except ImportError as e:
+            logger.warning(f"Proactive DNA not found: {e}")
+            self._dna_systems[DNASystem.PROACTIVE] = None
+        except Exception as e:
+            logger.error("Failed to load Proactive DNA", error=str(e))
+            self._dna_systems[DNASystem.PROACTIVE] = None
+    
+    def _load_gita_dna(self):
+        """Load Gita DNA"""
+        try:
+            from app.core.gita_dna_core import GitaDNACore
+            self._dna_systems[DNASystem.GITA] = GitaDNACore()
+            self._initialization_order.append(DNASystem.GITA)
+            logger.info("✅ Gita DNA loaded")
+        except ImportError as e:
+            logger.warning(f"Gita DNA not found: {e}")
+            self._dna_systems[DNASystem.GITA] = None
+        except Exception as e:
+            logger.error("Failed to load Gita DNA", error=str(e))
+            self._dna_systems[DNASystem.GITA] = None
+    
+    def _load_soul_aware_dna(self):
+        """Load Soul-Aware DNA"""
+        try:
+            from app.core.soul_aware_coder import SoulAwareCoder
+            self._dna_systems[DNASystem.SOUL_AWARE] = SoulAwareCoder()
+            self._initialization_order.append(DNASystem.SOUL_AWARE)
+            logger.info("✅ Soul-Aware DNA loaded")
+        except ImportError as e:
+            logger.warning(f"Soul-Aware DNA not found: {e}")
+            self._dna_systems[DNASystem.SOUL_AWARE] = None
+        except Exception as e:
+            logger.error("Failed to load Soul-Aware DNA", error=str(e))
+            self._dna_systems[DNASystem.SOUL_AWARE] = None
     
     def validate_code(
         self,
