@@ -734,8 +734,12 @@ class AnalyticsTracker:
             "os": "Windows"
         }
 
-# Usage
-tracker = AnalyticsTracker(api_url="https://analytics.example.com", api_key="your_key")
+# 🧬 REAL IMPLEMENTATION EXAMPLE:
+# import os
+# tracker = AnalyticsTracker(
+#     api_url=os.getenv("ANALYTICS_API_URL", "https://analytics.example.com"),
+#     api_key=os.getenv("ANALYTICS_API_KEY")
+# )
 
 # Track page view
 await tracker.track_event("page_view", {
