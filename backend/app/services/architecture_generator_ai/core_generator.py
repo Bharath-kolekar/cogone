@@ -1381,8 +1381,13 @@ class ArchitectureGeneratorService:
         return 0.0  # Honest: no real checking
     
     def _check_readability(self, diagram_content: str) -> float:
-        """Check diagram readability"""
-        return 0.8  # Placeholder implementation
+        """
+        Check diagram readability
+        
+        ⚠️ HONEST: Not implemented - returns 0.0
+        """
+        logger.warning("⚠️ HONEST: Readability check not implemented")
+        return 0.0  # Honest: no real checking
     
     def _calculate_cyclomatic_complexity(self, relationships: List[Tuple[str, str]]) -> int:
         """Calculate cyclomatic complexity"""
