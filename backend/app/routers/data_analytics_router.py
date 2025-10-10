@@ -82,7 +82,7 @@ async def optimize_database_query(request: QueryOptimizationRequest):
         return await capabilities['database_query_optimizer'].optimize_query(
             query=request.query,
             database_type=request.database_type,
-            schema=request.schema
+            schema=request.schema_data  # 🧬 Use internal field name
         )
     except Exception as e:
         logger.error("Query optimization failed", error=str(e))
