@@ -90,9 +90,9 @@ class DNAPoweredManipulationScanner:
         
         Each file goes through ALL 9 DNA systems automatically
         """
-        print("🧬" * 40)
+        print("="*80)
         print("DNA-POWERED MANIPULATION DETECTION")
-        print("🧬" * 40)
+        print("="*80)
         print("")
         print("🔬 Using: Unified Core DNA System")
         print("📊 DNA Systems: 9 (activate one, activate all)")
@@ -243,7 +243,7 @@ class DNAPoweredManipulationScanner:
     def _print_report(self):
         """Print comprehensive DNA-powered report"""
         print("\n" + "="*80)
-        print("🧬 DNA-POWERED MANIPULATION DETECTION REPORT")
+        print("DNA-POWERED MANIPULATION DETECTION REPORT")
         print("="*80)
         
         print("\n📊 SCAN SUMMARY:")
@@ -325,19 +325,19 @@ class DNAPoweredManipulationScanner:
         # DNA System Status
         if DNA_AVAILABLE:
             status = self.unified_dna.get_dna_status()
-            print("\n🧬 DNA SYSTEM STATUS:")
+            print("\nDNA SYSTEM STATUS:")
             print(f"  Systems loaded: {status['systems_loaded']}/9")
             print(f"  Initialization order: {', '.join(status['initialization_order'])}")
 
 
 def main():
-    print("\n" + "🧬"*40)
+    print("\n" + "="*80)
     print("UNIFIED CORE DNA SYSTEM - MANIPULATION DETECTION")
-    print("🧬"*40)
+    print("="*80)
     print("")
     print("This scan uses the UNIFIED CORE DNA SYSTEM")
     print("")
-    print("DNA Systems (9 total):")
+    print("DNA Systems (14 total):")
     print("  1. Immutable DNA         - Core principles")
     print("  2. Zero Assumption DNA   - Input validation")
     print("  3. Precision DNA         - Completeness checks")
@@ -346,9 +346,14 @@ def main():
     print("  6. Anti-Trick DNA        - 14 manipulation types")
     print("  7. Anti-Manipulation DNA - 7 tricks")
     print("  8. Consistency DNA       - Pattern enforcement")
-    print("  9. Autonomous DNA        - Recommendations")
+    print("  9. Autonomous DNA        - Self-improvement")
+    print(" 10. Consciousness DNA     - Self-awareness")
+    print(" 11. Proactive DNA         - Adaptive intelligence")
+    print(" 12. Gita DNA              - Ethical principles")
+    print(" 13. Soul-Aware DNA        - Empathetic coding")
+    print(" 14. Zero-Breakage DNA     - 0%% breakage guarantee")
     print("")
-    print("🔬 Principle: ACTIVATE ONE → ACTIVATE ALL")
+    print("Principle: ACTIVATE ONE -> ACTIVATE ALL")
     print("")
     
     scanner = DNAPoweredManipulationScanner()

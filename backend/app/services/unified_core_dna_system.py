@@ -107,13 +107,13 @@ class UnifiedCoreDNASystem:
         self._activation_count = {dna: 0 for dna in DNASystem}
         self._last_validation_result: Optional[DNAValidationResult] = None
         
-        logger.info("🧬 Unified Core DNA System initializing - ALL 14 SYSTEMS")
+        logger.info("Unified Core DNA System initializing - ALL 14 SYSTEMS")
         
         # Initialize in dependency order
         self._initialize_all_dna_systems()
         
         logger.info(
-            "🧬 Unified Core DNA System ready",
+            "Unified Core DNA System ready",
             systems_loaded=len(self._dna_systems),
             target=14,
             order=self._initialization_order
@@ -405,7 +405,7 @@ class UnifiedCoreDNASystem:
         start_time = datetime.now()
         
         logger.info(
-            "🧬 UNIFIED DNA VALIDATION STARTED",
+            "UNIFIED DNA VALIDATION STARTED",
             file=file_path,
             systems_count=len(self._dna_systems)
         )
@@ -575,7 +575,7 @@ class UnifiedCoreDNASystem:
         self._last_validation_result = result
         
         logger.info(
-            "🧬 UNIFIED DNA VALIDATION COMPLETE",
+            "UNIFIED DNA VALIDATION COMPLETE",
             file=file_path,
             is_valid=is_valid,
             violations_count=len(violations),

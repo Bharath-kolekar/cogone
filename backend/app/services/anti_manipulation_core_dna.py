@@ -124,7 +124,7 @@ class AntiManipulationCoreDNA:
             ]
         }
         
-        logger.info("🧬 Anti-Manipulation Core DNA initialized")
+        logger.info("Anti-Manipulation Core DNA initialized")
     
     def validate_fix(
         self,
@@ -219,14 +219,14 @@ class AntiManipulationCoreDNA:
         
         if trick_detected:
             logger.warning(
-                "🚫 MANIPULATION TRICK DETECTED",
+                "MANIPULATION TRICK DETECTED",
                 trick=trick_detected.value,
                 file=file_path,
                 reason=evidence.get('trick_reason')
             )
         elif is_real_fix:
             logger.info(
-                "✅ REAL FIX VALIDATED",
+                "REAL FIX VALIDATED",
                 file=file_path,
                 lines_changed=lines_modified
             )
@@ -462,7 +462,7 @@ class AntiManipulationCoreDNA:
         
         if not is_legitimate:
             logger.warning(
-                "🚫 WHITELIST BLOCKED",
+                "WHITELIST BLOCKED",
                 rule=whitelist_rule,
                 reason=reason,
                 verdict="manipulation_attempt"
@@ -473,14 +473,14 @@ class AntiManipulationCoreDNA:
         # Even if legitimate, require evidence
         if not context or 'evidence' not in context:
             logger.warning(
-                "🚫 WHITELIST BLOCKED",
+                "WHITELIST BLOCKED - no evidence",
                 rule=whitelist_rule,
                 reason="no_evidence_provided"
             )
             return False
         
         logger.info(
-            "✅ Whitelist allowed (legitimate false positive)",
+            "Whitelist allowed (legitimate false positive)",
             rule=whitelist_rule,
             evidence=context.get('evidence')
         )
