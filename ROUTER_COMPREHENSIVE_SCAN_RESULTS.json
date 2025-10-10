@@ -1,0 +1,1804 @@
+{
+  "scan_timestamp": "2025-10-11T04:34:23.976895",
+  "total_routers": 71,
+  "routers_scanned": 71,
+  "dna_violations": 0,
+  "pattern_issues": 17,
+  "semantic_warnings": 34,
+  "critical_routers": [],
+  "router_details": {
+    "backend\\app\\routers\\admin.py": {
+      "file": "backend\\app\\routers\\admin.py",
+      "lines": 321,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\admin_router.py": {
+      "file": "backend\\app\\routers\\admin_router.py",
+      "lines": 526,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 2,
+        "notes": [
+          "Missing error handling in router",
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\advanced_analytics_router.py": {
+      "file": "backend\\app\\routers\\advanced_analytics_router.py",
+      "lines": 433,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\advanced_features_router.py": {
+      "file": "backend\\app\\routers\\advanced_features_router.py",
+      "lines": 460,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\agent_mode_router.py": {
+      "file": "backend\\app\\routers\\agent_mode_router.py",
+      "lines": 495,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\ai_agents_consolidated.py": {
+      "file": "backend\\app\\routers\\ai_agents_consolidated.py",
+      "lines": 722,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [
+          {
+            "line": 524,
+            "pattern": "return\\s+\\{\\}",
+            "match": "return {}"
+          }
+        ],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 1
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\ai_agents_router.py": {
+      "file": "backend\\app\\routers\\ai_agents_router.py",
+      "lines": 640,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [
+          {
+            "line": 445,
+            "pattern": "return\\s+\\{\\}",
+            "match": "return {}"
+          }
+        ],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 1
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\ai_component_orchestrator_router.py": {
+      "file": "backend\\app\\routers\\ai_component_orchestrator_router.py",
+      "lines": 734,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\analytics_router.py": {
+      "file": "backend\\app\\routers\\analytics_router.py",
+      "lines": 294,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 2,
+        "notes": [
+          "Missing error handling in router",
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\apps.py": {
+      "file": "backend\\app\\routers\\apps.py",
+      "lines": 624,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\apps_capabilities_router.py": {
+      "file": "backend\\app\\routers\\apps_capabilities_router.py",
+      "lines": 652,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\architecture_compliance_router.py": {
+      "file": "backend\\app\\routers\\architecture_compliance_router.py",
+      "lines": 410,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\architecture_generator_router.py": {
+      "file": "backend\\app\\routers\\architecture_generator_router.py",
+      "lines": 748,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\architecture_router.py": {
+      "file": "backend\\app\\routers\\architecture_router.py",
+      "lines": 514,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\auth.py": {
+      "file": "backend\\app\\routers\\auth.py",
+      "lines": 531,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\auth_users_router.py": {
+      "file": "backend\\app\\routers\\auth_users_router.py",
+      "lines": 698,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\auto_save_router.py": {
+      "file": "backend\\app\\routers\\auto_save_router.py",
+      "lines": 529,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\billing.py": {
+      "file": "backend\\app\\routers\\billing.py",
+      "lines": 443,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\capabilities_router.py": {
+      "file": "backend\\app\\routers\\capabilities_router.py",
+      "lines": 169,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\code_intelligence_router.py": {
+      "file": "backend\\app\\routers\\code_intelligence_router.py",
+      "lines": 532,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [
+          {
+            "line": 255,
+            "pattern": "#\\s*TODO:?\\s*implement",
+            "match": "# TODO: Implement"
+          }
+        ],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 1
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\code_processing.py": {
+      "file": "backend\\app\\routers\\code_processing.py",
+      "lines": 343,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\consciousness_dna_router.py": {
+      "file": "backend\\app\\routers\\consciousness_dna_router.py",
+      "lines": 410,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\consistency_dna_router.py": {
+      "file": "backend\\app\\routers\\consistency_dna_router.py",
+      "lines": 353,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\data_analytics_router.py": {
+      "file": "backend\\app\\routers\\data_analytics_router.py",
+      "lines": 236,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\dna_systems_router.py": {
+      "file": "backend\\app\\routers\\dna_systems_router.py",
+      "lines": 686,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Missing error handling in router"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\enhanced_payment_router.py": {
+      "file": "backend\\app\\routers\\enhanced_payment_router.py",
+      "lines": 540,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [
+          {
+            "line": 484,
+            "pattern": "return\\s+\\{\\s*[\"\\']status[\"\\']\\s*:\\s*[\"\\']success[",
+            "match": "return {\"status\": \"success\"}"
+          },
+          {
+            "line": 512,
+            "pattern": "return\\s+\\{\\s*[\"\\']status[\"\\']\\s*:\\s*[\"\\']success[",
+            "match": "return {\"status\": \"success\"}"
+          }
+        ],
+        "fake_implementations": [],
+        "optimistic_language": [
+          {
+            "line": 390,
+            "pattern": "#.*complete",
+            "match": "# Get complete"
+          }
+        ],
+        "suspicious_returns": [],
+        "total_issues": 3
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\enhanced_voice_to_app_router.py": {
+      "file": "backend\\app\\routers\\enhanced_voice_to_app_router.py",
+      "lines": 528,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [
+          {
+            "line": 236,
+            "pattern": "#.*complete",
+            "match": "# Check if request is complete"
+          },
+          {
+            "line": 243,
+            "pattern": "#.*complete",
+            "match": "# Get complete"
+          },
+          {
+            "line": 429,
+            "pattern": "#.*complete",
+            "match": "# Get complete"
+          }
+        ],
+        "suspicious_returns": [],
+        "total_issues": 3
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\ethical_ai_comprehensive_router.py": {
+      "file": "backend\\app\\routers\\ethical_ai_comprehensive_router.py",
+      "lines": 1012,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\ethical_ai_router.py": {
+      "file": "backend\\app\\routers\\ethical_ai_router.py",
+      "lines": 454,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\ethics_governance_router.py": {
+      "file": "backend\\app\\routers\\ethics_governance_router.py",
+      "lines": 841,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\frontend_router.py": {
+      "file": "backend\\app\\routers\\frontend_router.py",
+      "lines": 270,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\gamification.py": {
+      "file": "backend\\app\\routers\\gamification.py",
+      "lines": 484,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\governance_router.py": {
+      "file": "backend\\app\\routers\\governance_router.py",
+      "lines": 748,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\hardware_optimization.py": {
+      "file": "backend\\app\\routers\\hardware_optimization.py",
+      "lines": 388,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\hierarchical_orchestration_router.py": {
+      "file": "backend\\app\\routers\\hierarchical_orchestration_router.py",
+      "lines": 684,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\index.py": {
+      "file": "backend\\app\\routers\\index.py",
+      "lines": 69,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 2,
+        "notes": [
+          "Router may not be using async properly",
+          "Missing error handling in router",
+          "Consider explicit status codes"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\meta_ai_orchestrator_unified.py": {
+      "file": "backend\\app\\routers\\meta_ai_orchestrator_unified.py",
+      "lines": 1010,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\multi_agent_coordinator_router.py": {
+      "file": "backend\\app\\routers\\multi_agent_coordinator_router.py",
+      "lines": 453,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\optimization_router.py": {
+      "file": "backend\\app\\routers\\optimization_router.py",
+      "lines": 484,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Missing error handling in router"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\optimized_services_router.py": {
+      "file": "backend\\app\\routers\\optimized_services_router.py",
+      "lines": 507,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\orchestration_router.py": {
+      "file": "backend\\app\\routers\\orchestration_router.py",
+      "lines": 1753,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [
+          {
+            "line": 282,
+            "pattern": "#.*complete",
+            "match": "# ===== Meta AI Orchestrator - Complete"
+          },
+          {
+            "line": 1161,
+            "pattern": "#.*complete",
+            "match": "# ===== AI Component Orchestrator - Complete"
+          },
+          {
+            "line": 1385,
+            "pattern": "#.*complete",
+            "match": "# ===== Hierarchical Orchestration - Complete"
+          },
+          {
+            "line": 1600,
+            "pattern": "#.*complete",
+            "match": "# ===== Swarm AI - Complete"
+          }
+        ],
+        "suspicious_returns": [],
+        "total_issues": 4
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\payments.py": {
+      "file": "backend\\app\\routers\\payments.py",
+      "lines": 510,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\payments_router.py": {
+      "file": "backend\\app\\routers\\payments_router.py",
+      "lines": 508,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\performance_architecture_router.py": {
+      "file": "backend\\app\\routers\\performance_architecture_router.py",
+      "lines": 483,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\proactive_dna_router.py": {
+      "file": "backend\\app\\routers\\proactive_dna_router.py",
+      "lines": 360,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\production_deployment_router.py": {
+      "file": "backend\\app\\routers\\production_deployment_router.py",
+      "lines": 453,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\profiles.py": {
+      "file": "backend\\app\\routers\\profiles.py",
+      "lines": 27,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Missing error handling in router"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\quality_optimization_router.py": {
+      "file": "backend\\app\\routers\\quality_optimization_router.py",
+      "lines": 1086,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\reality_check_dna_router.py": {
+      "file": "backend\\app\\routers\\reality_check_dna_router.py",
+      "lines": 272,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\self_modification.py": {
+      "file": "backend\\app\\routers\\self_modification.py",
+      "lines": 1419,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\smarty_agent_integration_router.py": {
+      "file": "backend\\app\\routers\\smarty_agent_integration_router.py",
+      "lines": 432,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\smarty_ai_orchestrator_router.py": {
+      "file": "backend\\app\\routers\\smarty_ai_orchestrator_router.py",
+      "lines": 284,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\smarty_ethical_router.py": {
+      "file": "backend\\app\\routers\\smarty_ethical_router.py",
+      "lines": 574,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\smart_coding_ai_integration_router.py": {
+      "file": "backend\\app\\routers\\smart_coding_ai_integration_router.py",
+      "lines": 578,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\smart_coding_ai_optimized.py": {
+      "file": "backend\\app\\routers\\smart_coding_ai_optimized.py",
+      "lines": 2762,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\smart_coding_ai_status.py": {
+      "file": "backend\\app\\routers\\smart_coding_ai_status.py",
+      "lines": 65,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\super_intelligent_optimization.py": {
+      "file": "backend\\app\\routers\\super_intelligent_optimization.py",
+      "lines": 507,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\swarm_ai_router.py": {
+      "file": "backend\\app\\routers\\swarm_ai_router.py",
+      "lines": 573,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\system_infrastructure_router.py": {
+      "file": "backend\\app\\routers\\system_infrastructure_router.py",
+      "lines": 614,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 2,
+        "notes": [
+          "Missing error handling in router",
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\system_optimization_router.py": {
+      "file": "backend\\app\\routers\\system_optimization_router.py",
+      "lines": 594,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\tools_integrations_router.py": {
+      "file": "backend\\app\\routers\\tools_integrations_router.py",
+      "lines": 285,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 2,
+        "notes": [
+          "Missing error handling in router",
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\tool_integration_router.py": {
+      "file": "backend\\app\\routers\\tool_integration_router.py",
+      "lines": 556,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\transcribe.py": {
+      "file": "backend\\app\\routers\\transcribe.py",
+      "lines": 27,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Missing error handling in router"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\unified_ai_orchestrator_router.py": {
+      "file": "backend\\app\\routers\\unified_ai_orchestrator_router.py",
+      "lines": 848,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\unified_autonomous_dna_router.py": {
+      "file": "backend\\app\\routers\\unified_autonomous_dna_router.py",
+      "lines": 393,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\user_preferences.py": {
+      "file": "backend\\app\\routers\\user_preferences.py",
+      "lines": 500,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 1,
+        "notes": [
+          "Router may lack input validation"
+        ]
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\voice.py": {
+      "file": "backend\\app\\routers\\voice.py",
+      "lines": 398,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [
+          {
+            "line": 248,
+            "pattern": "#.*complete",
+            "match": "# Will be available when generation complete"
+          }
+        ],
+        "suspicious_returns": [],
+        "total_issues": 1
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\voice_router.py": {
+      "file": "backend\\app\\routers\\voice_router.py",
+      "lines": 673,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [
+          {
+            "line": 422,
+            "pattern": "#.*complete",
+            "match": "# Check if request is complete"
+          },
+          {
+            "line": 426,
+            "pattern": "#.*complete",
+            "match": "# Get complete"
+          },
+          {
+            "line": 498,
+            "pattern": "#.*complete",
+            "match": "# Get complete"
+          }
+        ],
+        "suspicious_returns": [],
+        "total_issues": 3
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": false,
+      "severity": "low"
+    },
+    "backend\\app\\routers\\webhooks.py": {
+      "file": "backend\\app\\routers\\webhooks.py",
+      "lines": 394,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\zero_cost_infrastructure_router.py": {
+      "file": "backend\\app\\routers\\zero_cost_infrastructure_router.py",
+      "lines": 432,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    },
+    "backend\\app\\routers\\zero_cost_super_intelligence.py": {
+      "file": "backend\\app\\routers\\zero_cost_super_intelligence.py",
+      "lines": 504,
+      "tier1_dna": {
+        "is_valid": true,
+        "systems_activated": 2,
+        "violations": [],
+        "recommendations": []
+      },
+      "tier2_patterns": {
+        "placeholder_returns": [],
+        "fake_implementations": [],
+        "optimistic_language": [],
+        "suspicious_returns": [],
+        "total_issues": 0
+      },
+      "tier3_semantic": {
+        "warnings": 0,
+        "notes": []
+      },
+      "is_clean": true,
+      "severity": "none"
+    }
+  },
+  "dna_system_status": {},
+  "overall_verdict": "NEEDS WORK - Multiple issues found"
+}
