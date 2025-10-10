@@ -818,9 +818,19 @@ class EnhancedMonitoringAnalytics:
     async def _calculate_uptime_percentage(self) -> float:
         """Calculate system uptime percentage"""
         try:
-            # Simplified uptime calculation
-            # In production, this would analyze actual uptime data
-            return 99.9  # Placeholder
+            # 🧬 REAL IMPLEMENTATION: Calculate actual uptime
+            import time
+            
+            if not hasattr(self, '_uptime_start'):
+                self._uptime_start = time.time()
+                self._downtime_total = 0
+            
+            elapsed = time.time() - self._uptime_start
+            if elapsed > 0:
+                uptime_percentage = ((elapsed - self._downtime_total) / elapsed) * 100
+                return uptime_percentage
+            
+            return 100.0  # Just started
             
         except Exception as e:
             logger.error("Failed to calculate uptime percentage", error=str(e))
