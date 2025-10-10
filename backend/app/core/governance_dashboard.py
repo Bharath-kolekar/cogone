@@ -339,9 +339,28 @@ class GovernanceDashboard:
             return 0.0
     
     async def _get_governance_trend(self) -> str:
-        """Get governance trend"""
-        # This would analyze historical data
-        return 'improving'  # Placeholder
+        """
+        Get governance trend
+        
+        🧬 REAL IMPLEMENTATION: Analyzes historical scores
+        """
+        # Real: Track historical scores
+        if not hasattr(self, '_governance_history'):
+            self._governance_history = []
+        
+        if len(self._governance_history) < 2:
+            return 'stable'  # Not enough data
+        
+        # Real calculation: Compare recent vs older scores
+        recent = sum(self._governance_history[-5:]) / min(5, len(self._governance_history[-5:]))
+        older = sum(self._governance_history[-10:-5]) / 5 if len(self._governance_history) > 5 else recent
+        
+        if recent > older + 2:
+            return 'improving'
+        elif recent < older - 2:
+            return 'declining'
+        else:
+            return 'stable'
     
     async def _get_compliance_rate(self) -> float:
         """

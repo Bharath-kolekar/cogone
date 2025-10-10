@@ -392,7 +392,16 @@ class ConsistencyEnforcer:
             structure_violations = await self._check_structure_consistency(code)
             validation_result.warnings.extend(structure_violations)
             
-            validation_result.score = 0.95  # Placeholder
+            # 🧬 REAL IMPLEMENTATION: Calculate actual validation score
+            total_checks = len(validation_result.errors) + len(validation_result.warnings)
+            if total_checks == 0:
+                validation_result.score = 1.0  # Perfect
+            else:
+                # Errors are more serious than warnings
+                error_penalty = len(validation_result.errors) * 0.1
+                warning_penalty = len(validation_result.warnings) * 0.02
+                validation_result.score = max(0.0, 1.0 - error_penalty - warning_penalty)
+            
             validation_result.is_valid = len(validation_result.errors) == 0
             
             return validation_result
@@ -516,7 +525,15 @@ class PerformanceOptimizer:
             optimization_suggestions = await self._generate_optimization_suggestions(code)
             validation_result.suggestions.extend(optimization_suggestions)
             
-            validation_result.score = 0.85  # Placeholder
+            # 🧬 REAL IMPLEMENTATION: Calculate actual validation score
+            total_issues = len(validation_result.errors) + len(validation_result.warnings)
+            if total_issues == 0:
+                validation_result.score = 1.0
+            else:
+                error_penalty = len(validation_result.errors) * 0.15
+                warning_penalty = len(validation_result.warnings) * 0.03
+                validation_result.score = max(0.0, 1.0 - error_penalty - warning_penalty)
+            
             validation_result.is_valid = len(validation_result.errors) == 0
             
             return validation_result
