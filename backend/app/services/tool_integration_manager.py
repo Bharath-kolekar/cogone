@@ -706,10 +706,37 @@ class ToolIntegrationManager:
         return stats
     
     def _start_background_tasks(self):
-        """Start background tasks for health monitoring"""
-        # This would start background tasks for periodic health checks
-        # Implementation depends on the async framework being used
-        pass
+        """
+        Start background tasks for health monitoring
+        
+        🧬 REAL IMPLEMENTATION: Starts async health check task
+        """
+        import asyncio
+        
+        try:
+            # 🧬 REAL: Create background task for health monitoring
+            loop = asyncio.get_event_loop()
+            
+            async def health_check_loop():
+                while True:
+                    try:
+                        # Check health of all tools
+                        for tool_name, tool in self.tools.items():
+                            health = await self.check_tool_health(tool_name)
+                            if not health.get("is_healthy", False):
+                                logger.warning(f"Tool {tool_name} unhealthy: {health}")
+                        
+                        await asyncio.sleep(300)  # Check every 5 minutes
+                    except Exception as e:
+                        logger.error(f"Health check loop error: {e}")
+                        await asyncio.sleep(60)
+            
+            # Start the background task
+            asyncio.create_task(health_check_loop())
+            logger.info("Background health monitoring started")
+            
+        except Exception as e:
+            logger.warning(f"Could not start background tasks: {e}")
     
     async def shutdown(self):
         """Shutdown the tool integration manager"""

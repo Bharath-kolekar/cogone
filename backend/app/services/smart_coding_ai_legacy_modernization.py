@@ -393,9 +393,33 @@ class APIModernizer:
             return {"success": False, "error": str(e)}
     
     def _analyze_legacy_api(self, code: str) -> Dict[str, Any]:
-        """Analyze legacy API structure"""
+        """
+        Analyze legacy API structure
+        
+        🧬 REAL IMPLEMENTATION: Parses API endpoints from code
+        """
+        import re
+        
+        # 🧬 REAL: Find API decorators and route definitions
+        endpoints = []
+        
+        # Flask/FastAPI style routes
+        flask_routes = re.findall(r'@app\.(get|post|put|delete|patch)\(["\']([^"\']+)', code)
+        fastapi_routes = re.findall(r'@router\.(get|post|put|delete|patch)\(["\']([^"\']+)', code)
+        
+        endpoints.extend(flask_routes)
+        endpoints.extend(fastapi_routes)
+        
+        # Django style URLs
+        django_urls = re.findall(r'path\(["\']([^"\']+)["\'],', code)
+        endpoints.extend([('route', url) for url in django_urls])
+        
+        # Express.js style
+        express_routes = re.findall(r'app\.(get|post|put|delete|patch)\(["\']([^"\']+)', code)
+        endpoints.extend(express_routes)
+        
         return {
-            "endpoints": 15,  # Would parse from code
+            "endpoints": len(endpoints),  # 🧬 REAL: Parsed from code
             "authentication": "Basic Auth" if "Basic" in code else "None",
             "versioning": "None" if "/v" not in code else "URI versioning",
             "documentation": "Missing" if "swagger" not in code.lower() else "Swagger",

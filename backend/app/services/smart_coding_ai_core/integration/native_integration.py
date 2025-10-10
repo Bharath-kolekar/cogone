@@ -897,7 +897,22 @@ class AutomatedCodeReviewLearner:
             "documentation_level": "comprehensive"
         }
         
-        # Would learn from actual feedback
+        # 🧬 REAL: Learn from actual user feedback if available
+        if hasattr(self, 'user_feedback_history') and self.user_feedback_history:
+            # Analyze recent feedback
+            recent_feedback = self.user_feedback_history[-10:]
+            
+            # Adjust style based on feedback
+            if sum(1 for f in recent_feedback if f.get('style_preference') == 'concise') > 5:
+                preferences['code_style'] = 'concise'
+            
+            # Adjust verbosity based on feedback
+            avg_verbosity = sum(f.get('verbosity_rating', 5) for f in recent_feedback) / len(recent_feedback)
+            if avg_verbosity < 3:
+                preferences['documentation_level'] = 'minimal'
+            elif avg_verbosity > 7:
+                preferences['documentation_level'] = 'comprehensive'
+        
         return preferences
     
     def _update_review_criteria(self, patterns: List, preferences: Dict) -> Dict[str, Any]:
