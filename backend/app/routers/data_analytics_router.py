@@ -20,7 +20,8 @@ capabilities = factory.get_all_capabilities()
 class QueryOptimizationRequest(BaseModel):
     query: str
     database_type: str = "postgresql"
-    schema: Optional[Dict[str, Any]] = None
+    # 🧬 CONSISTENCY DNA: Use alias to avoid Pydantic BaseModel.schema() shadowing
+    schema_data: Optional[Dict[str, Any]] = Field(None, alias="schema")
 
 
 class DataPipelineRequest(BaseModel):
@@ -64,7 +65,8 @@ class IndexOptimizationRequest(BaseModel):
 
 
 class DataValidationRequest(BaseModel):
-    schema: Dict[str, Any]
+    # 🧬 CONSISTENCY DNA: Use alias to avoid Pydantic BaseModel.schema() shadowing
+    schema_data: Dict[str, Any] = Field(..., alias="schema")
     validation_rules: Optional[List[Dict]] = None
 
 
@@ -181,7 +183,7 @@ async def implement_data_validation(request: DataValidationRequest):
     """Capability #139: Data Validation Implementation"""
     try:
         return await capabilities['data_validation_implementer'].implement_data_validation(
-            schema=request.schema,
+            schema=request.schema_data,  # 🧬 Use internal field name
             validation_rules=request.validation_rules
         )
     except Exception as e:
