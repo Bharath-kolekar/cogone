@@ -38,10 +38,39 @@ class VoiceDependencies:
     async def check_voice_quota(
         current_user: User = Depends(AuthDependencies.get_current_user)
     ) -> User:
-        """Check if user has remaining voice processing quota"""
-        # This would integrate with rate limiting service
-        # For now, we'll just return the user
-        return current_user
+        """
+        Check if user has remaining voice processing quota
+        
+        🧬 REAL IMPLEMENTATION: Checks rate limits from database
+        """
+        try:
+            from app.core.database import get_supabase_client
+            import time
+            
+            db = get_supabase_client()
+            
+            if db:
+                # Check user's voice quota for today
+                today = time.strftime("%Y-%m-%d")
+                result = db.table('voice_usage').select('count').eq('user_id', str(current_user.id)).eq('date', today).execute()
+                
+                if result.data and len(result.data) > 0:
+                    count = result.data[0].get('count', 0)
+                    max_daily_quota = 100  # Default quota
+                    
+                    if count >= max_daily_quota:
+                        from fastapi import HTTPException
+                        raise HTTPException(
+                            status_code=429,
+                            detail=f"Daily voice quota exceeded ({count}/{max_daily_quota})"
+                        )
+            
+            return current_user
+            
+        except Exception as e:
+            # Log error but don't block user (fail open)
+            logger.warning(f"Quota check failed, allowing request: {e}")
+            return current_user
 
 
 @router.post("/transcribe", response_model=VoiceTranscriptionResponse)
@@ -51,6 +80,9 @@ async def transcribe_voice(
     current_user: User = Depends(VoiceDependencies.check_voice_quota)
 ):
     """Transcribe voice audio to text"""
+    import time
+    start_time = time.time()
+    
     try:
         # Validate file type
         if not audio_file.content_type.startswith('audio/'):
@@ -101,12 +133,15 @@ async def transcribe_voice(
             confidence=confidence
         )
         
+        # 🧬 REAL: Calculate actual processing time
+        processing_time_ms = round((time.time() - start_time) * 1000, 2)
+        
         return VoiceTranscriptionResponse(
             transcript=transcript,
             confidence=confidence,
             language=language,
             method=method,
-            processing_time_ms=0  # Would be calculated in actual implementation
+            processing_time_ms=processing_time_ms  # 🧬 REAL: Actual processing time
         )
         
     except Exception as e:

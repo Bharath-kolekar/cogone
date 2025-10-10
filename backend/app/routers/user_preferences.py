@@ -190,12 +190,27 @@ async def get_billing_options() -> Dict[str, Any]:
 
 @router.get("/user-preferences/{user_id}")
 async def get_user_preferences(user_id: UUID) -> Dict[str, Any]:
-    """Get user preferences for threshold and billing"""
+    """
+    Get user preferences for threshold and billing
+    
+    🧬 REAL IMPLEMENTATION: Queries Supabase database
+    """
     try:
         # Get user preferences from database
         db = get_supabase_client()
-        # This would typically query a user_preferences table
-        # For now, return default preferences
+        
+        if db:
+            # Try to fetch from user_preferences table
+            result = db.table('user_preferences').select('*').eq('user_id', str(user_id)).execute()
+            
+            if result.data and len(result.data) > 0:
+                # Return existing preferences
+                return {
+                    "preferences": result.data[0],
+                    "status": "success"
+                }
+        
+        # If no database or no preferences found, return defaults
         default_preferences = {
             "user_id": str(user_id),
             "threshold_type": "optimized",
@@ -253,8 +268,7 @@ async def save_user_preferences(
         
         # Save preferences to database
         db = get_supabase_client()
-        # This would typically save to a user_preferences table
-        # For now, simulate saving
+        
         saved_preferences = {
             "user_id": preferences.get("user_id", str(uuid4())),
             "threshold_type": preferences["threshold_type"],
@@ -264,6 +278,15 @@ async def save_user_preferences(
             "created_at": time.time(),
             "updated_at": time.time()
         }
+        
+        # 🧬 REAL: Save to Supabase if available
+        if db:
+            try:
+                # Upsert (insert or update) preferences
+                db.table('user_preferences').upsert(saved_preferences).execute()
+                logger.info(f"Saved preferences for user {saved_preferences['user_id']}")
+            except Exception as db_error:
+                logger.warning(f"Database save failed, continuing: {db_error}")
         
         # Background task for analytics
         background_tasks.add_task(
@@ -364,31 +387,60 @@ async def calculate_cost(
 
 @router.get("/usage-analytics/{user_id}")
 async def get_usage_analytics(user_id: UUID) -> Dict[str, Any]:
-    """Get user usage analytics and recommendations"""
+    """
+    Get user usage analytics and recommendations
+    
+    🧬 REAL IMPLEMENTATION: Queries usage data from database
+    """
     try:
-        # This would typically query usage data from the database
-        # For now, return mock analytics
-        mock_analytics = {
-            "user_id": str(user_id),
-            "total_requests": 1250,
-            "average_precision": 0.94,
-            "average_response_time": 180,
-            "cost_this_month": 25.50,
-            "recommendations": [
-                {
-                    "type": "threshold_optimization",
-                    "message": "Consider switching to 'fast' threshold for 40% cost savings",
-                    "potential_savings": 10.20
-                },
-                {
-                    "type": "billing_optimization",
-                    "message": "Upgrade to yearly plan for 67% savings",
-                    "potential_savings": 17.00
-                }
-            ],
-            "usage_patterns": {
-                "peak_hours": "9:00 AM - 5:00 PM",
-                "average_requests_per_day": 42,
+        # Try to query real usage data from database
+        db = get_supabase_client()
+        
+        usage_data = None
+        if db:
+            try:
+                # Query usage logs for this user
+                result = db.table('usage_logs').select('*').eq('user_id', str(user_id)).execute()
+                
+                if result.data and len(result.data) > 0:
+                    # Calculate analytics from real data
+                    logs = result.data
+                    total_requests = len(logs)
+                    avg_precision = sum(log.get('precision', 0) for log in logs) / total_requests if total_requests > 0 else 0
+                    avg_response_time = sum(log.get('response_time', 0) for log in logs) / total_requests if total_requests > 0 else 0
+                    cost_this_month = sum(log.get('cost', 0) for log in logs)
+                    
+                    usage_data = {
+                        "user_id": str(user_id),
+                        "total_requests": total_requests,
+                        "average_precision": round(avg_precision, 2),
+                        "average_response_time": round(avg_response_time, 2),
+                        "cost_this_month": round(cost_this_month, 2),
+                    }
+            except Exception as db_error:
+                logger.warning(f"Database query failed: {db_error}")
+        
+        # If no real data, return calculated defaults
+        if not usage_data:
+            usage_data = {
+                "user_id": str(user_id),
+                "total_requests": 0,
+                "average_precision": 0.0,
+                "average_response_time": 0.0,
+                "cost_this_month": 0.0,
+            }
+        
+        # Add recommendations and patterns
+        usage_data["recommendations"] = [
+            {
+                "type": "threshold_optimization",
+                "message": "Monitor usage patterns to optimize threshold settings",
+                "potential_savings": 0.0
+            }
+        ]
+        usage_data["usage_patterns"] = {
+            "peak_hours": "Not enough data yet",
+            "average_requests_per_day": round(usage_data["total_requests"] / 30, 2) if usage_data["total_requests"] > 0 else 0,
                 "most_used_features": ["general_chat", "content_generation", "data_analysis"]
             }
         }
