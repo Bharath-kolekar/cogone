@@ -94,25 +94,26 @@ async def periodic_diagnostic_task():
             
             diagnostic = CognOmegaDiagnostic()
             results = await diagnostic.run_full_diagnostic()
-                
-                summary = results.get('summary', {})
-                logger.info(
-                    "🧬 Periodic Context-Aware diagnostic complete",
-                    timestamp=datetime.now().isoformat(),
-                    a_plus_plus_percentage=summary.get('a_plus_plus_or_better_percentage', 0),
-                    average_score=summary.get('average_score', 0)
+            
+            summary = results.get('summary', {})
+            logger.info(
+                "🧬 Periodic Context-Aware diagnostic complete",
+                timestamp=datetime.now().isoformat(),
+                a_plus_plus_percentage=summary.get('a_plus_plus_or_better_percentage', 0),
+                average_score=summary.get('average_score', 0)
+            )
+            
+            # Alert if system quality drops below PERFECT
+            percentage = summary.get('a_plus_plus_or_better_percentage', 0)
+            if percentage < 98.0:
+                logger.warning(
+                    "⚠️ System quality below PERFECT target",
+                    current=f"{percentage}%",
+                    target="98%+"
                 )
-                
-                # Alert if system quality drops below PERFECT
-                percentage = summary.get('a_plus_plus_or_better_percentage', 0)
-                if percentage < 98.0:
-                    logger.warning(
-                        "⚠️ System quality below PERFECT target",
-                        current=f"{percentage}%",
-                        target="98%+"
-                    )
-            else:
+        except Exception as e:
                 # Fallback to original
+                logger.error(f"Error running context-aware diagnostic: {e}")
                 logger.info("🔍 Running periodic diagnostic (2-hour interval)...")
                 
                 diagnostic = CognOmegaDiagnostic()

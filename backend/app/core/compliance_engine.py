@@ -791,7 +791,7 @@ class ComplianceEngine:
         if not hasattr(self, '_throughput_tracker'):
             self._throughput_tracker = {}
         
-        if operation not in self._throughput_tracker'):
+        if operation not in self._throughput_tracker:
             self._throughput_tracker[operation] = {
                 "count": 0,
                 "start_time": time.time()

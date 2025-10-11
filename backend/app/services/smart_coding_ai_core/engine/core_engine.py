@@ -1284,6 +1284,8 @@ class CodebaseMemorySystem:
             
             # Save memory snapshot
             self.memory_snapshots[project_id] = memory_snapshot
+        except Exception as e:
+            logger.error(f"Error building memory snapshot: {e}")
     
     def _analyze_project_configs(self) -> List[Dict[str, Any]]:
         """
@@ -1298,30 +1300,6 @@ class CodebaseMemorySystem:
         import sys
         total = sys.getsizeof(structure) + sys.getsizeof(patterns) + sys.getsizeof(dependencies)
         return total  # Real byte calculation
-            
-            analysis_time = time.time() - start_time
-            
-            return {
-                "analysis_id": str(uuid.uuid4()),
-                "project_id": project_id,
-                "memory_snapshot": memory_snapshot,
-                "analysis_time": analysis_time,
-                "files_analyzed": structure.get("total_files", 0),
-                "patterns_found": len(patterns),
-                "dependencies_found": len(dependencies),
-                "configs_found": 0,
-                "analysis_summary": {
-                    "languages": structure.get("languages_used", []),
-                    "frameworks": structure.get("frameworks", []),
-                    "total_patterns": len(patterns),
-                    "total_dependencies": len(dependencies)
-                },
-                "timestamp": datetime.now()
-            }
-            
-        except Exception as e:
-            logger.error(f"Failed to analyze project: {e}")
-            return {}
     
     async def _analyze_all_patterns(self, project_path: str, analysis_depth: str) -> List[Dict]:
         """Analyze patterns in all files"""

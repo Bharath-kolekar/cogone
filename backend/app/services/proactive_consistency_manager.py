@@ -574,7 +574,7 @@ class ProactiveConsistencyManager:
                     lines[i] = line.replace(':', ' -> Any:', 1)
                 
                 # Fix missing self in methods (if inside class)
-                if 'def ' in line and '(self)' not in line and '(@' not in lines[i-1] if i > 0 else True):
+                if 'def ' in line and '(self)' not in line and (i == 0 or '(@' not in lines[i-1]):
                     # Only if it looks like a method
                     if any('class ' in l for l in lines[:i]):
                         lines[i] = line.replace('def ', 'def ').replace('()', '(self)', 1)

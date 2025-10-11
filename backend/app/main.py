@@ -31,63 +31,23 @@ except ImportError:
 from app.core.database import init_db
 from app.core.redis import init_redis
 from app.core.async_task_manager import async_task_manager
+# 🧬 CONSOLIDATED ROUTERS (118 → 15)
 from app.routers import (
-    auth,
-    voice,
-    payments,
-    gamification,
-    apps,
-    admin,
-    webhooks,
-    smart_coding_ai_optimized,
-    capabilities_router,
-    ai_agents_consolidated,
-    meta_ai_orchestrator_unified,
-    swarm_ai_router,
-    architecture_generator_router,
-    agent_mode_router,
-    smart_coding_ai_integration_router,
-    auto_save_router,
-    ai_component_orchestrator_router,
-    unified_ai_orchestrator_router,
-    hierarchical_orchestration_router,
-    multi_agent_coordinator_router,
-    tool_integration_router,
-    consistency_dna_router,
-    proactive_dna_router,
-    consciousness_dna_router,
-    quality_optimization_router,
-    advanced_analytics_router,
-    architecture_compliance_router,
-    performance_architecture_router,
-    optimized_services_router,
-    ethical_ai_router,
-    ethical_ai_comprehensive_router,
-    smarty_ethical_router,
-    smarty_ai_orchestrator_router,
-    smarty_agent_integration_router,
-    enhanced_voice_to_app_router,
-    enhanced_payment_router,
-    zero_cost_infrastructure_router,
-    advanced_features_router,
-    production_deployment_router,
-    code_processing,
-    self_modification,
-    unified_autonomous_dna_router,
-    reality_check_dna_router,
-    # Phase 1.5: Missing routers with health endpoints
-    code_intelligence_router,
-    data_analytics_router,
-    frontend_router,
-    governance_router,
-    hardware_optimization,
-    profiles,
-    smart_coding_ai_status,
-    super_intelligent_optimization,
-    system_optimization_router,
-    transcribe,
-    user_preferences,
-    zero_cost_super_intelligence,
+    auth_users_router,           # 1. Auth, Profiles, User Preferences
+    ai_agents_router,             # 2. AI Agents, Agent Mode, Multi-Agent Coordinator
+    orchestration_router,         # 3. All AI Orchestrators (Unified, Meta, Hierarchical, Swarm, Smarty)
+    architecture_router,          # 4. Architecture Generation, Compliance, Performance
+    ethics_governance_router,     # 5. Ethical AI, Governance, Compliance
+    payments_router,              # 6. Payments, Billing, Subscriptions
+    voice_router,                 # 7. Voice, Transcribe, Enhanced Voice-to-App
+    code_intelligence_router,     # 8. Code Processing, Code Intelligence
+    apps_capabilities_router,     # 9. Apps, Frontend, Gamification, Capabilities
+    system_infrastructure_router, # 10. System Optimization, Hardware, Zero-Cost
+    analytics_router,             # 11. Advanced Analytics, Data Analytics
+    tools_integrations_router,    # 12. Tool Integration, Webhooks
+    admin_router,                 # 13. Admin, Self-Modification
+    optimization_router,          # 14. Quality, Optimized Services, Super-Intelligent
+    dna_systems_router,           # 15. All DNA Systems (Consciousness, Consistency, Proactive, Reality Check, Autonomous, Auto-Save)
 )
 from app.trpc.app_router import get_trpc_router
 from app.middleware.rate_limiter import RateLimitMiddleware
@@ -237,85 +197,56 @@ app.add_middleware(RateLimitMiddleware)
 if settings.ENABLE_AUTH_MIDDLEWARE:
     app.add_middleware(AuthMiddleware)
 
-# Include routers
-app.include_router(auth.router, prefix="/api/v0/auth", tags=["Authentication"])
-app.include_router(voice.router, prefix="/api/v0/voice", tags=["Voice Processing"])
-app.include_router(payments.router, prefix="/api/v0/payments", tags=["Payments"])
-app.include_router(gamification.router, prefix="/api/v0/gamification", tags=["Gamification"])
-app.include_router(apps.router, prefix="/api/v0/apps", tags=["App Generation"])
-app.include_router(admin.router, prefix="/api/v0/admin", tags=["Admin"])
-app.include_router(webhooks.router, prefix="/api/v0/webhooks", tags=["Webhooks"])
-app.include_router(smart_coding_ai_optimized.router, prefix="/api/v0/smart-coding-ai", tags=["Smart Coding AI"])
-app.include_router(capabilities_router.router, prefix="/api/v0/ai-capabilities", tags=["AI Capabilities"])
-app.include_router(smart_coding_ai_integration_router.router, prefix="/api/v1/smart-coding-ai/integration", tags=["Smart Coding AI Integration"])
-app.include_router(auto_save_router.router, tags=["Auto-Save & Keep All Changes"])
-app.include_router(ai_component_orchestrator_router.router, tags=["AI Component Orchestrator"])
-app.include_router(unified_ai_orchestrator_router.router, tags=["Unified AI Orchestrator"])
-app.include_router(ai_agents_consolidated.router, prefix="/api/v0/ai-agents", tags=["AI Agents"])
-app.include_router(meta_ai_orchestrator_unified.router, prefix="/api/v0/meta-orchestrator", tags=["Meta Orchestrator"])
-app.include_router(swarm_ai_router.router, prefix="/api/v0/swarm-ai", tags=["Swarm AI"])
-app.include_router(architecture_generator_router.router, prefix="/api/v0/architecture-generator", tags=["Architecture Generator"])
-app.include_router(agent_mode_router.router, prefix="/api/v0/agent-mode", tags=["Agent Mode"])
-app.include_router(hierarchical_orchestration_router.router, prefix="/api/v0", tags=["Hierarchical Orchestration"])
-app.include_router(multi_agent_coordinator_router.router, prefix="/api/v0", tags=["Multi-Agent Coordination"])
-app.include_router(tool_integration_router.router, prefix="/api/v0", tags=["Tool Integration"])
-app.include_router(consistency_dna_router.router, prefix="/api/v0", tags=["Consistency DNA"])
-app.include_router(proactive_dna_router.router, prefix="/api/v0", tags=["Proactive DNA"])
-app.include_router(consciousness_dna_router.router, prefix="/api/v0", tags=["Consciousness DNA"])
-app.include_router(quality_optimization_router.router, prefix="/api/v0/quality", tags=["Quality Optimization"])
-app.include_router(advanced_analytics_router.router, prefix="/api/v0/analytics", tags=["Advanced Analytics"])
-app.include_router(architecture_compliance_router.router, prefix="/api/v0", tags=["Architecture Compliance"])
-app.include_router(performance_architecture_router.router, prefix="/api/v0", tags=["Performance Architecture"])
-app.include_router(optimized_services_router.router, prefix="/api/v0/optimized", tags=["Optimized Services"])
-app.include_router(ethical_ai_router.router, prefix="/api/v0/ethical", tags=["Ethical AI"])
-app.include_router(ethical_ai_comprehensive_router.router, prefix="/api/v0/ethical-ai", tags=["Ethical AI Comprehensive"])
-app.include_router(smarty_ethical_router.router, prefix="/api/v0/smarty-ethical", tags=["Smarty Ethical Integration"])
-app.include_router(smarty_ai_orchestrator_router.router, prefix="/api/v0/smarty-orchestrator", tags=["Smarty AI Orchestrator"])
-app.include_router(smarty_agent_integration_router.router, prefix="/api/v0/smarty-agents", tags=["Smarty Agent Integration"])
-app.include_router(enhanced_voice_to_app_router.router, prefix="/api/v0/voice-to-app", tags=["Enhanced Voice-to-App"])
-app.include_router(enhanced_payment_router.router, prefix="/api/v0/payments", tags=["Enhanced Payments"])
+# 🧬 CONSOLIDATED ROUTERS - 15 Routers (Previously 118+)
+# Each consolidated router groups related functionality for better organization
 
-# tRPC Router
+# 1. Authentication & Users (auth, profiles, user_preferences)
+app.include_router(auth_users_router.router, prefix="/api/v0/auth", tags=["Auth & Users"])
+
+# 2. AI Agents & Coordination (ai_agents, agent_mode, multi_agent_coordinator)
+app.include_router(ai_agents_router.router, prefix="/api/v0/ai-agents", tags=["AI Agents"])
+
+# 3. AI Orchestration (unified, meta, hierarchical, swarm, smarty orchestrators)
+app.include_router(orchestration_router.router, prefix="/api/v0/orchestration", tags=["Orchestration"])
+
+# 4. Architecture (generation, compliance, performance)
+app.include_router(architecture_router.router, prefix="/api/v0/architecture", tags=["Architecture"])
+
+# 5. Ethics & Governance (ethical AI, governance, compliance)
+app.include_router(ethics_governance_router.router, prefix="/api/v0/ethics", tags=["Ethics & Governance"])
+
+# 6. Payments & Billing (payments, subscriptions, billing, refunds)
+app.include_router(payments_router.router, prefix="/api/v0/payments", tags=["Payments & Billing"])
+
+# 7. Voice & Voice-to-App (voice, transcribe, enhanced voice-to-app)
+app.include_router(voice_router.router, prefix="/api/v0/voice", tags=["Voice & Voice-to-App"])
+
+# 8. Code Intelligence (code processing, code intelligence, analysis)
+app.include_router(code_intelligence_router.router, prefix="/api/v0/code", tags=["Code Intelligence"])
+
+# 9. Apps & Capabilities (apps, frontend, gamification, capabilities)
+app.include_router(apps_capabilities_router.router, prefix="/api/v0/apps", tags=["Apps & Capabilities"])
+
+# 10. System & Infrastructure (system optimization, hardware, zero-cost)
+app.include_router(system_infrastructure_router.router, prefix="/api/v0/system", tags=["System & Infrastructure"])
+
+# 11. Analytics (advanced analytics, data analytics, reporting)
+app.include_router(analytics_router.router, prefix="/api/v0/analytics", tags=["Analytics"])
+
+# 12. Tools & Integrations (tool integration, webhooks, api keys)
+app.include_router(tools_integrations_router.router, prefix="/api/v0/tools", tags=["Tools & Integrations"])
+
+# 13. Admin & Self-Modification (admin, self-modification, system management)
+app.include_router(admin_router.router, prefix="/api/v0/admin", tags=["Admin & Management"])
+
+# 14. Optimization (quality, services, super-intelligent optimization)
+app.include_router(optimization_router.router, prefix="/api/v0/optimization", tags=["Optimization"])
+
+# 15. DNA Systems (consciousness, consistency, proactive, reality check, autonomous, auto-save)
+app.include_router(dna_systems_router.router, prefix="/api/v0/dna", tags=["DNA Systems"])
+
+# tRPC Router (kept separate for compatibility)
 app.include_router(get_trpc_router(), prefix="/api", tags=["tRPC"])
-
-# Zero-Cost Infrastructure Router
-app.include_router(zero_cost_infrastructure_router.router, prefix="/api/v0/zero-cost", tags=["Zero-Cost Infrastructure"])
-
-# Advanced Features Router - Phase 2
-app.include_router(advanced_features_router.router, prefix="/api/v0/advanced-features", tags=["Advanced Features"])
-
-# Production Deployment Router - Phase 2
-app.include_router(production_deployment_router.router, prefix="/api/v0/deployment", tags=["Production Deployment"])
-
-# System Optimization Router - Current System Optimization
-from app.routers.system_optimization_router import router as system_optimization_router
-app.include_router(system_optimization_router, prefix="/api/v0/optimization", tags=["System Optimization"])
-
-# Code Processing Router - Seamless Edit & Fix Workflow
-app.include_router(code_processing.router, prefix="/api/v0/code", tags=["Code Processing"])
-
-# Self-Modification Router - Self-Coding, Self-Debugging, Self-Testing, Self-Management
-app.include_router(self_modification.router, prefix="/api/v0", tags=["Self-Modification"])
-
-# Unified Autonomous DNA Integration - Complete Integrated AI System
-app.include_router(unified_autonomous_dna_router.router, prefix="/api/v0", tags=["Unified Autonomous DNA"])
-
-# Reality Check DNA - Anti-Hallucination System
-app.include_router(reality_check_dna_router.router, prefix="/api/v0", tags=["Reality Check DNA"])
-
-# Phase 1.5: Missing routers with health endpoints (12 routers)
-app.include_router(code_intelligence_router.router, prefix="/api/v0/code-intelligence", tags=["Code Intelligence"])
-app.include_router(data_analytics_router.router, prefix="/api/v0/data-analytics", tags=["Data Analytics"])
-app.include_router(frontend_router.router, prefix="/api/v0/frontend", tags=["Frontend"])
-app.include_router(governance_router.router, prefix="/api/v0/governance", tags=["Governance"])
-app.include_router(hardware_optimization.router, prefix="/api/v0/hardware-optimization", tags=["Hardware Optimization"])
-app.include_router(profiles.router, prefix="/api/v0/profiles", tags=["User Profiles"])
-app.include_router(smart_coding_ai_status.router, prefix="/api/v0/smart-coding-ai-status", tags=["Smart Coding AI Status"])
-app.include_router(super_intelligent_optimization.router, prefix="/api/v0/super-intelligent-optimization", tags=["Super Intelligent Optimization"])
-app.include_router(system_optimization_router, prefix="/api/v0/system-optimization", tags=["System Optimization"])
-app.include_router(transcribe.router, prefix="/api/v0/transcribe", tags=["Transcription"])
-app.include_router(user_preferences.router, prefix="/api/v0/user-preferences", tags=["User Preferences"])
-app.include_router(zero_cost_super_intelligence.router, prefix="/api/v0/zero-cost-super-intelligence", tags=["Zero Cost Super Intelligence"])
 
 # Static files for generated apps
 app.mount("/static", StaticFiles(directory="static"), name="static")

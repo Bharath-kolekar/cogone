@@ -716,9 +716,12 @@ class SelfCodingEngine:
         # This is a simplified version - in production, this would use
         # the AI model to generate sophisticated code
         
-        return f'''"""
-Generated code based on specification: {specification}
-Generated at: {datetime.now().isoformat()}
+        context_str = repr(context or {'key': 'value'})
+        timestamp = datetime.now().isoformat()
+        
+        code_template = '''"""
+Generated code based on specification: {spec}
+Generated at: {timestamp}
 """
 
 import structlog
@@ -727,11 +730,11 @@ logger = structlog.get_logger()
 
 
 class GeneratedClass:
-    """Generated class for: {specification}"""
+    """Generated class for: {spec}"""
     
     def __init__(self):
-        self.specification = "{specification}"
-        self.context = {context or {}}
+        self.specification = "{spec}"
+        self.context = {context}
     
     async def execute(self):
         """
@@ -748,7 +751,7 @@ class GeneratedClass:
             tree = ast.parse(self.generated_code)
             
             # Compile and execute in isolated namespace
-            namespace = {}
+            namespace = {{}}
             exec(compile(tree, '<generated>', 'exec'), namespace)
             
             # Return executed function if exists
@@ -773,6 +776,8 @@ class GeneratedClass:
 # Export
 __all__ = ['GeneratedClass']
 '''
+        
+        return code_template.format(spec=specification, timestamp=timestamp, context=context_str)
     
     async def _apply_modifications(self, current_code: str, modifications: str) -> str:
         """Apply modifications to existing code"""
